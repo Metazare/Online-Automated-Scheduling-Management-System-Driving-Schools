@@ -5,11 +5,12 @@ import express from 'express';
 import helmet from 'helmet';
 import mongoose from 'mongoose';
 
+// Middlewares
 import authenticate from './middlewares/authenticate';
 import errorHandler from './middlewares/errorHandler';
 
+// Routes
 import authRoute from './api/auth/auth.route';
-import userRoute from './api/user/user.route';
 
 import { NotFound } from './utilities/errors';
 import envs from './utilities/envs';
@@ -25,7 +26,6 @@ app.use(helmet());
 
 app.use('/auth', authRoute);
 app.use(authenticate);
-app.use('/users', userRoute);
 
 app.use((_req, _res, next) => next(new NotFound()));
 app.use(errorHandler);
