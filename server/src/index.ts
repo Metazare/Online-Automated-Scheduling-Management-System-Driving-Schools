@@ -11,6 +11,8 @@ import errorHandler from './middlewares/errorHandler';
 
 // Routes
 import authRoute from './api/auth/auth.route';
+import courseRoute from './api/course/course.route';
+import enrollmentRoute from './api/enrollment/enrollment.route';
 
 import { NotFound } from './utilities/errors';
 import envs from './utilities/envs';
@@ -26,6 +28,8 @@ app.use(helmet());
 
 app.use('/auth', authRoute);
 app.use(authenticate);
+app.use('/courses', courseRoute);
+app.use('/enrollments', enrollmentRoute);
 
 app.use((_req, _res, next) => next(new NotFound()));
 app.use(errorHandler);
