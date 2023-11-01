@@ -7,7 +7,6 @@ const studentSchema = new Schema(
     {
         instructorId: {
             type: String,
-            required: [true, 'Instructor ID is required'],
             unique: true,
             default: id
         },
@@ -62,6 +61,7 @@ const studentSchema = new Schema(
     },
     {
         timestamps: true,
+        versionKey: false,
         toJSON: {
             transform(_doc, ret: Record<string, unknown>) {
                 const { credentials, _id, __v, ...rest } = ret;
