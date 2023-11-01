@@ -12,8 +12,8 @@ import InstructorModel from '../instructor/instructor.model';
 import SchoolModel from '../school/school.model';
 import StudentModel from '../student/student.model';
 
-    const { name, address, contact, email, password } = body;
 const RegisterDrivingSchool = (body: SchoolRegister): Promise<SchoolDocument> => {
+    const { name, about, address, contact, email, password } = body;
 
     return SchoolModel.create({
         name,
@@ -37,7 +37,6 @@ const RegisterInstructor = async (body: InstructorRegister, admin: SchoolDocumen
         },
         address,
         contact,
-        sex,
         credentials: { email, password: newPassword },
         school: admin._id
     });

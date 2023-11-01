@@ -35,11 +35,6 @@ const instructorSchema = new Schema(
             type: String,
             required: [true, 'Contact is required']
         },
-        sex: {
-            type: String,
-            enum: ['male', 'female'],
-            required: [true, 'Sex is required']
-        },
         credentials: {
             type: {
                 email: {
