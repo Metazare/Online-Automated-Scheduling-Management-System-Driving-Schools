@@ -1,7 +1,7 @@
-import { checkIfAdmin, login, logout, register } from "./auth.controller";
-import { Router } from "express";
-import asynchronousHandler from "../../middlewares/asynchronousHandler";
-import authenticate from "../../middlewares/authenticate";
+import { checkIfAdmin, login, logout, register } from './auth.controller';
+import { Router } from 'express';
+import asynchronousHandler from '../../middlewares/asynchronousHandler';
+import authenticate from '../../middlewares/authenticate';
 
 const router = Router();
 

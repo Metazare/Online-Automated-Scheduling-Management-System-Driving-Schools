@@ -1,7 +1,15 @@
+import {
+    AllRegister,
+    InstructorRegister,
+    Payload,
+    Role,
+    SchoolRegister,
+    StudentRegister,
+    UserLogin
+} from './auth.types';
 import { BodyRequest, RequestHandler } from 'express';
 import { compareSync } from 'bcrypt';
 import { cookieOptions, signAccess, signRefresh } from '../../utilities/cookies';
-import { AllRegister, DrivingSchoolRegister, InstructorRegister, Payload, StudentRegister, UserLogin } from './auth.types';
 import { InstructorPopulatedDocument } from '../instructor/instructor.types';
 import { password } from '../../utilities/ids';
 import { SchoolDocument } from '../school/school.types';
@@ -17,6 +25,7 @@ const RegisterDrivingSchool = (body: SchoolRegister): Promise<SchoolDocument> =>
 
     return SchoolModel.create({
         name,
+        about,
         address,
         contact,
         credentials: { email, password }
