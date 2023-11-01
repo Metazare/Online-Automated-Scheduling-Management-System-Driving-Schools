@@ -1,19 +1,22 @@
-import { DrivingSchoolDocument } from './drivingSchool.types';
 import { hashSync } from 'bcrypt';
 import { id } from '../../utilities/ids';
 import { Schema, model } from 'mongoose';
+import { SchoolDocument } from './school.types';
 
-const drivingSchoolSchema = new Schema(
+const schoolSchema = new Schema(
     {
         schoolId: {
             type: String,
-            required: [true, 'School ID is required'],
             unique: true,
             default: id
         },
         name: {
             type: String,
             required: [true, 'Name is required']
+        },
+        about: {
+            type: String,
+            required: [true, 'About is required']
         },
         address: {
             type: String,
@@ -42,6 +45,7 @@ const drivingSchoolSchema = new Schema(
     },
     {
         timestamps: true,
+        versionKey: false,
         toJSON: {
             transform(_doc, ret: Record<string, unknown>) {
                 const { credentials, _id, __v, ...rest } = ret;
@@ -51,4 +55,4 @@ const drivingSchoolSchema = new Schema(
     }
 );
 
-export default model<DrivingSchoolDocument>('DrivingSchool', drivingSchoolSchema);
+export default model<SchoolDocument>('School', schoolSchema);

@@ -1,4 +1,5 @@
 import { Role, Sex } from '../../@types/types';
+import { SchoolDocument } from '../school/school.types';
 
 export interface Payload {
     userId: string;
@@ -19,7 +20,12 @@ type BaseRegister = {
     role: Role;
 };
 
-export type DrivingSchoolRegister = BaseRegister & { name: string };
+export type SchoolRegister = BaseRegister & {
+    name: string;
+    about: string;
+    password: string;
+};
+
 export type InstructorRegister = BaseRegister & {
     firstName: string;
     middleName?: string;
@@ -29,4 +35,4 @@ export type InstructorRegister = BaseRegister & {
 };
 export type StudentRegister = InstructorRegister & { birthday: Date };
 
-export type AllRegister = DrivingSchoolRegister | InstructorRegister | StudentRegister;
+export type AllRegister = SchoolRegister | InstructorRegister | StudentRegister;

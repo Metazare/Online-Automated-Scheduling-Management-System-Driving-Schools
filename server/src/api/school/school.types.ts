@@ -1,8 +1,9 @@
 import { Document } from 'mongoose';
 
-export interface DrivingSchool {
+export interface School {
     schoolId: string;
     name: string;
+    about: string;
     address: string;
     contact: string;
     credentials: {
@@ -11,7 +12,7 @@ export interface DrivingSchool {
     };
 }
 
-export interface DrivingSchoolDocument extends DrivingSchool, Document {
+export interface SchoolDocument extends School, Document {
     createdAt: Date;
     updatedAt: Date;
 }

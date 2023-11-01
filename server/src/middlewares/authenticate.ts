@@ -1,13 +1,12 @@
 import { cookieOptions, signAccess, signRefresh } from '../utilities/cookies';
-import { DrivingSchoolDocument } from '../api/drivingSchool/drivingSchool.types';
 import { Forbidden, Unauthorized } from '../utilities/errors';
 import { InstructorDocument } from '../api/instructor/instructor.types';
 import { JwtPayload, verify } from 'jsonwebtoken';
 import { Payload } from '../api/auth/auth.types';
 import { RequestHandler } from 'express';
 import { Role } from '../@types/types';
+import { SchoolDocument } from '../api/school/school.types';
 import { StudentDocument } from '../api/student/student.types';
-import DrivingSchoolModel from '../api/drivingSchool/drivingSchool.model';
 import envs from '../utilities/envs';
 import InstructorModel from '../api/instructor/instructor.model';
 import StudentModel from '../api/student/student.model';
@@ -43,7 +42,7 @@ const authenticate: RequestHandler = async (req, res, next) => {
     if (payload) {
         switch (payload.role) {
             case Role.ADMIN:
-                req.user = <DrivingSchoolDocument>await DrivingSchoolModel.findOne({ schoolId: payload.userId });
+                user = <SchoolDocument>await SchoolModel.findOne({ schoolId: payload.userId });
                 break;
             case Role.INSTRUCTOR:
                 req.user = <InstructorDocument>await InstructorModel.findOne({ instructorId: payload.userId });

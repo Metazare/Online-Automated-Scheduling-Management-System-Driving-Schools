@@ -1,6 +1,6 @@
 import { Document, Types } from 'mongoose';
-import { DrivingSchool, DrivingSchoolDocument } from '../drivingSchool/drivingSchool.types';
 import { Sex } from '../../@types/types';
+import { DrivingSchool, DrivingSchoolDocument } from '../school/school.types';
 
 export interface Instructor {
     instructorId: string;

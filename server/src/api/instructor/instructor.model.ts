@@ -2,7 +2,7 @@ import { hashSync } from 'bcrypt';
 import { id } from '../../utilities/ids';
 import { InstructorDocument } from './instructor.types';
 import { Schema, Types, model } from 'mongoose';
-import { DrivingSchool } from '../drivingSchool/drivingSchool.types';
+import { School } from '../school/school.types';
 
 const instructorSchema = new Schema(
     {
@@ -56,10 +56,10 @@ const instructorSchema = new Schema(
             },
             required: [true, 'Admin credentials are required']
         },
-        drivingSchool: {
+        school: {
             type: Types.ObjectId,
-            ref: 'DrivingSchool',
-            required: [true, 'Driving school is required']
+            ref: 'School',
+            required: [true, 'School is required']
         },
         status: {
             type: String,
@@ -74,8 +74,8 @@ const instructorSchema = new Schema(
         timestamps: true,
         toJSON: {
             transform(_doc, ret: Record<string, unknown>) {
-                const { credentials, _id, __v, drivingSchool, ...rest } = ret;
-                return { ...rest, drivingSchool: (<DrivingSchool>drivingSchool).schoolId };
+                const { credentials, _id, __v, school, ...rest } = ret;
+                return { ...rest, school: (<School>school).schoolId };
             }
         }
     }

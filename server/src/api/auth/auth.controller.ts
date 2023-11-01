@@ -6,17 +6,18 @@ import { InstructorPopulatedDocument } from '../instructor/instructor.types';
 import { password } from '../../utilities/ids';
 import { RequestHandler } from 'express';
 import { BodyRequest, Role } from '../../@types/types';
+import { SchoolDocument } from '../school/school.types';
 import { StudentDocument } from '../student/student.types';
 import { Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import authenticate from '../../middlewares/authenticate';
-import DrivingSchoolModel from '../drivingSchool/drivingSchool.model';
 import InstructorModel from '../instructor/instructor.model';
+import SchoolModel from '../school/school.model';
 import StudentModel from '../student/student.model';
 
 const RegisterDrivingSchool = (body: DrivingSchoolRegister): Promise<DrivingSchoolDocument> => {
     const { name, address, contact, email, password } = body;
 
-    return DrivingSchoolModel.create({
+    return SchoolModel.create({
         name,
         address,
         contact,
@@ -24,8 +25,8 @@ const RegisterDrivingSchool = (body: DrivingSchoolRegister): Promise<DrivingScho
     });
 };
 
-const RegisterInstructor = async (body: InstructorRegister, admin: DrivingSchoolDocument): Promise<UserLogin> => {
-    const { firstName, middleName, lastName, extensionName, address, contact, sex, email } = body;
+const RegisterInstructor = async (body: InstructorRegister, admin: SchoolDocument): Promise<UserLogin> => {
+    const { firstName, middleName, lastName, extensionName, address, contact, email } = body;
 
     const newPassword = password();
 
@@ -40,7 +41,7 @@ const RegisterInstructor = async (body: InstructorRegister, admin: DrivingSchool
         contact,
         sex,
         credentials: { email, password: newPassword },
-        drivingSchool: admin._id
+        school: admin._id
     });
 
     return { email, password: newPassword, role: Role.INSTRUCTOR };
@@ -70,11 +71,14 @@ export const register: RequestHandler = async (req: BodyRequest<AllRegister>, re
 
     switch (role) {
         case Role.ADMIN:
-            const { schoolId } = await RegisterDrivingSchool(<DrivingSchoolRegister>req.body);
+            const { schoolId } = await RegisterDrivingSchool(<SchoolRegister>req.body);
             payload.userId = schoolId;
             break;
         case Role.INSTRUCTOR:
-            const credentials = await RegisterInstructor(<InstructorRegister>req.body, <DrivingSchoolDocument>req.user);
+            const credentials = await RegisterInstructor(
+                <InstructorRegister>req.body,
+                <SchoolDocument>req.user?.document
+            );
             return res.status(201).json(credentials);
         case Role.STUDENT:
             const { studentId } = await RegisterStudent(<StudentRegister>req.body);
@@ -93,17 +97,17 @@ export const register: RequestHandler = async (req: BodyRequest<AllRegister>, re
 export const login: RequestHandler = async (req: BodyRequest<UserLogin>, res) => {
     const { email, password, role } = req.body;
 
-    let user: DrivingSchoolDocument | InstructorPopulatedDocument | StudentDocument | null;
+    let user: SchoolDocument | InstructorPopulatedDocument | StudentDocument | null;
     let userId: string | null;
 
     switch (role) {
         case Role.ADMIN:
-            user = <DrivingSchoolDocument>await DrivingSchoolModel.findOne({ 'credentials.email': email }).exec();
+            user = <SchoolDocument>await SchoolModel.findOne({ 'credentials.email': email }).exec();
             userId = user?.schoolId;
             break;
         case Role.INSTRUCTOR:
             user = <InstructorPopulatedDocument>(
-                await InstructorModel.findOne({ 'credentials.email': email }).populate('drivingSchool').exec()
+                await InstructorModel.findOne({ 'credentials.email': email }).populate('school').exec()
             );
             userId = user?.instructorId;
             break;
