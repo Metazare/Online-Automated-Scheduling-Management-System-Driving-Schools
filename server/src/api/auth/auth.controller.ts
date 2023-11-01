@@ -1,11 +1,9 @@
+import { BodyRequest, RequestHandler } from 'express';
 import { compareSync } from 'bcrypt';
 import { cookieOptions, signAccess, signRefresh } from '../../utilities/cookies';
-import { DrivingSchoolDocument } from '../drivingSchool/drivingSchool.types';
 import { AllRegister, DrivingSchoolRegister, InstructorRegister, Payload, StudentRegister, UserLogin } from './auth.types';
 import { InstructorPopulatedDocument } from '../instructor/instructor.types';
 import { password } from '../../utilities/ids';
-import { RequestHandler } from 'express';
-import { BodyRequest, Role } from '../../@types/types';
 import { SchoolDocument } from '../school/school.types';
 import { StudentDocument } from '../student/student.types';
 import { Unauthorized, UnprocessableEntity } from '../../utilities/errors';
@@ -14,8 +12,8 @@ import InstructorModel from '../instructor/instructor.model';
 import SchoolModel from '../school/school.model';
 import StudentModel from '../student/student.model';
 
-const RegisterDrivingSchool = (body: DrivingSchoolRegister): Promise<DrivingSchoolDocument> => {
     const { name, address, contact, email, password } = body;
+const RegisterDrivingSchool = (body: SchoolRegister): Promise<SchoolDocument> => {
 
     return SchoolModel.create({
         name,

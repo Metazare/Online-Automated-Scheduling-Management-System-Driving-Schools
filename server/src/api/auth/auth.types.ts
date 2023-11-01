@@ -1,5 +1,9 @@
-import { Role, Sex } from '../../@types/types';
 import { SchoolDocument } from '../school/school.types';
+export enum Role {
+    ADMIN = 'admin',
+    STUDENT = 'student',
+    INSTRUCTOR = 'instructor'
+}
 
 export interface Payload {
     userId: string;

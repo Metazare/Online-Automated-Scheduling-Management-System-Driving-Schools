@@ -4,7 +4,6 @@ import { InstructorDocument } from '../api/instructor/instructor.types';
 import { JwtPayload, verify } from 'jsonwebtoken';
 import { Payload } from '../api/auth/auth.types';
 import { RequestHandler } from 'express';
-import { Role } from '../@types/types';
 import { SchoolDocument } from '../api/school/school.types';
 import { StudentDocument } from '../api/student/student.types';
 import envs from '../utilities/envs';

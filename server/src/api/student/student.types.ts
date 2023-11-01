@@ -1,5 +1,9 @@
 import { Document } from 'mongoose';
-import { Sex } from '../../@types/types';
+
+export enum Sex {
+    MALE = 'male',
+    FEMALE = 'female'
+}
 
 export interface Student {
     studentId: string;
