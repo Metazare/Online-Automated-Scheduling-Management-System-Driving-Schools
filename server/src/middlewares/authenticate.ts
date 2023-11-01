@@ -2,12 +2,13 @@ import { cookieOptions, signAccess, signRefresh } from '../utilities/cookies';
 import { Forbidden, Unauthorized } from '../utilities/errors';
 import { InstructorDocument } from '../api/instructor/instructor.types';
 import { JwtPayload, verify } from 'jsonwebtoken';
-import { Payload } from '../api/auth/auth.types';
+import { AllUserDocument, Payload, Role } from '../api/auth/auth.types';
 import { RequestHandler } from 'express';
 import { SchoolDocument } from '../api/school/school.types';
 import { StudentDocument } from '../api/student/student.types';
 import envs from '../utilities/envs';
 import InstructorModel from '../api/instructor/instructor.model';
+import SchoolModel from '../api/school/school.model';
 import StudentModel from '../api/student/student.model';
 
 const refreshTime = 5 * 24 * 60 * 60 * 1000; // 5 days
@@ -39,21 +40,25 @@ const authenticate: RequestHandler = async (req, res, next) => {
     }
 
     if (payload) {
+        let user: AllUserDocument | null;
+
         switch (payload.role) {
             case Role.ADMIN:
                 user = <SchoolDocument>await SchoolModel.findOne({ schoolId: payload.userId });
                 break;
             case Role.INSTRUCTOR:
-                req.user = <InstructorDocument>await InstructorModel.findOne({ instructorId: payload.userId });
+                user = <InstructorDocument>await InstructorModel.findOne({ instructorId: payload.userId });
                 break;
             case Role.STUDENT:
-                req.user = <StudentDocument>await StudentModel.findOne({ studentId: payload.userId });
+                user = <StudentDocument>await StudentModel.findOne({ studentId: payload.userId });
                 break;
             default:
                 return next(new Unauthorized('Invalid user role'));
         }
 
-        if (!req.user) return next(new Forbidden());
+        if (!user) return next(new Forbidden());
+
+        req.user = { document: user, role: payload.role };
 
         return next();
     }

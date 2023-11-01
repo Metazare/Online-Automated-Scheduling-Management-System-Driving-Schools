@@ -1,4 +1,7 @@
+import { InstructorDocument } from '../instructor/instructor.types';
 import { SchoolDocument } from '../school/school.types';
+import { Sex, StudentDocument } from '../student/student.types';
+
 export enum Role {
     ADMIN = 'admin',
     STUDENT = 'student',
@@ -7,6 +10,13 @@ export enum Role {
 
 export interface Payload {
     userId: string;
+    role: Role;
+}
+
+export type AllUserDocument = SchoolDocument | InstructorDocument | StudentDocument;
+
+export interface User {
+    document: AllUserDocument;
     role: Role;
 }
 
@@ -20,7 +30,6 @@ type BaseRegister = {
     address: string;
     contact: string;
     email: string;
-    password: string;
     role: Role;
 };
 
@@ -35,8 +44,12 @@ export type InstructorRegister = BaseRegister & {
     middleName?: string;
     lastName: string;
     extensionName?: string;
-    sex: Sex;
 };
-export type StudentRegister = InstructorRegister & { birthday: Date };
+
+export type StudentRegister = InstructorRegister & {
+    birthday: Date;
+    sex: Sex;
+    password: string;
+};
 
 export type AllRegister = SchoolRegister | InstructorRegister | StudentRegister;
