@@ -1,5 +1,5 @@
 import { Document, Types } from "mongoose";
-import { CourseDocument, CoursePopulutadDocument } from "../course/course.types";
+import { CourseDocument, CoursePopulutadDocument, CourseType } from "../course/course.types";
 import { Student, StudentDocument } from "../student/student.types";
 
 export enum EnrollmentStatus {
@@ -33,6 +33,13 @@ export interface EnrollmentDocument extends Enrollment, Document {
 export interface EnrollmentPopulatedDocument extends EnrollmentDocument {
     course: CoursePopulutadDocument;
     student: Student;
+}
+
+export type GetEnrollment = {
+    enrollmentId?: string;
+    courseId?: string;
+    status?: EnrollmentStatus;
+    courseType?: CourseType;
 }
 
 export type CreateEnrollment = {

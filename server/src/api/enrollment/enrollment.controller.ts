@@ -1,16 +1,51 @@
-import { BodyRequest, RequestHandler } from 'express';
+import { BodyRequest, QueryRequest, RequestHandler } from 'express';
 import { CourseDocument } from '../course/course.types';
 import {
     CreateEnrollment,
     EnrollmentPopulatedDocument,
     EnrollmentStatus,
+    GetEnrollment,
     UpdateEnrollmentStatus
 } from './enrollment.types';
 import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
+import { Role } from '../auth/auth.types';
 import { SchoolDocument } from '../school/school.types';
 import { StudentDocument } from '../student/student.types';
 import CourseModel from '../course/course.model';
 import EnrollmentModel from './enrollment.model';
+
+export const getEnrollments: RequestHandler = async (req: QueryRequest<GetEnrollment>, res) => {
+    if (!req.user) throw new Unauthorized();
+    const { document: user, role } = req.user;
+
+    const { enrollmentId, courseId, status, courseType } = req.query;
+
+    const enrollmentQuery: Record<string, unknown> = {};
+    if (typeof enrollmentId === 'string') enrollmentQuery.enrollmentId = enrollmentId;
+    if (typeof status === 'string') enrollmentQuery.status = status;
+
+    if (role === Role.STUDENT) enrollmentQuery.student = user._id;
+
+    if (role === Role.ADMIN) {
+        const courses: CourseDocument[] = await CourseModel.find({ school: user._id }).exec();
+        const coursesObjectIds: string[] = courses.map((course) => course._id);
+
+        enrollmentQuery.course = { $in: coursesObjectIds };
+    }
+
+    let enrollments: EnrollmentPopulatedDocument[] = await EnrollmentModel.find(enrollmentQuery)
+        .populate({ path: 'course', populate: 'school' })
+        .populate('student')
+        .exec();
+
+    if (typeof courseType === 'string')
+        enrollments = enrollments.filter((enrollment) => enrollment.course.type === courseType);
+
+    if (typeof courseId === 'string')
+        enrollments = enrollments.filter((enrollment) => enrollment.course.courseId === courseId);
+
+    res.json(enrollments);
+};
 
 export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEnrollment>, res) => {
     if (!req.user) throw new Unauthorized();
