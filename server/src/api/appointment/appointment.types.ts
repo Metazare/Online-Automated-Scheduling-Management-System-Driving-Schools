@@ -28,3 +28,23 @@ export interface AppointmentPopulatedDocument extends AppointmentDocument {
     student: Student;
     instructor: InstructorPopulatedDocument;
 }
+
+export type GetAppointments = {
+    appointmentId?: string;
+    studentId?: string;
+    instructorId?: string;
+    status?: AppointmentStatus;
+}
+
+export type CreateAppointment = {
+    studentId: string;
+    instructorId: string;
+    vehicle: string;
+    schedule: string;
+}
+
+export type UpdateAppointment = {
+    appointmentId: string;
+    status?: AppointmentStatus;
+    schedule?: string;
+}

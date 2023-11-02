@@ -10,6 +10,7 @@ import authenticate from './middlewares/authenticate';
 import errorHandler from './middlewares/errorHandler';
 
 // Routes
+import appointmentRoute from './api/appointment/appointment.route';
 import authRoute from './api/auth/auth.route';
 import courseRoute from './api/course/course.route';
 import enrollmentRoute from './api/enrollment/enrollment.route';
@@ -28,6 +29,7 @@ app.use(helmet());
 
 app.use('/auth', authRoute);
 app.use(authenticate);
+app.use('/appointments', appointmentRoute);
 app.use('/courses', courseRoute);
 app.use('/enrollments', enrollmentRoute);
 
