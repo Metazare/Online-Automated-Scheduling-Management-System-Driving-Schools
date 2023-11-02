@@ -131,7 +131,7 @@ export const login: RequestHandler = async (req: BodyRequest<UserLogin>, res) =>
 
     res.cookie('access-token', signAccess(payload), cookieOptions.access)
         .cookie('refresh-token', signRefresh(payload), cookieOptions.refresh)
-        .json(user.toJSON());
+        .json({ ...user.toJSON(), role });
 };
 
 export const logout: RequestHandler = async (_req, res) =>
