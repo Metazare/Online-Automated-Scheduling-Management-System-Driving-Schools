@@ -5,7 +5,8 @@ import { Student, StudentDocument } from "../student/student.types";
 export enum EnrollmentStatus {
     PENDING = 'pending',
     ACCEPTED = 'accepted',
-    DECLINED = 'declined'
+    DECLINED = 'declined',
+    FINISHED = 'finished'
 }
 
 export interface Enrollment {
