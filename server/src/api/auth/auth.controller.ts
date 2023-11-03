@@ -10,7 +10,6 @@ import {
 import { BodyRequest, RequestHandler } from 'express';
 import { compareSync } from 'bcrypt';
 import { cookieOptions, signAccess, signRefresh } from '../../utilities/cookies';
-import { InstructorPopulatedDocument } from '../instructor/instructor.types';
 import { password } from '../../utilities/ids';
 import { SchoolDocument } from '../school/school.types';
 import { StudentDocument } from '../student/student.types';
@@ -50,7 +49,7 @@ const RegisterInstructor = async (body: InstructorRegister, admin: SchoolDocumen
         school: admin._id
     });
 
-    return { email, password: newPassword, role: Role.INSTRUCTOR };
+    return { email, password: newPassword };
 };
 
 const RegisterStudent = (body: StudentRegister): Promise<StudentDocument> => {
@@ -72,8 +71,15 @@ const RegisterStudent = (body: StudentRegister): Promise<StudentDocument> => {
 };
 
 export const register: RequestHandler = async (req: BodyRequest<AllRegister>, res) => {
-    const { role } = req.body;
+    const { role, email } = req.body;
     let payload: Payload = { userId: '', role };
+
+    const checkDuplicateEmail = await Promise.all([
+        SchoolModel.exists({ 'credentials.email': email }).exec(),
+        InstructorModel.exists({ 'credentials.email': email }).exec(),
+        StudentModel.exists({ 'credentials.email': email }).exec()
+    ]);
+    if (checkDuplicateEmail.find(Boolean)) throw new UnprocessableEntity('Email already exists');
 
     switch (role) {
         case Role.ADMIN:
@@ -101,31 +107,34 @@ export const register: RequestHandler = async (req: BodyRequest<AllRegister>, re
 };
 
 export const login: RequestHandler = async (req: BodyRequest<UserLogin>, res) => {
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
 
-    let user: SchoolDocument | InstructorPopulatedDocument | StudentDocument | null;
-    let userId: string | null;
+    const findUser = await Promise.all([
+        SchoolModel.findOne({ 'credentials.email': email }).exec(),
+        InstructorModel.findOne({ 'credentials.email': email }).exec(),
+        StudentModel.findOne({ 'credentials.email': email }).exec()
+    ]);
 
-    switch (role) {
-        case Role.ADMIN:
-            user = <SchoolDocument>await SchoolModel.findOne({ 'credentials.email': email }).exec();
-            userId = user?.schoolId;
-            break;
-        case Role.INSTRUCTOR:
-            user = <InstructorPopulatedDocument>(
-                await InstructorModel.findOne({ 'credentials.email': email }).populate('school').exec()
-            );
-            userId = user?.instructorId;
-            break;
-        case Role.STUDENT:
-            user = <StudentDocument>await StudentModel.findOne({ 'credentials.email': email }).exec();
-            userId = user?.studentId;
-            break;
-        default:
-            throw new UnprocessableEntity('Invalid user role');
-    }
-
+    const user = findUser.find(Boolean);
     if (!user || !password || !compareSync(password, user.credentials.password)) throw new Unauthorized();
+
+    let userId: string;
+    let role: Role;
+
+    // prettier-ignore
+    if (user instanceof SchoolModel) {
+        userId = user.schoolId;
+        role = Role.ADMIN;
+    }
+    else if (user instanceof InstructorModel) {
+        userId = user.instructorId;
+        role = Role.INSTRUCTOR;
+    }
+    else if (user instanceof StudentModel) {
+        userId = user.studentId;
+        role = Role.STUDENT;
+    }
+    else throw new Unauthorized();
 
     const payload: Payload = { userId, role };
 
