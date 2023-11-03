@@ -23,7 +23,6 @@ export interface User {
 export type UserLogin = {
     email: string;
     password: string;
-    role: Role;
 };
 
 type BaseRegister = {

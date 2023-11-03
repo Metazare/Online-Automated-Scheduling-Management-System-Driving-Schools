@@ -21,7 +21,7 @@ export interface CourseDocument extends Course, Document {
     updatedAt: Date;
 }
 
-export interface CoursePopulutadDocument extends CourseDocument {
+export interface CoursePopulatedDocument extends CourseDocument {
     school: School;
 }
 
