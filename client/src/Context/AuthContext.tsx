@@ -4,24 +4,32 @@ import axios from '../Hooks/UseAxios';
 
 interface AuthContextState {
     user: any;
-    login: (email: string, password: string) => void;
+    login: (data: LoginData) => void;
     logout: () => void;
-    register: (
-        name: string, 
-        first: string,
-        middle: string,
-        last: string,
-        extension: string,
-        sex: string,
-        birthday: Date,
-        address: string,
-        contact: string,
-        about: string,
-        email: string, 
-        password: string,
-        role: string,
-        ) => void;
+    register: (data: RegisterData) => void;
     isAuth: (id: any) => boolean;
+}
+
+interface RegisterData {
+    name: string;
+    first: string;
+    middle: string;
+    last: string;
+    extension: string;
+    sex: string;
+    birthday: Date;
+    address: string;
+    contact: string;
+    about: string;
+    email: string;
+    password: string;
+    role: string;
+  }
+
+interface LoginData {
+  email: string;
+  password: string;
+  role: string;
 }
 
 export const AuthContext = createContext<AuthContextState>({
@@ -36,56 +44,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const navigate = useNavigate()
     const [user, setUser] = useState<any>(null);
 
-    const login = async (email: string, password: string) => {
+    const login = async (data: LoginData) => {
+        const { email, password, role } = data;
+
         try{
             await axios
             .post(`/auth/login`,{
                 "email" : email,
-                "password" : password
+                "password" : password,
+                "role": role
             })
             .then((response: any) => {
-                console.log(response)
-                setUser(response.data.user);
-                localStorage.setItem('user', JSON.stringify(response.data.user))
+                console.log(response.data)
+                setUser(response.data);
+                localStorage.setItem('user', JSON.stringify(response.data))
                 navigate("/profile")
             });
         }
+
         catch (error: any){
             console.log(error);
             alert(error.message);
         }
     };
 
-    const register = async (
-        name: string, 
-        first: string,
-        middle: string,
-        last: string,
-        extension: string,
-        sex: string,
-        birthday: Date,
-        address: string,
-        contact: string,
-        about: string,
-        email: string, 
-        password: string,
-        role: string,) => {
+    const register = async (data: RegisterData) => {
+        const { name, first, middle, last, extension, sex, birthday, address, contact, about, email, password, role } = data;
+
         try{
             await axios
             .post(`/auth/register`,{
-                "name": name, 
-                "first": first,
-                "middle": middle,
-                "last": last,
-                "extension": extension,
-                "sex": sex,
-                "birthday": birthday,
-                "address": address,
-                "contact": contact,
-                "about": about,
-                "email": email, 
-                "password": password,
-                "role": role,
+                name: name,
+                firstName: first,
+                middleName: middle,
+                lastName: last,
+                extensionName: extension,
+                sex: sex,
+                birthday: birthday,
+                address: address,
+                contact: contact,
+                about: about,
+                email: email,
+                password: password,
+                role: role,
             })
             .then((response: any) => {
                 console.log(response)

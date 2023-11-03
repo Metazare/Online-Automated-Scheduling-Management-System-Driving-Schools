@@ -12,7 +12,8 @@ export default function Login({}: Props) {
 
   const [form, setForm] = useState({
     email: '', 
-    password: ''
+    password: '',
+    role: ''
   });
 
   const handleChange = (event: any) => {
@@ -25,11 +26,7 @@ export default function Login({}: Props) {
 
   async function submit(e: React.MouseEvent<HTMLButtonElement>){
     e.preventDefault();
-    // console.log(form)
-    login(
-      form.email, 
-      form.password,
-    )
+    login(form)
   };
 
   return (
@@ -55,6 +52,17 @@ export default function Login({}: Props) {
             onChange={handleChange}
             fullWidth
             type="password"
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            required
+            label="Role"
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            fullWidth
+            type="text"
           />
         </Grid>
         <Grid item xs={12}>

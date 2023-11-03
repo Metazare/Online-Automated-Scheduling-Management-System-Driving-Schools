@@ -8,7 +8,6 @@ import Button from '@mui/material/Button';
 // import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 // import dayjs from 'dayjs';
 
-
 import { useAuth } from '../Context/AuthContext';
 
 type Props = {}
@@ -17,8 +16,8 @@ type Props = {}
 export default function Register({}: Props) {
   const { register } = useAuth();
 
-  const [form, setForm] = useState({
-    name: '', 
+  const initialFormState = {
+    name: '',
     first: '',
     middle: '',
     last: '',
@@ -28,33 +27,19 @@ export default function Register({}: Props) {
     address: '',
     contact: '',
     about: '',
-    email: '', 
+    email: '',
     password: '',
     role: '',
-  });
+  };
 
- 
+  const [form, setForm] = useState(initialFormState);
 
   const clear = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setForm({
-      name: '', 
-      first: '',
-      middle: '',
-      last: '',
-      extension: '',
-      sex: '',
-      birthday: new Date(),
-      address: '',
-      contact: '',
-      about: '',
-      email: '', 
-      password: '',
-      role: '',
-    });
+    setForm(initialFormState);
   };
 
-  const handleChange = (event: any) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setForm({
       ...form,
@@ -64,22 +49,7 @@ export default function Register({}: Props) {
 
   async function submit(e: React.MouseEvent<HTMLButtonElement>){
     e.preventDefault();
-    console.log(form)
-    register(
-      form.name,
-      form.first,
-      form.middle,
-      form.last,
-      form.extension,
-      form.sex,
-      form.birthday,
-      form.address,
-      form.contact,
-      form.about,
-      form.email, 
-      form.password,
-      form.role
-    )
+    register(form);
   };
 
   return (
@@ -188,74 +158,6 @@ export default function Register({}: Props) {
           />
         </Grid>
         <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={submit}>
-            Submit
-          </Button>
-          <Button variant="contained" color="primary" onClick={clear}>
-            Clear
-          </Button>
-        </Grid>
-      </Grid>
-      <h1>Admin</h1>
-      <hr />
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField
-            required
-            label="Name"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            fullWidth
-            type="text"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            label="Address"
-            name="address"
-            value={form.address}
-            onChange={handleChange}
-            fullWidth
-            type="text"
-          />
-        </Grid>
-        
-        <Grid item xs={12}>
-          <TextField
-            required
-            label="Contact"
-            name="contact"
-            value={form.contact}
-            onChange={handleChange}
-            fullWidth
-            type="number"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-              required
-              label="About"
-              name="about"
-              value={form.about}
-              onChange={handleChange}
-              fullWidth
-              type="text"
-            />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            label="Email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            fullWidth
-            type="email"
-          />
-        </Grid>
-        <Grid item xs={12}>
           <TextField
             required
             label="Password"
@@ -263,7 +165,7 @@ export default function Register({}: Props) {
             value={form.password}
             onChange={handleChange}
             fullWidth
-            type="password"
+            type="text"
           />
         </Grid>
         <Grid item xs={12}>
