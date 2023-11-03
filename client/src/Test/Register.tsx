@@ -27,6 +27,7 @@ export default function Register({}: Props) {
     birthday: new Date(),
     address: '',
     contact: '',
+    about: '',
     email: '', 
     password: '',
     role: '',
@@ -46,6 +47,7 @@ export default function Register({}: Props) {
       birthday: new Date(),
       address: '',
       contact: '',
+      about: '',
       email: '', 
       password: '',
       role: '',
@@ -73,6 +75,7 @@ export default function Register({}: Props) {
       form.birthday,
       form.address,
       form.contact,
+      form.about,
       form.email, 
       form.password,
       form.role
@@ -229,6 +232,17 @@ export default function Register({}: Props) {
             fullWidth
             type="number"
           />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+              required
+              label="About"
+              name="about"
+              value={form.about}
+              onChange={handleChange}
+              fullWidth
+              type="text"
+            />
         </Grid>
         <Grid item xs={12}>
           <TextField

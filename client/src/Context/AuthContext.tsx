@@ -16,6 +16,7 @@ interface AuthContextState {
         birthday: Date,
         address: string,
         contact: string,
+        about: string,
         email: string, 
         password: string,
         role: string,
@@ -65,6 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         birthday: Date,
         address: string,
         contact: string,
+        about: string,
         email: string, 
         password: string,
         role: string,) => {
@@ -80,6 +82,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 "birthday": birthday,
                 "address": address,
                 "contact": contact,
+                "about": about,
                 "email": email, 
                 "password": password,
                 "role": role,
