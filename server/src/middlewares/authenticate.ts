@@ -1,13 +1,18 @@
 import { cookieOptions, signAccess, signRefresh } from '../utilities/cookies';
-import { DrivingSchoolDocument, InstructorDocument, Role, StudentDocument, UserDocument } from '../api/user/user.types';
+import { Forbidden, Unauthorized } from '../utilities/errors';
+import { InstructorDocument } from '../api/instructor/instructor.types';
 import { JwtPayload, verify } from 'jsonwebtoken';
-import { NotFound, Unauthorized } from '../utilities/errors';
-import { Payload } from '../api/auth/auth.types';
+import { AllUserDocument, Payload, Role } from '../api/auth/auth.types';
 import { RequestHandler } from 'express';
+import { SchoolDocument } from '../api/school/school.types';
+import { StudentDocument } from '../api/student/student.types';
 import envs from '../utilities/envs';
-import UserModel from '../api/user/user.model';
+import InstructorModel from '../api/instructor/instructor.model';
+import SchoolModel from '../api/school/school.model';
+import StudentModel from '../api/student/student.model';
 
 const refreshTime = 5 * 24 * 60 * 60 * 1000; // 5 days
+
 const authenticate: RequestHandler = async (req, res, next) => {
     const { 'access-token': accessToken, 'refresh-token': refreshToken } = req.cookies;
 
@@ -35,20 +40,25 @@ const authenticate: RequestHandler = async (req, res, next) => {
     }
 
     if (payload) {
-        const user: UserDocument | null = await UserModel.findOne({ userId: payload.userId, role: payload.role });
-        if (!user) return next(new NotFound('User not found'));
+        let user: AllUserDocument | null;
 
-        switch (user.role) {
+        switch (payload.role) {
             case Role.ADMIN:
-                req.user = user as DrivingSchoolDocument;
+                user = <SchoolDocument>await SchoolModel.findOne({ schoolId: payload.userId });
                 break;
             case Role.INSTRUCTOR:
-                req.user = user as InstructorDocument;
+                user = <InstructorDocument>await InstructorModel.findOne({ instructorId: payload.userId });
                 break;
             case Role.STUDENT:
-                req.user = user as StudentDocument;
+                user = <StudentDocument>await StudentModel.findOne({ studentId: payload.userId });
                 break;
+            default:
+                return next(new Unauthorized('Invalid user role'));
         }
+
+        if (!user) return next(new Forbidden());
+
+        req.user = { document: user, role: payload.role };
 
         return next();
     }

@@ -34,3 +34,5 @@ export const id = (): string => {
 
     return stringBuffer(combined);
 };
+
+export const password = (): string => stringBuffer(Buffer.concat([randomBytes(10), bufferHex(Date.now())]));

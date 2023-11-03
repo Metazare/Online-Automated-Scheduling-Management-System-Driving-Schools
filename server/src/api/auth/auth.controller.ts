@@ -1,94 +1,137 @@
+import {
+    AllRegister,
+    InstructorRegister,
+    Payload,
+    Role,
+    SchoolRegister,
+    StudentRegister,
+    UserLogin
+} from './auth.types';
+import { BodyRequest, RequestHandler } from 'express';
 import { compareSync } from 'bcrypt';
 import { cookieOptions, signAccess, signRefresh } from '../../utilities/cookies';
-import { Payload } from './auth.types';
-import { RequestHandler } from 'express';
-import { Role, UserDocument } from '../user/user.types';
+import { InstructorPopulatedDocument } from '../instructor/instructor.types';
+import { password } from '../../utilities/ids';
+import { SchoolDocument } from '../school/school.types';
+import { StudentDocument } from '../student/student.types';
 import { Unauthorized, UnprocessableEntity } from '../../utilities/errors';
-import UserModel from '../user/user.model';
+import authenticate from '../../middlewares/authenticate';
+import InstructorModel from '../instructor/instructor.model';
+import SchoolModel from '../school/school.model';
+import StudentModel from '../student/student.model';
 
-const pwPattern: RegExp = /^(?=^(?!.*\n).*$)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_])[A-Za-z\d\W_]{8,32}$/;
-const drivingSchool = (body: any) => {
-    const { name, address, contact, email, password } = body;
-    if (typeof name !== 'string') throw new UnprocessableEntity();
+const RegisterDrivingSchool = (body: SchoolRegister): Promise<SchoolDocument> => {
+    const { name, about, address, contact, email, password } = body;
 
-    return UserModel.create({
+    return SchoolModel.create({
         name,
+        about,
         address,
         contact,
-        credentials: { email, password },
-        role: Role.ADMIN
+        credentials: { email, password }
     });
 };
 
-const instructor = (body: any) => {
-    const { name, address, contact, sex, email, password } = body;
-    if (!name) throw new UnprocessableEntity();
+const RegisterInstructor = async (body: InstructorRegister, admin: SchoolDocument): Promise<UserLogin> => {
+    const { firstName, middleName, lastName, extensionName, address, contact, email } = body;
 
-    const { first, middle, last, extension } = name;
+    const newPassword = password();
 
-    return UserModel.create({
-        name: { first, middle, last, extension },
+    await InstructorModel.create({
+        name: {
+            first: firstName,
+            middle: middleName,
+            last: lastName,
+            extension: extensionName
+        },
         address,
         contact,
-        sex,
-        credentials: { email, password },
-        role: Role.INSTRUCTOR
+        credentials: { email, password: newPassword },
+        school: admin._id
     });
+
+    return { email, password: newPassword, role: Role.INSTRUCTOR };
 };
 
-const student = (body: any) => {
-    const { name, address, birthday, contact, sex, email, password } = body;
-    if (!name) throw new UnprocessableEntity();
+const RegisterStudent = (body: StudentRegister): Promise<StudentDocument> => {
+    const { firstName, middleName, lastName, extensionName, address, birthday, contact, sex, email, password } = body;
 
-    const { first, middle, last, extension } = name;
-
-    return UserModel.create({
-        name: { first, middle, last, extension },
+    return StudentModel.create({
+        name: {
+            first: firstName,
+            middle: middleName,
+            last: lastName,
+            extension: extensionName
+        },
         address,
         contact,
         sex,
         birthday,
-        credentials: { email, password },
-        role: Role.INSTRUCTOR
+        credentials: { email, password }
     });
 };
 
-export const register: RequestHandler = async (req, res) => {
-    const { role, password } = req.body;
-
-    if (!pwPattern.test(password)) throw new UnprocessableEntity('Invalid password format');
+export const register: RequestHandler = async (req: BodyRequest<AllRegister>, res) => {
+    const { role } = req.body;
+    let payload: Payload = { userId: '', role };
 
     switch (role) {
         case Role.ADMIN:
-            await drivingSchool(req.body);
+            const { schoolId } = await RegisterDrivingSchool(<SchoolRegister>req.body);
+            payload.userId = schoolId;
             break;
         case Role.INSTRUCTOR:
-            await instructor(req.body);
-            break;
+            const credentials = await RegisterInstructor(
+                <InstructorRegister>req.body,
+                <SchoolDocument>req.user?.document
+            );
+            return res.status(201).json(credentials);
         case Role.STUDENT:
-            await student(req.body);
+            const { studentId } = await RegisterStudent(<StudentRegister>req.body);
+            payload.userId = studentId;
             break;
         default:
             throw new UnprocessableEntity('Invalid role');
     }
 
-    res.sendStatus(201);
+    return res
+        .cookie('access-token', signAccess(payload), cookieOptions.access)
+        .cookie('refresh-token', signRefresh(payload), cookieOptions.refresh)
+        .sendStatus(201);
 };
 
-export const login: RequestHandler = async (req, res) => {
-    const { email, password } = req.body;
+export const login: RequestHandler = async (req: BodyRequest<UserLogin>, res) => {
+    const { email, password, role } = req.body;
 
-    const user: UserDocument | null = await UserModel.findOne({ 'credentials.email': email });
+    let user: SchoolDocument | InstructorPopulatedDocument | StudentDocument | null;
+    let userId: string | null;
+
+    switch (role) {
+        case Role.ADMIN:
+            user = <SchoolDocument>await SchoolModel.findOne({ 'credentials.email': email }).exec();
+            userId = user?.schoolId;
+            break;
+        case Role.INSTRUCTOR:
+            user = <InstructorPopulatedDocument>(
+                await InstructorModel.findOne({ 'credentials.email': email }).populate('school').exec()
+            );
+            userId = user?.instructorId;
+            break;
+        case Role.STUDENT:
+            user = <StudentDocument>await StudentModel.findOne({ 'credentials.email': email }).exec();
+            userId = user?.studentId;
+            break;
+        default:
+            throw new UnprocessableEntity('Invalid user role');
+    }
+
     if (!user || !password || !compareSync(password, user.credentials.password)) throw new Unauthorized();
 
-    const payload: Payload = {
-        userId: user.userId,
-        role: user.role
-    };
+    const payload: Payload = { userId, role };
 
     res.cookie('access-token', signAccess(payload), cookieOptions.access)
         .cookie('refresh-token', signRefresh(payload), cookieOptions.refresh)
-        .sendStatus(204);
+        .json({ ...user.toJSON(), role });
 };
 
 export const logout: RequestHandler = async (_req, res) =>
@@ -96,3 +139,8 @@ export const logout: RequestHandler = async (_req, res) =>
     res.cookie('access-token', '', cookieOptions.default)
         .cookie('refresh-token', '', cookieOptions.default)
         .sendStatus(205);
+
+export const checkIfAdmin: RequestHandler = (req: BodyRequest<AllRegister>, res, next) => {
+    if (req.body.role === Role.INSTRUCTOR) return authenticate(req, res, next);
+    next();
+};
