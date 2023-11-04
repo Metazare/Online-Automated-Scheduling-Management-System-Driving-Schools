@@ -15,7 +15,7 @@ function Index() {
   };
 
 
-  
+
   const [form, setForm] = useState({
     email: '',
     password:''
@@ -53,6 +53,7 @@ function Index() {
             </Grid>
             <Grid item xs={12}>
               <TextField
+                type='password'
                 fullWidth
                 id="password"
                 label="Password"
