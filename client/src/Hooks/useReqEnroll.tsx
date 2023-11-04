@@ -1,11 +1,13 @@
 import {useState} from 'react'
 import axios from './useAxios'
+import { datePickerToolbarClasses } from '@mui/x-date-pickers';
 
 interface Data {
   data: any;
   loading: boolean;
   error: Error | null;
   enroll: (data: CreateEnrollmentData) => void;
+  getEnrollments: (data: GetEnrollmentData) => void
 }
 
 interface CreateEnrollmentData {
@@ -13,6 +15,13 @@ interface CreateEnrollmentData {
   days: number[];
   startTime: Date;
   endTime: Date;
+}
+
+interface GetEnrollmentData {
+  enrollmentId: string | null;
+  courseId: string | null;
+  status?: string | null;
+  courseType?: string | null;
 }
 
 function useReqEnroll(): Data {
@@ -38,17 +47,44 @@ function useReqEnroll(): Data {
         });
       } catch (error: any) {
         setError(error);
+        console.log(error);
       } finally {
         setLoading(false);
       }
-    };
+    }
+  };
+
+  const getEnrollments = async (data: GetEnrollmentData) => {
+    setLoading(true);
+    try {
+      const params = {
+        enrollmentId: data.enrollmentId,
+        courseId: data.courseId,
+        status: data.status,
+        courseType: data.courseType,
+      };
+
+      await axios
+      .get('/enrollments', {
+        params: params
+      }).then((response:any)=>{
+        setData(response.data);
+        console.log(response.data);
+        alert(response.data);
+      });
+    } catch (error: any) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
   }
     
   return {
     data,
     loading,
     error,
-    enroll
+    enroll,
+    getEnrollments
   }
 }
 

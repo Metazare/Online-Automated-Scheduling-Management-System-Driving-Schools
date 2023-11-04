@@ -43,6 +43,7 @@ export default function EnrollStudent() {
 
   async function submit(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
+    console.log(form);
     enroll(form);
   }
 

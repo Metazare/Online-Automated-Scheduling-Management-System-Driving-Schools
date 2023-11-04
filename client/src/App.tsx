@@ -9,6 +9,7 @@ import Login from './Test/Login';
 import Logout from './Test/Logout';
 import AddCourse from './Test/AddCourse';
 import EnrollStudent from './Test/EnrollStudent';
+import EnrollGet from './Test/EnrollGet';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
           <Route path="logout" element={<Logout/>} />
           <Route path="addcourse" element={<AddCourse/>} />
           <Route path="enrollstudent" element={<EnrollStudent/>} />
+          <Route path="enrollget" element={<EnrollGet/>} />
         </Route>
     </Routes>
   );
