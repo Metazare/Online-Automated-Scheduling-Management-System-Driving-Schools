@@ -1,13 +1,13 @@
 import {useState} from 'react'
 import axios from './useAxios'
-import { datePickerToolbarClasses } from '@mui/x-date-pickers';
 
 interface Data {
   data: any;
   loading: boolean;
   error: Error | null;
   enroll: (data: CreateEnrollmentData) => void;
-  getEnrollments: (data: GetEnrollmentData) => void
+  getEnrollments: (data: GetEnrollmentData) => void,
+  updateEnrollments: (data: UpdateEnrollmentData) => void
 }
 
 interface CreateEnrollmentData {
@@ -22,6 +22,12 @@ interface GetEnrollmentData {
   courseId: string | null;
   status?: string | null;
   courseType?: string | null;
+}
+
+interface UpdateEnrollmentData {
+  enrollmentId: string;
+  status: string;
+  reason: string | null;
 }
 
 function useReqEnroll(): Data {
@@ -63,11 +69,11 @@ function useReqEnroll(): Data {
         status: data.status,
         courseType: data.courseType,
       };
-
       await axios
       .get('/enrollments', {
         params: params
-      }).then((response:any)=>{
+      })
+      .then((response:any)=>{
         setData(response.data);
         console.log(response.data);
         alert(response.data);
@@ -78,13 +84,37 @@ function useReqEnroll(): Data {
       setLoading(false);
     }
   }
+
+  const updateEnrollments = async (data: UpdateEnrollmentData) => {
+    setLoading(true);
+    console.log(data);
+    try {
+      await axios
+      .patch('/enrollments', {
+        enrollmentId: data.enrollmentId,
+        status: data.status,
+        reason: data.reason
+      })
+      .then((response:any)=>{
+        // setData(response.data);
+        console.log(response.data);
+        alert(response.data);
+      });
+    } catch (error: any) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+  
     
   return {
     data,
     loading,
     error,
     enroll,
-    getEnrollments
+    getEnrollments,
+    updateEnrollments
   }
 }
 
