@@ -10,7 +10,7 @@ interface Data {
 
 interface CreateEnrollmentData {
   courseId: string;
-  days: number;
+  days: number[];
   startTime: Date | null;
   endTime: Date | null;
 }
@@ -21,28 +21,29 @@ function useReqEnroll(): Data {
   const [error, setError] = useState<Error | null>(null);
 
   const enroll = async (data:CreateEnrollmentData) => {
-    console.log(data)
     setLoading(true);
-    try {
-      await axios
-      .post('/enrollments', {
-        courseId: data.courseId,
-        days: data.days,
-        startTime: data.startTime,
-        endTime: data.endTime
-      })
-      .then((response:any)=>{
-        setData(response.data);
-        console.log(response.data);
-        alert(response.data);
-      });
-    } catch (error: any) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+    if (data.endTime && data.startTime) {
+      try {
+        await axios
+        .post('/enrollments', {
+          courseId: data.courseId,
+          days: data.days,
+          startTime: data.startTime.getHours(),
+          endTime: data.endTime.getHours()
+        })
+        .then((response:any)=>{
+          setData(response.data);
+          console.log(response.data);
+          alert(response.data);
+        });
+      } catch (error: any) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+  }
+    
   return {
     data,
     loading,
