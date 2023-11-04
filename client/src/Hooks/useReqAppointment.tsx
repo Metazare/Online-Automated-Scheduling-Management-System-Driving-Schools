@@ -36,6 +36,7 @@ function useReqAppointment(): Data {
   const [error, setError] = useState<Error | null>(null);
 
   const createAppointment = async (data:CreateAppointmentData) => {
+    console.log(data)
     setLoading(true);
     try {
       await axios
