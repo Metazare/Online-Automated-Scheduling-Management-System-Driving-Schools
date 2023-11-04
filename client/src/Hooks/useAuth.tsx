@@ -69,35 +69,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const register = async (data: RegisterData) => {
-        const { name, first, middle, last, extension, sex, birthday, address, contact, about, email, password, role } = data;
+      const { name, first, middle, last, extension, sex, birthday, address, contact, about, email, password, role } = data;
 
-        try{
-            await axios
-            .post(`/auth/register`,{
-                name: name,
-                firstName: first,
-                middleName: middle,
-                lastName: last,
-                extensionName: extension,
-                sex: sex,
-                birthday: birthday,
-                address: address,
-                contact: contact,
-                about: about,
-                email: email,
-                password: password,
-                role: role,
-            })
-            .then((response: any) => {
-                console.log(response)
-                setUser(response.data.user);
-                localStorage.setItem('user', JSON.stringify(response.data.user))
-            });
-        }
-        catch (error: any){
-            console.log(error);
-            alert(error.message);
-        }
+      try{
+          await axios
+          .post(`/auth/register`,{
+              name: name,
+              firstName: first,
+              middleName: middle,
+              lastName: last,
+              extensionName: extension,
+              sex: sex,
+              birthday: birthday,
+              address: address,
+              contact: contact,
+              about: about,
+              email: email,
+              password: password,
+              role: role,
+          })
+          .then((response: any) => {
+              console.log(response)
+              setUser(response.data.user);
+              localStorage.setItem('user', JSON.stringify(response.data.user))
+          });
+      }
+      catch (error: any){
+          console.log(error);
+          alert(error.message);
+      }
     };
 
     const logout = async () => {

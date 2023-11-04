@@ -1,19 +1,10 @@
 import React, {useState} from 'react'
-import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-// import dayjs from 'dayjs';
 
 import { useAuth } from '../Hooks/useAuth';
 
-type Props = {}
-
-// eslint-disable-next-line
-export default function Register({}: Props) {
+export default function Register() {
   const { register } = useAuth();
 
   const initialFormState = {
@@ -54,94 +45,75 @@ export default function Register({}: Props) {
 
   return (
     <div>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField
-            required
-            label="Name"
-            name="name"
-            value={form.name}
-            onChange={handleChange}
-            fullWidth
-            type="text"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            label="Address"
-            name="address"
-            value={form.address}
-            onChange={handleChange}
-            fullWidth
-            type="text"
-          />
-        </Grid>
-        
-        <Grid item xs={12}>
-          <TextField
-            required
-            label="Contact"
-            name="contact"
-            value={form.contact}
-            onChange={handleChange}
-            fullWidth
-            type="number"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-              required
-              label="About"
-              name="about"
-              value={form.about}
-              onChange={handleChange}
-              fullWidth
-              type="text"
-            />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            label="Email"
-            name="email"
-            value={form.email}
-            onChange={handleChange}
-            fullWidth
-            type="email"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            label="Password"
-            name="password"
-            value={form.password}
-            onChange={handleChange}
-            fullWidth
-            type="password"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            label="Role"
-            name="role"
-            value={form.role}
-            onChange={handleChange}
-            fullWidth
-            type="text"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button variant="contained" color="primary" onClick={submit}>
-            Submit
-          </Button>
-          <Button variant="contained" color="primary" onClick={clear}>
-            Clear
-          </Button>
-        </Grid>
-      </Grid>
+      <TextField
+        required
+        label="Name"
+        name="name"
+        value={form.name}
+        onChange={handleChange}
+        fullWidth
+        type="text"
+      />
+      <TextField
+        required
+        label="Address"
+        name="address"
+        value={form.address}
+        onChange={handleChange}
+        fullWidth
+        type="text"
+      />
+      <TextField
+        required
+        label="Contact"
+        name="contact"
+        value={form.contact}
+        onChange={handleChange}
+        fullWidth
+        type="number"
+      />
+      <TextField
+        required
+        label="About"
+        name="about"
+        value={form.about}
+        onChange={handleChange}
+        fullWidth
+        type="text"
+      />
+      <TextField
+        required
+        label="Email"
+        name="email"
+        value={form.email}
+        onChange={handleChange}
+        fullWidth
+        type="email"
+      />
+      <TextField
+        required
+        label="Password"
+        name="password"
+        value={form.password}
+        onChange={handleChange}
+        fullWidth
+        type="password"
+      />
+      <TextField
+        required
+        label="Role"
+        name="role"
+        value={form.role}
+        onChange={handleChange}
+        fullWidth
+        type="text"
+      />
+      <Button variant="contained" color="primary" onClick={submit}>
+        Submit
+      </Button>
+      <Button variant="contained" color="primary" onClick={clear}>
+        Clear
+      </Button>
     </div>
   );
 }

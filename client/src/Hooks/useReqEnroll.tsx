@@ -1,34 +1,40 @@
 import {useState} from 'react'
 import axios from './useAxios'
 
-interface UseRequestsResult {
+interface Data {
   data: any;
   loading: boolean;
   error: Error | null;
-  postCourse: (data: CourseData) => void;
+  enroll: (data: CreateEnrollmentData) => void;
 }
 
-interface CourseData {
-  type: string;
+interface CreateEnrollmentData {
+  courseId: string;
+  days: number;
+  startTime: number;
+  endTime: number;
 }
 
-function useRequest(): UseRequestsResult {
+function useReqEnroll(): Data {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const postCourse = async (data:CourseData) => {
+  const enroll = async (data:CreateEnrollmentData) => {
     setLoading(true);
     try {
       await axios
-      .post('/courses', {
-        type: data.type
+      .post('/enrollments', {
+        courseId: data.courseId,
+        days: data.days,
+        startTime: data.startTime,
+        endTime: data.endTime
       })
       .then((response:any)=>{
         setData(response.data);
-        alert(response.data)
+        console.log(response.data);
+        alert(response.data);
       });
-      
     } catch (error: any) {
       setError(error);
     } finally {
@@ -40,8 +46,8 @@ function useRequest(): UseRequestsResult {
     data,
     loading,
     error,
-    postCourse
+    enroll
   }
 }
 
-export default useRequest;
+export default useReqEnroll;

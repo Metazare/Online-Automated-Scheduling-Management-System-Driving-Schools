@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import useRequest from '../Hooks/useRequest';
+import useReqCourse from '../Hooks/useReqCourse';
 
 type Props = {}
 
 // eslint-disable-next-line
 export default function AddCourse({}: Props) {
-  const { data, loading, error, postCourse } = useRequest();
+  const { postCourse } = useReqCourse();
 
   const [form, setForm] = useState({
     type: ''
