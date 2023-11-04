@@ -11,8 +11,8 @@ interface Data {
 interface CreateEnrollmentData {
   courseId: string;
   days: number;
-  startTime: number;
-  endTime: number;
+  startTime: Date | null;
+  endTime: Date | null;
 }
 
 function useReqEnroll(): Data {
@@ -21,6 +21,7 @@ function useReqEnroll(): Data {
   const [error, setError] = useState<Error | null>(null);
 
   const enroll = async (data:CreateEnrollmentData) => {
+    console.log(data)
     setLoading(true);
     try {
       await axios

@@ -1,11 +1,15 @@
 import React, {useState} from 'react'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-// import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-// import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 import { useAuth } from '../Hooks/useAuth';
 
@@ -25,7 +29,7 @@ export default function Register() {
     about: '',
     email: '',
     password: '',
-    role: '',
+    role: 'student',
   };
 
   const [form, setForm] = useState(initialFormState);
@@ -35,11 +39,18 @@ export default function Register() {
     setForm(initialFormState);
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (event: any) => {
     const { name, value } = event.target;
     setForm({
       ...form,
       [name]: value,
+    });
+  };
+
+  const handleChangeBirthday = (date: any) => {
+    setForm({
+      ...form,
+      birthday: date,
     });
   };
 
@@ -104,33 +115,28 @@ export default function Register() {
         fullWidth
         type="text"
       />
-      <TextField
-        required
-        label="Sex"
-        name="sex"
-        value={form.sex}
-        onChange={handleChange}
-        fullWidth
-        type="text"
-      />
-    {/* 
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Sex</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            name="sex"
+            value={form.sex}
+            label="Sex"
+            onChange={handleChange}
+          >
+            <MenuItem value={"male"}>Male</MenuItem>
+            <MenuItem value={"female"}>Female</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DemoContainer components={['DatePicker']}>
-          <DatePicker
-            label="Birthday"
-            value={dayjs(form.birthday)}
-            onChange={(newDate) => {
-              if (newDate) {
-                setForm({
-                  ...form,
-                  birthday: newDate,
-                });
-              }
-            }}
-          />
-        </DemoContainer>
+        <DatePicker
+          label="Birthday"
+          value={dayjs(form.birthday)}
+          onChange={handleChangeBirthday}
+        />
       </LocalizationProvider>
-   */}
       <TextField
         required
         label="Email"
@@ -145,15 +151,6 @@ export default function Register() {
         label="Password"
         name="password"
         value={form.password}
-        onChange={handleChange}
-        fullWidth
-        type="text"
-      />
-      <TextField
-        required
-        label="Role"
-        name="role"
-        value={form.role}
         onChange={handleChange}
         fullWidth
         type="text"

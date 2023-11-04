@@ -44,8 +44,7 @@ export default function Login() {
         fullWidth
         type="password"
       />
-      <Button variant="contained" color="primary" onClick={submit}
-      >
+      <Button variant="contained" color="primary" onClick={submit}>
         Submit
       </Button>
     </div>

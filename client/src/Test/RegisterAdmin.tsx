@@ -20,7 +20,7 @@ export default function Register() {
     about: '',
     email: '',
     password: '',
-    role: '',
+    role: 'admin',
   };
   
   const [form, setForm] = useState(initialFormState);
@@ -98,15 +98,6 @@ export default function Register() {
         onChange={handleChange}
         fullWidth
         type="password"
-      />
-      <TextField
-        required
-        label="Role"
-        name="role"
-        value={form.role}
-        onChange={handleChange}
-        fullWidth
-        type="text"
       />
       <Button variant="contained" color="primary" onClick={submit}>
         Submit
