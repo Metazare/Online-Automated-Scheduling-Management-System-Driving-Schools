@@ -1,7 +1,11 @@
 import React, { useState } from 'react'
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+
 import useReqCourse from '../Hooks/useReqCourse';
 
 export default function AddCourse() {
@@ -26,28 +30,26 @@ export default function AddCourse() {
 
   return (
     <div>
-      <Grid container spacing={2}>
-       <Grid item xs={12}>
-          <TextField
-            required
-            label="Course"
+      <Box sx={{ minWidth: 120 }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Course</InputLabel>
+          <Select
             name="type"
             value={form.type}
+            label="Course"
             onChange={handleChange}
-            fullWidth
-            type="text"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={submit}
           >
-            Submit
-          </Button>
-        </Grid>
-      </Grid>
+            <MenuItem value={"TDC Face to Face"}>TDC Face to Face</MenuItem>
+            <MenuItem value={"PDC Automatic Motorcycle"}>PDC Automatic Motorcycle</MenuItem>
+            <MenuItem value={"PDC Manual Motorcycle"}>PDC Manual Motorcycle</MenuItem>
+            <MenuItem value={"PDC Automatic Car"}>PDC Automatic Car</MenuItem>
+            <MenuItem value={"PDC Manual Car"}>PDC Manual Car</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+      <Button variant="contained" color="primary" onClick={submit} fullWidth>
+        Add Course
+      </Button>
     </div>
   )
 }
