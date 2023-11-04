@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import { useAuth } from '../Hooks/useAuth';
 
-export default function Login() {
+export default function Logout() {
   const { logout } = useAuth();
   
   return (
