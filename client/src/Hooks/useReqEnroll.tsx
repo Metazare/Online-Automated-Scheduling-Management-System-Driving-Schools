@@ -96,7 +96,6 @@ function useReqEnroll(): Data {
         reason: data.reason
       })
       .then((response:any)=>{
-        // setData(response.data);
         console.log(response.data);
         alert(response.data);
       });
@@ -106,7 +105,6 @@ function useReqEnroll(): Data {
       setLoading(false);
     }
   }
-  
     
   return {
     data,
