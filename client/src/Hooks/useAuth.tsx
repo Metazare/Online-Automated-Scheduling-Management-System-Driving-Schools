@@ -29,7 +29,6 @@ interface RegisterData {
 interface LoginData {
   email: string;
   password: string;
-  role: string;
 }
 
 export const AuthContext = createContext<AuthContextState>({
@@ -45,14 +44,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<any>(null);
 
     const login = async (data: LoginData) => {
-        const { email, password, role } = data;
+        const { email, password} = data;
 
         try{
             await axios
             .post(`/auth/login`,{
                 "email" : email,
-                "password" : password,
-                "role": role
+                "password" : password
             })
             .then((response: any) => {
                 console.log(response.data)

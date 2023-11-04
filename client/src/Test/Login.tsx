@@ -8,8 +8,7 @@ export default function Login() {
 
   const [form, setForm] = useState({
     email: '', 
-    password: '',
-    role: ''
+    password: ''
   });
 
   const handleChange = (event: any) => {
@@ -44,15 +43,6 @@ export default function Login() {
         onChange={handleChange}
         fullWidth
         type="password"
-      />
-      <TextField
-        required
-        label="Role"
-        name="role"
-        value={form.role}
-        onChange={handleChange}
-        fullWidth
-        type="text"
       />
       <Button variant="contained" color="primary" onClick={submit}
       >
