@@ -1,11 +1,15 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 import axios from './useAxios'
 
 interface UseRequestsResult {
   data: any;
   loading: boolean;
   error: Error | null;
-  postCourse: () => void;
+  postCourse: (data: CourseData) => void;
+}
+
+interface CourseData {
+  type: string;
 }
 
 function useRequest(): UseRequestsResult {
@@ -13,15 +17,16 @@ function useRequest(): UseRequestsResult {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const postCourse = async () => {
+  const postCourse = async (data:CourseData) => {
     setLoading(true);
     try {
       await axios
-      .post('/course', {
-
+      .post('/courses', {
+        type: data.type
       })
       .then((response:any)=>{
         setData(response.data);
+        alert(response.data)
       });
       
     } catch (error: any) {
@@ -38,3 +43,5 @@ function useRequest(): UseRequestsResult {
     postCourse
   }
 }
+
+export default useRequest;

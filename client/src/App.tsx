@@ -6,6 +6,7 @@ import RegisterAdmin from './Test/RegisterAdmin';
 import RegisterInstructor from './Test/RegisterInstructor';
 import RegisterStudent from './Test/RegisterStudent';
 import Login from './Test/Login';
+import AddCourse from './Test/AddCourse';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="registerstudent" element={<RegisterStudent/>}/>
           <Route path="registerinstructor" element={<RegisterInstructor/>}/>
           <Route path="login" element={<Login/>} />
+          <Route path="addcourse" element={<AddCourse/>} />
         </Route>
     </Routes>
   );
