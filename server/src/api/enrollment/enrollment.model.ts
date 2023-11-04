@@ -26,9 +26,10 @@ const enrollmentSchema = new Schema(
                         {
                             type: Number,
                             min: [0, 'Invalid day'],
-                            max: [6, 'Invalid day'],
+                            max: [6, 'Invalid day']
                         }
                     ],
+                    cast: 'Invalid days',
                     required: [true, 'Avaliable days required']
                 },
                 time: {
@@ -37,12 +38,14 @@ const enrollmentSchema = new Schema(
                             type: Number,
                             min: [0, 'Invalid start time'],
                             max: [23, 'Invalid start time'],
+                            cast: 'Invalid start time',
                             required: [true, 'Start time is required']
                         },
                         end: {
                             type: Number,
                             min: [0, 'Invalid end time'],
                             max: [23, 'Invalid end time'],
+                            cast: 'Invalid end time',
                             required: [true, 'End time is required']
                         }
                     },
