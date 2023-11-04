@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './Hooks/useAuth';
 
+import './Styles/main.scss';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
