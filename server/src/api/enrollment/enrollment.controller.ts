@@ -52,7 +52,7 @@ export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEn
     const user = <StudentDocument>req.user.document;
 
     const { courseId, days, startTime, endTime } = req.body;
-    console.log(req.body)
+
     // prettier-ignore
     if (
         !(days instanceof Array) ||

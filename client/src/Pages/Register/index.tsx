@@ -73,8 +73,6 @@ function Index() {
     else {
       alert("Passwords do not match");
     }
-
-    console.log(form)
   };
 
   return (
@@ -152,7 +150,7 @@ function Index() {
             </Typography>
           }
           
-
+          {/* School Register Form */}
           
           {(role === "school")? 
             <form onSubmit={submit}>
@@ -235,8 +233,6 @@ function Index() {
                 
               </Grid>
               
-              
-
               <Button fullWidth variant="contained" color="primary" type="submit">
                 Sign Up
               </Button>
@@ -246,23 +242,7 @@ function Index() {
             </form>
           :""}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          {/* Student Register Form */}
 
           {(role === "student")? 
             <form onSubmit={submit}>
