@@ -10,7 +10,6 @@ import BaseLayout from './Layouts/BaseLayout/BaseLayout';
 import RegisterAdmin from './Test/RegisterAdmin';
 import RegisterInstructor from './Test/RegisterInstructor';
 import RegisterStudent from './Test/RegisterStudent';
-import Login from './Test/Login';
 import Logout from './Test/Logout';
 import AddCourse from './Test/AddCourse';
 import EnrollStudent from './Test/EnrollStudent';

@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,7 +16,6 @@ import Box from '@mui/material/Box';
 
 // image
 import patternImg from '../../Images/Resources/Pattern.jpg';
-
 import studentImg from '../../Images/Resources/student.png';
 import schoolImg from '../../Images/Resources/school.png';
 
