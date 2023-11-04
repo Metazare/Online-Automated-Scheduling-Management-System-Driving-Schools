@@ -15,8 +15,8 @@ export default function EnrollStudent() {
   const [form, setForm] = useState({
     courseId: '',
     days: [] as number[],
-    startTime: null, // Initialize as null
-    endTime: null, // Initialize as null
+    startTime: new Date(), 
+    endTime: new Date()
   });
 
   const handleChange = (event: any) => {
@@ -97,14 +97,12 @@ export default function EnrollStudent() {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <TimePicker
           label="Start Time"
-          value={form.startTime}
           onChange={handleChangeStart}
         />
       </LocalizationProvider>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <TimePicker
           label="End Time"
-          value={form.endTime}
           onChange={handleChangeEnd}
         />
       </LocalizationProvider>

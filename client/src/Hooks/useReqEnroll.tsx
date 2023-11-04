@@ -11,8 +11,8 @@ interface Data {
 interface CreateEnrollmentData {
   courseId: string;
   days: number[];
-  startTime: Date | null;
-  endTime: Date | null;
+  startTime: Date;
+  endTime: Date;
 }
 
 function useReqEnroll(): Data {
@@ -28,8 +28,8 @@ function useReqEnroll(): Data {
         .post('/enrollments', {
           courseId: data.courseId,
           days: data.days,
-          startTime: data.startTime.getHours(),
-          endTime: data.endTime.getHours()
+          startTime: new Date(data.startTime).getHours(),
+          endTime: new Date(data.endTime).getHours()
         })
         .then((response:any)=>{
           setData(response.data);
