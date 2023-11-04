@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import {useNavigate} from 'react-router-dom';
-import axios from '../Hooks/UseAxios';
+import axios from './useAxioss';
 
 interface AuthContextState {
     user: any;
