@@ -45,7 +45,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const login = async (data: LoginData) => {
         const { email, password} = data;
-
         try{
             await axios
             .post(`/auth/login`,{
@@ -59,7 +58,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 navigate("/profile")
             });
         }
-
         catch (error: any){
             console.log(error);
             alert(error.message);
@@ -79,9 +77,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               extensionName: extension,
               sex: sex,
               birthday: birthday,
-              address: address,
-              contact: contact,
-              about: about,
+              address: address || ' ',
+              contact: contact || ' ',
+              about: about || ' ',
               email: email,
               password: password,
               role: role,
@@ -90,6 +88,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               console.log(response)
               setUser(response.data.user);
               localStorage.setItem('user', JSON.stringify(response.data.user))
+              navigate("/dashboard")
           });
       }
       catch (error: any){

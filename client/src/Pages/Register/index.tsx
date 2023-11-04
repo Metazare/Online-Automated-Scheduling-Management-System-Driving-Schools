@@ -19,36 +19,63 @@ import patternImg from '../../Images/Resources/Pattern.jpg';
 import studentImg from '../../Images/Resources/student.png';
 import schoolImg from '../../Images/Resources/school.png';
 
+// Hooks
+import { useAuth } from '../../Hooks/useAuth';
+
 function Index() {
+  const { register } = useAuth();
+
   const styleContainer = {
     minHeight:"100vh",
     display:"grid",
     gridTemplateColumns:".4fr .6fr"
 
   };
+
   const [role, setRole] = useState('')
-
-  const [formSchool, setFormSchool] = useState({
-    schoolName: '',
-    address:'',
-    email:'',
-    contactNo:'',
-    password:''
-  });
-
-  const [formStudent, setFormStudent] = useState({
-    firstName: '',
-    middleName:'',
-    lastName:'',
-    suffix:'',
-    sex:'',
-    birthday: dayjs('2022-04-17'),
-    email:'',
-    contactNo:'',
-    password:''
-  });
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [form, setForm] = useState({
+    name: '',
+    first: '',
+    middle: '',
+    last: '',
+    extension: '',
+    sex: '',
+    birthday: new Date(),
+    address: '',
+    contact: '',
+    about: '',
+    email: '',
+    password: '',
+    role: '',
+  });
+  
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setForm({
+      ...form,
+      [name]: value,
+    });
+  };
 
+  const handleChangeBirthday = (date: any) => {
+    setForm({
+      ...form,
+      birthday: date,
+    });
+  };
+
+  async function submit(e: React.FormEvent<HTMLFormElement>){
+    e.preventDefault();
+    if (form.password === confirmPassword) {
+      register(form);
+    } 
+    else {
+      alert("Passwords do not match");
+    }
+
+    console.log(form)
+  };
 
   return (
     <div style={styleContainer}>
@@ -66,7 +93,13 @@ function Index() {
 
             <Grid container spacing={2} width={"100%"}  mt={"40px"}>
               <Grid item md={6} xs={12}>
-                <Paper elevation={3} style={{padding:"1em"}}  sx={{boxShadow: 3,"&:hover": {boxShadow: 8,cursor:"pointer"},}} onClick={()=> setRole("student")}>
+                <Paper elevation={3} style={{padding:"1em"}}  sx={{boxShadow: 3,"&:hover": {boxShadow: 8,cursor:"pointer"},}} onClick={()=> {
+                  setRole("student");
+                  setForm({
+                    ...form,
+                    role: "student",
+                  });
+                }}>
                   <Box
                     sx={{
                       padding: "3em 0 2em",
@@ -86,7 +119,13 @@ function Index() {
                 </Paper>
               </Grid>
               <Grid item md={6} xs={12}>
-              <Paper elevation={3} style={{padding:"1em"}}  sx={{boxShadow: 3,"&:hover": {boxShadow: 8,cursor:"pointer"},}} onClick={()=> setRole("school")}>
+              <Paper elevation={3} style={{padding:"1em"}}  sx={{boxShadow: 3,"&:hover": {boxShadow: 8,cursor:"pointer"},}} onClick={()=> {
+                  setRole("school");
+                  setForm({
+                    ...form,
+                    role: "admin",
+                  });
+                }}>
                   <Box
                     sx={{
                       padding: "3em 0 2em",
@@ -116,7 +155,7 @@ function Index() {
 
           
           {(role === "school")? 
-            <form>
+            <form onSubmit={submit}>
               <Grid container spacing={2} width={"100%"} mt="20px" mb={"20px"}>
                 <Grid item  xs={12}>
                   <TextField
@@ -125,10 +164,9 @@ function Index() {
                     label="School Name"
                     variant="outlined"
                     required
-                    value={formSchool.schoolName}
-                    onChange={(event) => {
-                      setFormSchool({...formSchool, schoolName: event.target.value });
-                    }}
+                    name="name"
+                    value={form.name}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item  xs={12}>
@@ -138,10 +176,9 @@ function Index() {
                     label="Address"
                     variant="outlined"
                     required
-                    value={formSchool.address}
-                    onChange={(event) => {
-                      setFormSchool({...formSchool, address: event.target.value });
-                    }}
+                    name="address"
+                    value={form.address}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item  md={6} xs={12}>
@@ -151,10 +188,9 @@ function Index() {
                     label="Contact Number"
                     variant="outlined"
                     required
-                    value={formSchool.contactNo}
-                    onChange={(event) => {
-                      setFormSchool({...formSchool, contactNo: event.target.value });
-                    }}
+                    name="contact"
+                    value={form.contact}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item  md={6} xs={12}>
@@ -164,10 +200,9 @@ function Index() {
                     label="Email"
                     variant="outlined"
                     required
-                    value={formSchool.email}
-                    onChange={(event) => {
-                      setFormSchool({...formSchool, email: event.target.value });
-                    }}
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item  md={6} xs={12}>
@@ -178,10 +213,9 @@ function Index() {
                     label="Password"
                     variant="outlined"
                     required
-                    value={formSchool.password}
-                    onChange={(event) => {
-                      setFormSchool({...formSchool, password: event.target.value });
-                    }}
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item  md={6} xs={12}>
@@ -203,7 +237,7 @@ function Index() {
               
               
 
-              <Button fullWidth variant="contained" color="primary">
+              <Button fullWidth variant="contained" color="primary" type="submit">
                 Sign Up
               </Button>
               <Button href='login' fullWidth variant="text" color="primary" style={{marginTop:"10px"}}>
@@ -231,7 +265,7 @@ function Index() {
 
 
           {(role === "student")? 
-            <form>
+            <form onSubmit={submit}>
               <Grid container spacing={2} width={"100%"} mt="20px" mb={"20px"}>
                 <Grid item lg={4} md={8} xs={12}>
                   <TextField
@@ -240,10 +274,9 @@ function Index() {
                     label="First Name"
                     variant="outlined"
                     required
-                    value={formStudent.firstName}
-                    onChange={(event) => {
-                      setFormStudent({...formStudent, firstName: event.target.value });
-                    }}
+                    name="first"
+                    value={form.first}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item lg={2}  md={4} xs={12}>
@@ -252,11 +285,9 @@ function Index() {
                     id="lastName"
                     label="Middle Name"
                     variant="outlined"
-                    required
-                    value={formStudent.middleName}
-                    onChange={(event) => {
-                      setFormStudent({...formStudent, middleName: event.target.value });
-                    }}
+                    name="middle"
+                    value={form.middle}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item lg={4} md={8} xs={12}>
@@ -266,10 +297,9 @@ function Index() {
                     label="Last Name"
                     variant="outlined"
                     required
-                    value={formStudent.lastName}
-                    onChange={(event) => {
-                      setFormStudent({...formStudent, lastName: event.target.value });
-                    }}
+                    name="last"
+                    value={form.last}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item lg={2} md={4} xs={12}>
@@ -278,14 +308,11 @@ function Index() {
                     id="suffix"
                     label="Suffix"
                     variant="outlined"
-                    required
-                    value={formStudent.suffix}
-                    onChange={(event) => {
-                      setFormStudent({...formStudent, suffix: event.target.value });
-                    }}
+                    name="extension"
+                    value={form.extension}
+                    onChange={handleChange}
                   />
                 </Grid>
-
 
                 <Grid item  md={6} xs={12} >
                   <TextField
@@ -293,12 +320,11 @@ function Index() {
                     fullWidth
                     id="outlined-select-currency"
                     select
-                    label="Select"
+                    label="Sex"
                     required
-                    value={formStudent.sex}
-                    onChange={(event) => {
-                      setFormStudent({...formStudent, sex: event.target.value });
-                    }}
+                    name="sex"
+                    value={form.sex}
+                    onChange={handleChange}
                   >
                     <MenuItem  value={"male"}>
                       Male
@@ -315,10 +341,8 @@ function Index() {
                       <DatePicker
                         slotProps={{ textField: { fullWidth: true } }}
                         label="Birthday"
-                        value={formStudent.birthday}
-                        onChange={(newValue) => {
-                          setFormStudent({...formStudent, birthday: dayjs(newValue)});
-                        }}
+                        value={dayjs(form.birthday)}
+                        onChange={handleChangeBirthday}
                       />
                     </DemoContainer>
                   </LocalizationProvider>
@@ -333,10 +357,9 @@ function Index() {
                     variant="outlined"
                     type='email'
                     required
-                    value={formStudent.email}
-                    onChange={(event) => {
-                      setFormStudent({...formStudent, email: event.target.value });
-                    }}
+                    name="email"
+                    value={form.email}
+                    onChange={handleChange}
                   />
                 </Grid>
 
@@ -348,10 +371,9 @@ function Index() {
                     label="Password"
                     variant="outlined"
                     required
-                    value={formStudent.password}
-                    onChange={(event) => {
-                      setFormStudent({...formStudent, password: event.target.value });
-                    }}
+                    name="password"
+                    value={form.password}
+                    onChange={handleChange}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
@@ -369,10 +391,8 @@ function Index() {
                   />
                 </Grid>
               </Grid>
-              
-              
-
-              <Button fullWidth variant="contained" color="primary">
+            
+              <Button fullWidth variant="contained" color="primary" type="submit">
                 Sign Up
               </Button>
               <Button href='login' fullWidth variant="text" color="primary" style={{marginTop:"10px"}}>
