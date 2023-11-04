@@ -1,10 +1,25 @@
 import React,{useState} from 'react'
+
+// mui utilities
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button';
+import MenuItem from '@mui/material/MenuItem';
+import dayjs, { Dayjs } from 'dayjs';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import patternImg from '../../Images/Resources/Pattern.jpg'
+
+// image
+import patternImg from '../../Images/Resources/Pattern.jpg';
+
+import studentImg from '../../Images/Resources/student.png';
+import schoolImg from '../../Images/Resources/school.png';
+
 function Index() {
   const styleContainer = {
     minHeight:"100vh",
@@ -12,17 +27,28 @@ function Index() {
     gridTemplateColumns:".4fr .6fr"
 
   };
+  const [role, setRole] = useState('')
 
+  const [formSchool, setFormSchool] = useState({
+    schoolName: '',
+    address:'',
+    email:'',
+    contactNo:'',
+    password:''
+  });
 
-  const [form, setForm] = useState({
+  const [formStudent, setFormStudent] = useState({
     firstName: '',
     middleName:'',
     lastName:'',
+    suffix:'',
+    sex:'',
+    birthday: dayjs('2022-04-17'),
     email:'',
+    contactNo:'',
     password:''
   });
   const [confirmPassword, setConfirmPassword] = useState('');
-
 
 
   return (
@@ -33,104 +59,329 @@ function Index() {
       </div>
       <div style={{minHeight:"100%",maxWidth:"1200px", display:"flex",alignItems:"center",padding:"50px 0 50px 4em"}}>
         <div style={{width:"90%"} }>
-          <Typography variant="h3" gutterBottom color="primary.main">
-            REGISTER
-          </Typography>
-          <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={2} width={"100%"} mt="20px" mb={"20px"}>
-              <Grid item md={5} xs={12}>
-                <TextField
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  variant="outlined"
-                  required
-                  value={form.firstName}
-                  onChange={(event) => {
-                    setForm({...form, firstName: event.target.value });
-                  }}
-                />
-              </Grid>
-              <Grid item md={2} xs={12}>
-                <TextField
-                  fullWidth
-                  id="lastName"
-                  label="Middle Name"
-                  variant="outlined"
-                  required
-                  value={form.middleName}
-                  onChange={(event) => {
-                    setForm({...form, middleName: event.target.value });
-                  }}
-                />
-              </Grid>
-              <Grid item md={5} xs={12}>
-                <TextField
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  variant="outlined"
-                  required
-                  value={form.lastName}
-                  onChange={(event) => {
-                    setForm({...form, lastName: event.target.value });
-                  }}
-                />
-              </Grid>
-            </Grid>
-          </Box>
-          
-          <Grid container spacing={2} width={"100%"}  mb={"20px"}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                id="email"
-                label="Email"
-                variant="outlined"
-                type='email'
-                required
-                value={form.email}
-                onChange={(event) => {
-                  setForm({...form, email: event.target.value });
-                }}
-              />
-            </Grid>
-          </Grid>
-          <Grid container spacing={2} width={"100%"}  mb={"40px"}>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                id="password"
-                label="Password"
-                variant="outlined"
-                required
-                value={form.password}
-                onChange={(event) => {
-                  setForm({...form, password: event.target.value });
-                }}
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                id="confirmPassword"
-                label="Confirm Password"
-                variant="outlined"
-                required
-                value={confirmPassword}
-                onChange={(event) => {
-                  setConfirmPassword(event.target.value);
-                }}
-              />
-            </Grid>
-          </Grid>
+          {(!role)?
+          <>
+            <Typography variant="h4" textAlign={"center"} gutterBottom color="primary.main">
+              Select a Role
+            </Typography>
 
-          <Button fullWidth variant="contained" color="primary">
-            Sign Up
-          </Button>
-          <Button href='login' fullWidth variant="text" color="primary" style={{marginTop:"10px"}}>
-            Login
-          </Button>
+            <Grid container spacing={2} width={"100%"}  mt={"40px"}>
+              <Grid item md={6} xs={12}>
+                <Paper elevation={3} style={{padding:"1em"}}  sx={{boxShadow: 3,"&:hover": {boxShadow: 8,cursor:"pointer"},}} onClick={()=> setRole("student")}>
+                  <Box
+                    sx={{
+                      padding: "3em 0 2em",
+                      display: 'flex',
+                      justifyContent:'center',
+                      width:'100%',
+                    }}
+                  >
+                  <img width={"100px"} height={"100px"} src={studentImg} alt="" />
+                  </Box>
+                  <Typography variant="h6" textAlign={"center"} gutterBottom color="#00BBD3">
+                    Student
+                  </Typography>
+                  <Typography variant="body2"  gutterBottom >
+                    A student driver is an individual who is learning how to operate a motor vehicle. This person is typically a beginner and is in the process of obtaining a driver's license.
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item md={6} xs={12}>
+              <Paper elevation={3} style={{padding:"1em"}}  sx={{boxShadow: 3,"&:hover": {boxShadow: 8,cursor:"pointer"},}} onClick={()=> setRole("school")}>
+                  <Box
+                    sx={{
+                      padding: "3em 0 2em",
+                      display: 'flex',
+                      justifyContent:'center',
+                      width:'100%',
+                    }}
+                  >
+                  <img width={"100px"} height={"100px"} src={schoolImg} alt="" />
+                  </Box>
+                  <Typography variant="h6" textAlign={"center"} gutterBottom color="#00BBD3">
+                    Driving School
+                  </Typography>
+                  <Typography variant="body2"  gutterBottom >
+                  A driving school is an educational institution that provides instruction and hands-on practice to individuals seeking to acquire the knowledge and skills necessary for safe and responsible driving.
+                  </Typography>
+                </Paper>
+              </Grid>
+            </Grid>
+          </>
+          :
+            <Typography variant="h3" gutterBottom color="primary.main">
+              REGISTER
+            </Typography>
+          }
+          
+
+          
+          {(role === "school")? 
+            <form>
+              <Grid container spacing={2} width={"100%"} mt="20px" mb={"20px"}>
+                <Grid item  xs={12}>
+                  <TextField
+                    fullWidth
+                    id="schoolName"
+                    label="School Name"
+                    variant="outlined"
+                    required
+                    value={formSchool.schoolName}
+                    onChange={(event) => {
+                      setFormSchool({...formSchool, schoolName: event.target.value });
+                    }}
+                  />
+                </Grid>
+                <Grid item  xs={12}>
+                  <TextField
+                    fullWidth
+                    id="address"
+                    label="Address"
+                    variant="outlined"
+                    required
+                    value={formSchool.address}
+                    onChange={(event) => {
+                      setFormSchool({...formSchool, address: event.target.value });
+                    }}
+                  />
+                </Grid>
+                <Grid item  md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    id="contactNo"
+                    label="Contact Number"
+                    variant="outlined"
+                    required
+                    value={formSchool.contactNo}
+                    onChange={(event) => {
+                      setFormSchool({...formSchool, contactNo: event.target.value });
+                    }}
+                  />
+                </Grid>
+                <Grid item  md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    id="email"
+                    label="Email"
+                    variant="outlined"
+                    required
+                    value={formSchool.email}
+                    onChange={(event) => {
+                      setFormSchool({...formSchool, email: event.target.value });
+                    }}
+                  />
+                </Grid>
+                <Grid item  md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    type='password'
+                    id="password"
+                    label="Password"
+                    variant="outlined"
+                    required
+                    value={formSchool.password}
+                    onChange={(event) => {
+                      setFormSchool({...formSchool, password: event.target.value });
+                    }}
+                  />
+                </Grid>
+                <Grid item  md={6} xs={12}>
+                  <TextField
+                    fullWidth
+                    type='password'
+                    id="confirmPassword"
+                    label="Confirm Password"
+                    variant="outlined"
+                    required
+                    value={confirmPassword}
+                    onChange={(event) => {
+                      setConfirmPassword(event.target.value);
+                    }}
+                  />
+                </Grid>
+                
+              </Grid>
+              
+              
+
+              <Button fullWidth variant="contained" color="primary">
+                Sign Up
+              </Button>
+              <Button href='login' fullWidth variant="text" color="primary" style={{marginTop:"10px"}}>
+                Login
+              </Button>
+            </form>
+          :""}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          {(role === "student")? 
+            <form>
+              <Grid container spacing={2} width={"100%"} mt="20px" mb={"20px"}>
+                <Grid item lg={4} md={8} xs={12}>
+                  <TextField
+                    fullWidth
+                    id="firstName"
+                    label="First Name"
+                    variant="outlined"
+                    required
+                    value={formStudent.firstName}
+                    onChange={(event) => {
+                      setFormStudent({...formStudent, firstName: event.target.value });
+                    }}
+                  />
+                </Grid>
+                <Grid item lg={2}  md={4} xs={12}>
+                  <TextField
+                    fullWidth
+                    id="lastName"
+                    label="Middle Name"
+                    variant="outlined"
+                    required
+                    value={formStudent.middleName}
+                    onChange={(event) => {
+                      setFormStudent({...formStudent, middleName: event.target.value });
+                    }}
+                  />
+                </Grid>
+                <Grid item lg={4} md={8} xs={12}>
+                  <TextField
+                    fullWidth
+                    id="lastName"
+                    label="Last Name"
+                    variant="outlined"
+                    required
+                    value={formStudent.lastName}
+                    onChange={(event) => {
+                      setFormStudent({...formStudent, lastName: event.target.value });
+                    }}
+                  />
+                </Grid>
+                <Grid item lg={2} md={4} xs={12}>
+                  <TextField
+                    fullWidth
+                    id="suffix"
+                    label="Suffix"
+                    variant="outlined"
+                    required
+                    value={formStudent.suffix}
+                    onChange={(event) => {
+                      setFormStudent({...formStudent, suffix: event.target.value });
+                    }}
+                  />
+                </Grid>
+
+
+                <Grid item  md={6} xs={12} >
+                  <TextField
+                    style={{paddingTop:"9px"}}
+                    fullWidth
+                    id="outlined-select-currency"
+                    select
+                    label="Select"
+                    required
+                    value={formStudent.sex}
+                    onChange={(event) => {
+                      setFormStudent({...formStudent, sex: event.target.value });
+                    }}
+                  >
+                    <MenuItem  value={"male"}>
+                      Male
+                    </MenuItem>
+                    <MenuItem  value={"female"}>
+                      Female
+                    </MenuItem>
+                  </TextField>
+                </Grid>
+                
+                <Grid item  md={6} xs={12}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker', 'DatePicker']}>
+                      <DatePicker
+                        slotProps={{ textField: { fullWidth: true } }}
+                        label="Birthday"
+                        value={formStudent.birthday}
+                        onChange={(newValue) => {
+                          setFormStudent({...formStudent, birthday: dayjs(newValue)});
+                        }}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                </Grid>
+
+
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    id="email"
+                    label="Email"
+                    variant="outlined"
+                    type='email'
+                    required
+                    value={formStudent.email}
+                    onChange={(event) => {
+                      setFormStudent({...formStudent, email: event.target.value });
+                    }}
+                  />
+                </Grid>
+
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    type='password'
+                    fullWidth
+                    id="password"
+                    label="Password"
+                    variant="outlined"
+                    required
+                    value={formStudent.password}
+                    onChange={(event) => {
+                      setFormStudent({...formStudent, password: event.target.value });
+                    }}
+                  />
+                </Grid>
+                <Grid item md={6} xs={12}>
+                  <TextField
+                    type='password'
+                    fullWidth
+                    id="confirmPassword"
+                    label="Confirm Password"
+                    variant="outlined"
+                    required
+                    value={confirmPassword}
+                    onChange={(event) => {
+                      setConfirmPassword(event.target.value);
+                    }}
+                  />
+                </Grid>
+              </Grid>
+              
+              
+
+              <Button fullWidth variant="contained" color="primary">
+                Sign Up
+              </Button>
+              <Button href='login' fullWidth variant="text" color="primary" style={{marginTop:"10px"}}>
+                Login
+              </Button>
+            </form>
+          :""}
+          
         </div>
       </div>
     </div>
