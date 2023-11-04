@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { useAuth } from '../Context/AuthContext';
+import { useAuth } from '../Hooks/useAuth';
 
 type Props = {}
 
