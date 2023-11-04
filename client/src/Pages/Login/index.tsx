@@ -1,30 +1,27 @@
 import React, { useState} from 'react'
+
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button';
+
 import patternImg from '../../Images/Resources/Pattern.jpg'
 
+import { useAuth } from '../../Hooks/useAuth';
 
 function Index() {
-  const styleContainer = {
-    minHeight:"100vh",
-    display:"grid",
-    gridTemplateColumns:".4fr .6fr"
-
-  };
-
-
+  const { login } = useAuth();
 
   const [form, setForm] = useState({
     email: '',
     password:''
   });
 
-
-
-
-
+  const styleContainer = {
+    minHeight:"100vh",
+    display:"grid",
+    gridTemplateColumns:".4fr .6fr"
+  };
 
   return (
     <div style={styleContainer}>
@@ -66,7 +63,7 @@ function Index() {
               />
             </Grid>
             <Grid item xs={12} mt="25px">
-              <Button type='submit' fullWidth variant="contained" color="primary">
+              <Button type='submit' fullWidth variant="contained" color="primary" onClick={()=>login(form)}>
                 Login
               </Button>
               <Button href='register' fullWidth variant="text" color="primary" style={{marginTop:"10px"}}>
