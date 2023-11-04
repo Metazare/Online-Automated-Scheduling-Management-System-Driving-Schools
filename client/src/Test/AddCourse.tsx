@@ -4,10 +4,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import useReqCourse from '../Hooks/useReqCourse';
 
-type Props = {}
-
-// eslint-disable-next-line
-export default function AddCourse({}: Props) {
+export default function AddCourse() {
   const { postCourse } = useReqCourse();
 
   const [form, setForm] = useState({
