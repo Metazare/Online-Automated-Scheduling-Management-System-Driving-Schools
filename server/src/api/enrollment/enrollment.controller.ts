@@ -1,4 +1,5 @@
 import { BodyRequest, QueryRequest, RequestHandler } from 'express';
+import { CheckData } from '../../utilities/checkData';
 import { CourseDocument } from '../course/course.types';
 import {
     CreateEnrollment,
@@ -52,13 +53,13 @@ export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEn
     const user = <StudentDocument>req.user.document;
 
     const { courseId, days, startTime, endTime } = req.body;
+    const checker = new CheckData();
 
-    // prettier-ignore
-    if (
-        !(days instanceof Array) ||
-        days.length === 0 ||
-        days.some((day) => typeof day !== 'number' || day < 0 || day > 6)
-    ) throw new UnprocessableEntity();
+    checker.checkType(courseId, 'string', 'courseId');
+    checker.checkArray(days, 'number', 'days');
+    checker.checkType(startTime, 'number', 'startTime');
+    checker.checkType(endTime, 'number', 'endTime');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const course: CourseDocument | null = await CourseModel.findOne({ courseId }).exec();
     if (!course) throw new NotFound('Course not found');
@@ -83,7 +84,11 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
     const user = <SchoolDocument>req.user.document;
 
     const { enrollmentId, status } = req.body;
-    if (typeof enrollmentId !== 'string' || typeof status !== 'string') throw new UnprocessableEntity();
+    const checker = new CheckData();
+
+    checker.checkType(enrollmentId, 'string', 'enrollmentId');
+    checker.checkType(status, 'string', 'status');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const enrollment: EnrollmentPopulatedDocument | null = await EnrollmentModel.findOne({
         enrollmentId,
@@ -97,7 +102,9 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
 
     if (status === EnrollmentStatus.DECLINED) {
         const { reason } = req.body;
-        if (typeof reason !== 'string') throw new UnprocessableEntity();
+
+        checker.checkType(reason, 'string', 'reason');
+        if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
         enrollment.reason = reason;
     }

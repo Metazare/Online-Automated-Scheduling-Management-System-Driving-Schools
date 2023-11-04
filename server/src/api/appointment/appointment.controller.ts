@@ -1,12 +1,6 @@
-import {
-    AppointmentDocument,
-    AppointmentPopulatedDocument,
-    AppointmentStatus,
-    CreateAppointment,
-    GetAppointments,
-    UpdateAppointment
-} from './appointment.types';
+import { AppointmentDocument, AppointmentPopulatedDocument, AppointmentStatus, CreateAppointment, GetAppointments, UpdateAppointment } from './appointment.types';
 import { BodyRequest, QueryRequest, RequestHandler } from 'express';
+import { CheckData } from '../../utilities/checkData';
 import { EnrollmentStatus } from '../enrollment/enrollment.types';
 import { InstructorDocument } from '../instructor/instructor.types';
 import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
@@ -62,14 +56,14 @@ export const createAppointment: RequestHandler = async (req: BodyRequest<CreateA
     const user = <SchoolDocument>req.user.document;
 
     const { studentId, instructorId, vehicle, schedule } = req.body;
-    // prettier-ignore
-    if (
-        typeof studentId !== 'string' ||
-        typeof instructorId !== 'string' ||
-        typeof vehicle !== 'string' ||
-        !schedule ||
-        isNaN(Date.parse(schedule))
-    ) throw new UnprocessableEntity();
+    const checker = new CheckData();
+
+    checker.checkType(studentId, 'string', 'studentId');
+    checker.checkType(instructorId, 'string', 'instructorId');
+    checker.checkType(vehicle, 'string', 'vehicle');
+    checker.checkDate(schedule, 'schedule');
+    
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const [student, instructor] = await Promise.all([
         studentModel.findOne({ studentId, status: EnrollmentStatus.ACCEPTED }).exec(),
@@ -94,11 +88,16 @@ export const updateAppointment: RequestHandler = async (req: BodyRequest<UpdateA
     const { document, role } = req.user;
 
     const { appointmentId } = req.body;
-    if (typeof appointmentId !== 'string') throw new UnprocessableEntity();
+    const checker = new CheckData();
+
+    checker.checkType(appointmentId, 'string', 'appointmentId');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     if (role === Role.ADMIN) {
-        const { schedule } = req.body;
-        if (!schedule || isNaN(Date.parse(schedule))) throw new UnprocessableEntity();
+        const { schedule = '' } = req.body;
+
+        checker.checkDate(schedule, 'schedule');
+        if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
         const user = <SchoolDocument>document;
 
@@ -120,7 +119,10 @@ export const updateAppointment: RequestHandler = async (req: BodyRequest<UpdateA
         const user = <StudentDocument>document;
 
         const { status } = req.body;
-        if (typeof status !== 'string') throw new UnprocessableEntity();
+
+        checker.checkType(status, 'string', 'status');
+        checker.checkValue(status, AppointmentStatus.PENDING, 'status');
+        if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
         const appointment: AppointmentDocument | null = await AppointmentModel.findOne({
             appointmentId,
@@ -129,9 +131,7 @@ export const updateAppointment: RequestHandler = async (req: BodyRequest<UpdateA
         }).exec();
         if (!appointment) throw new NotFound();
 
-        if (status === AppointmentStatus.PENDING) throw new UnprocessableEntity();
-
-        appointment.status = status;
+        appointment.status = <AppointmentStatus>status;
 
         await appointment.save();
     }

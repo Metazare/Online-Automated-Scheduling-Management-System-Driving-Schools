@@ -1,6 +1,7 @@
 import { BodyRequest, RequestHandler } from 'express';
-import { CreateCourse } from './course.types';
+import { CheckData } from '../../utilities/checkData';
 import { Conflict, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
+import { CreateCourse } from './course.types';
 import CourseModel from './course.model';
 
 export const createCourse: RequestHandler = async (req: BodyRequest<CreateCourse>, res) => {
@@ -8,12 +9,15 @@ export const createCourse: RequestHandler = async (req: BodyRequest<CreateCourse
     const { document: user } = req.user;
 
     const { type } = req.body;
-    if (typeof type !== 'string') throw new UnprocessableEntity();
+    const checker = new CheckData();
 
-    const query = { type, school: user._id }
+    checker.checkType(type, 'string', 'type');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
+
+    const query = { type, school: user._id };
 
     const found = await CourseModel.findOneAndUpdate(query, query, { upsert: true });
-    if (found) throw new Conflict();
+    if (found) throw new Conflict('Course already exists');
 
     res.sendStatus(201);
 };

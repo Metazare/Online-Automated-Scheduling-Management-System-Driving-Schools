@@ -1,13 +1,6 @@
-import {
-    AllRegister,
-    InstructorRegister,
-    Payload,
-    Role,
-    SchoolRegister,
-    StudentRegister,
-    UserLogin
-} from './auth.types';
+import { AllRegister, InstructorRegister, Payload, Role, SchoolRegister, StudentRegister, UserLogin } from './auth.types';
 import { BodyRequest, RequestHandler } from 'express';
+import { CheckData } from '../../utilities/checkData';
 import { compareSync } from 'bcrypt';
 import { cookieOptions, signAccess, signRefresh } from '../../utilities/cookies';
 import { password } from '../../utilities/ids';
@@ -19,8 +12,16 @@ import InstructorModel from '../instructor/instructor.model';
 import SchoolModel from '../school/school.model';
 import StudentModel from '../student/student.model';
 
-const RegisterDrivingSchool = (body: SchoolRegister): Promise<SchoolDocument> => {
+const RegisterDrivingSchool = (body: SchoolRegister, checker: CheckData): Promise<SchoolDocument> => {
     const { name, about, address, contact, email, password } = body;
+
+    checker.checkType(name, 'string', 'name');
+    checker.checkType(about, 'string', 'about');
+    checker.checkType(address, 'string', 'address');
+    checker.checkType(contact, 'string', 'contact');
+    checker.checkType(email, 'string', 'email');
+    checker.checkType(password, 'string', 'password');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     return SchoolModel.create({
         name,
@@ -31,8 +32,21 @@ const RegisterDrivingSchool = (body: SchoolRegister): Promise<SchoolDocument> =>
     });
 };
 
-const RegisterInstructor = async (body: InstructorRegister, admin: SchoolDocument): Promise<UserLogin> => {
-    const { firstName, middleName, lastName, extensionName, address, contact, email } = body;
+const RegisterInstructor = async (
+    body: InstructorRegister,
+    admin: SchoolDocument,
+    checker: CheckData
+): Promise<UserLogin> => {
+    const { address, contact, email, extensionName, firstName, lastName, middleName } = body;
+
+    checker.checkType(address, 'string', 'address');
+    checker.checkType(contact, 'string', 'contact');
+    checker.checkType(email, 'string', 'email');
+    checker.checkType(extensionName, 'string', 'extensionName');
+    checker.checkType(firstName, 'string', 'firstName');
+    checker.checkType(lastName, 'string', 'lastName');
+    checker.checkType(middleName, 'string', 'middleName');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const newPassword = password();
 
@@ -52,8 +66,20 @@ const RegisterInstructor = async (body: InstructorRegister, admin: SchoolDocumen
     return { email, password: newPassword };
 };
 
-const RegisterStudent = (body: StudentRegister): Promise<StudentDocument> => {
-    const { firstName, middleName, lastName, extensionName, address, birthday, contact, sex, email, password } = body;
+const RegisterStudent = (body: StudentRegister, checker: CheckData): Promise<StudentDocument> => {
+    const { address, birthday, contact, email, extensionName, firstName, lastName, middleName, password, sex } = body;
+
+    checker.checkDate(birthday, 'birthday');
+    checker.checkType(address, 'string', 'address');
+    checker.checkType(contact, 'string', 'contact');
+    checker.checkType(email, 'string', 'email');
+    checker.checkType(extensionName, 'string', 'extensionName');
+    checker.checkType(firstName, 'string', 'firstName');
+    checker.checkType(lastName, 'string', 'lastName');
+    checker.checkType(middleName, 'string', 'middleName');
+    checker.checkType(password, 'string', 'password');
+    checker.checkType(sex, 'string', 'sex');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     return StudentModel.create({
         name: {
@@ -72,6 +98,12 @@ const RegisterStudent = (body: StudentRegister): Promise<StudentDocument> => {
 
 export const register: RequestHandler = async (req: BodyRequest<AllRegister>, res) => {
     const { role, email } = req.body;
+    const checker: CheckData = new CheckData();
+
+    checker.checkType(role, 'string', 'role');
+    checker.checkType(email, 'string', 'email');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
+
     let payload: Payload = { userId: '', role };
 
     const checkDuplicateEmail = await Promise.all([
@@ -79,25 +111,30 @@ export const register: RequestHandler = async (req: BodyRequest<AllRegister>, re
         InstructorModel.exists({ 'credentials.email': email }).exec(),
         StudentModel.exists({ 'credentials.email': email }).exec()
     ]);
-    if (checkDuplicateEmail.find(Boolean)) throw new UnprocessableEntity('Email already exists');
+    if (checkDuplicateEmail.find(Boolean)) {
+        checker.addError('email', 'Duplicate email');
+        throw new UnprocessableEntity(checker.errors);
+    }
 
     switch (role) {
         case Role.ADMIN:
-            const { schoolId } = await RegisterDrivingSchool(<SchoolRegister>req.body);
+            const { schoolId } = await RegisterDrivingSchool(<SchoolRegister>req.body, checker);
             payload.userId = schoolId;
             break;
         case Role.INSTRUCTOR:
             const credentials = await RegisterInstructor(
                 <InstructorRegister>req.body,
-                <SchoolDocument>req.user?.document
+                <SchoolDocument>req.user?.document,
+                checker
             );
             return res.status(201).json(credentials);
         case Role.STUDENT:
-            const { studentId } = await RegisterStudent(<StudentRegister>req.body);
+            const { studentId } = await RegisterStudent(<StudentRegister>req.body, checker);
             payload.userId = studentId;
             break;
         default:
-            throw new UnprocessableEntity('Invalid role');
+            checker.addError('role', 'Invalid role');
+            throw new UnprocessableEntity(checker.errors);
     }
 
     return res
@@ -108,6 +145,11 @@ export const register: RequestHandler = async (req: BodyRequest<AllRegister>, re
 
 export const login: RequestHandler = async (req: BodyRequest<UserLogin>, res) => {
     const { email, password } = req.body;
+    const checker = new CheckData();
+
+    checker.checkType(email, 'string', 'email');
+    checker.checkType(password, 'string', 'password');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const findUser = await Promise.all([
         SchoolModel.findOne({ 'credentials.email': email }).exec(),
@@ -116,7 +158,7 @@ export const login: RequestHandler = async (req: BodyRequest<UserLogin>, res) =>
     ]);
 
     const user = findUser.find(Boolean);
-    if (!user || !password || !compareSync(password, user.credentials.password)) throw new Unauthorized();
+    if (!user || !compareSync(password, user.credentials.password)) throw new Unauthorized();
 
     let userId: string;
     let role: Role;
