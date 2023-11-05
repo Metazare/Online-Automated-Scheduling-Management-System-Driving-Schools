@@ -7,7 +7,7 @@ import Register from './Pages/Register'
 import Home from './Pages/User/Home';
 import BaseLayout from './Layouts/BaseLayout/BaseLayout';
 import School from './Pages/User/School/School'
-import schoolView from './Pages/User/School/School';
+import ManageSchool from './Pages/Admin/School/ManageSchool';
 
 const theme = createTheme({
   palette:{
@@ -33,6 +33,11 @@ function App() {
         <Route element={<BaseLayout />} >
           <Route path="/home" element={<Home/>} />
           <Route path="/school" element={<School/>} />
+        </Route>
+
+        <Route element={<BaseLayout />} >
+          <Route path="" element={<Home/>} />
+          <Route path="admin/school" element={<ManageSchool/>} />
         </Route>
 
 

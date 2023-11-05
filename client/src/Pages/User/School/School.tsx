@@ -16,6 +16,8 @@ import Button from '@mui/material/Button';
 import CourseCard from '../../../Components/CourseCard'
 import MenuItem from '@mui/material/MenuItem';
 
+
+
 function School() {
     const [form, setForm] = useState({
         course:'',
@@ -29,6 +31,7 @@ function School() {
         startTime:"17:59",
         endTime:"17:59"
     });
+    
     return <>
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em"}}>
             <Container maxWidth="lg">
@@ -82,8 +85,11 @@ function School() {
                         </IconButton> */}
                     </Box>
                 </div>
+                
             </Container>
         </div>
+
+        
         <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
             <Grid container spacing={2}>
                 <Grid item md={8} sm={8} xs={12} sx={{padding:"40px"}}>
@@ -243,7 +249,6 @@ function School() {
                         </form>
                     </Paper>
                 </Grid>
-            
             </Grid>
         </Container>
     </>
