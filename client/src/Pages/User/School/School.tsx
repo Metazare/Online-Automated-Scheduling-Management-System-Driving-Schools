@@ -36,7 +36,7 @@ function School() {
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em"}}>
             <Container maxWidth="lg">
                 <div style={{padding:"3.8rem 0",}}>
-                    <a href="#" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
+                    <a href="/" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
                         <ArrowBackIcon/>
                         <Typography variant="subtitle1" color="initial"> Go Back</Typography>
                     </a>

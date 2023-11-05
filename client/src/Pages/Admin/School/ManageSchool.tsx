@@ -1,5 +1,5 @@
 
-import React,{useState} from 'react'
+import React from 'react'
 // * MUI Imports
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
@@ -14,24 +14,12 @@ import Tab from '@mui/material/Tab';
 
 // * Components
 import CourseCard from '../../../Components/CourseCard'
-import MenuItem from '@mui/material/MenuItem';
 
 // * Pages
 import Requests from './Requests';
 
 function ManageSchool() {
-    const [form, setForm] = useState({
-        course:'',
-        sunday: false,
-        monday:false,
-        tuesday:false,
-        wednesday:false,
-        thursday:false,
-        friday:false,
-        saturday:false,
-        startTime:"17:59",
-        endTime:"17:59"
-    });
+    
     const [value, setValue] = React.useState(0);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
@@ -40,7 +28,7 @@ function ManageSchool() {
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em 1em 0"}}>
             <Container maxWidth="lg">
                 <div style={{padding:"3.8rem 0",}}>
-                    <a href="#" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
+                    <a href="/" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
                         <ArrowBackIcon/>
                         <Typography variant="subtitle1" color="initial"> Go Back</Typography>
                     </a>
