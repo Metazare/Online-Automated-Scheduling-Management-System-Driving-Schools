@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "rimraf dist && tsc",
-        "start": "NODE_ENV=production node dist/index.js",
+        "start": "node dist/index.js",
         "dev": "SET NODE_ENV=development&& nodemon src/index.ts"
     },
     "keywords": [],
