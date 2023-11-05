@@ -4,8 +4,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import Login from './Pages/Login'
 import Register from './Pages/Register'
-import Home from './Pages/Home';
+import Home from './Pages/User/Home';
 import BaseLayout from './Layouts/BaseLayout/BaseLayout';
+import School from './Pages/School/School'
+import schoolView from './Pages/School/School';
 
 const theme = createTheme({
   palette:{
@@ -24,9 +26,19 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
+
+        <Route path="/" element={<Home/>} />
+
+        {/* user */}
         <Route element={<BaseLayout />} >
-          <Route path="/" element={<Home/>} />
+          <Route path="/home" element={<Home/>} />
+          <Route path="/school" element={<School/>} />
         </Route>
+
+
+
+
+
       </Routes>
     </ThemeProvider>
 
