@@ -2,11 +2,13 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+//Official Routes
 import Login from './Pages/Login'
 import Register from './Pages/Register'
 import Home from './Pages/Home';
 import BaseLayout from './Layouts/BaseLayout/BaseLayout';
 
+//Test Routes
 import RegisterAdmin from './Test/RegisterAdmin';
 import RegisterInstructor from './Test/RegisterInstructor';
 import RegisterStudent from './Test/RegisterStudent';
@@ -15,7 +17,6 @@ import AddCourse from './Test/AddCourse';
 import EnrollStudent from './Test/EnrollStudent';
 import EnrollGet from './Test/EnrollGet';
 import AppointmentCreate from './Test/AppointmentCreate';
-
 
 const theme = createTheme({
   palette:{
@@ -28,6 +29,7 @@ const theme = createTheme({
     }
   }
 })
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -43,14 +45,13 @@ function App() {
           <Route path="registeradmin" element={<RegisterAdmin/>}/>
           <Route path="registerstudent" element={<RegisterStudent/>}/>
           <Route path="registerinstructor" element={<RegisterInstructor/>}/>
-          <Route path="login" element={<Login/>} />
           <Route path="logout" element={<Logout/>} />
           <Route path="addcourse" element={<AddCourse/>} />
           <Route path="enrollstudent" element={<EnrollStudent/>} />
           <Route path="enrollget" element={<EnrollGet/>} />
           <Route path="appointmentcreate" element={<AppointmentCreate/>} />
         </Route>
-    </Routes>
+      </Routes>
     </ThemeProvider>
   );
 }
