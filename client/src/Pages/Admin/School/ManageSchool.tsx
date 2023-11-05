@@ -8,15 +8,19 @@ import { Box, Grid } from '@mui/material';
 import CallIcon from '@mui/icons-material/Call';
 import EmailIcon from '@mui/icons-material/Email';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 // * Components
 import CourseCard from '../../../Components/CourseCard'
 
-// * Pages
+// * Tabs
 import Requests from './Requests';
+import Appointments from './Appointments';
+import Courses from './Courses';
+import Students from './Students';
 import Intructors from './Intructors';
 
 function ManageSchool() {
@@ -73,9 +77,9 @@ function ManageSchool() {
                             </Box>
                         </Box>
                         </div>
-                        {/* <IconButton aria-label="" onClick={()=>alert}>
+                        <IconButton aria-label="" onClick={()=>alert}>
                         <MoreVertIcon/>
-                        </IconButton> */}
+                        </IconButton>
                     </Box>
                 </div>
                 <Tabs value={value} onChange={handleChange} >
@@ -101,8 +105,17 @@ function ManageSchool() {
                         </Box>
                     </Grid>
                 :""}
+                {value===1?
+                    <Appointments/>
+                :""}
+                {value===2?
+                    <Courses/>
+                :""}
                 {value===3?
                     <Requests/>
+                :""}
+                {value===4?
+                    <Students/>
                 :""}
                 {value===5?
                     <Intructors/>

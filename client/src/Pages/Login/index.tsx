@@ -15,16 +15,10 @@ function Index() {
   };
 
 
-
   const [form, setForm] = useState({
     email: '',
     password:''
   });
-
-
-
-
-
 
   return (
     <div style={styleContainer}>
