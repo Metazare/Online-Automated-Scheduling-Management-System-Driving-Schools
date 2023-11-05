@@ -13,7 +13,7 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button';
 
 // * Components
-import CourseCard from '../../Components/CourseCard'
+import CourseCard from '../../../Components/CourseCard'
 import MenuItem from '@mui/material/MenuItem';
 
 function School() {

@@ -6,8 +6,8 @@ import Login from './Pages/Login'
 import Register from './Pages/Register'
 import Home from './Pages/User/Home';
 import BaseLayout from './Layouts/BaseLayout/BaseLayout';
-import School from './Pages/School/School'
-import schoolView from './Pages/School/School';
+import School from './Pages/User/School/School'
+import schoolView from './Pages/User/School/School';
 
 const theme = createTheme({
   palette:{
