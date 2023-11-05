@@ -24,8 +24,7 @@ const style = {
     borderRadius:'8px',
     boxShadow: 24,
     p: 4,
-};                                                                                                                                                                                                             
-// * Components
+};                 
 function Requests() {
     // TODO Pagination
     const [page, setPage] = useState(0);

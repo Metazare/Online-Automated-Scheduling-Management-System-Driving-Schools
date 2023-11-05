@@ -17,6 +17,7 @@ import CourseCard from '../../../Components/CourseCard'
 
 // * Pages
 import Requests from './Requests';
+import Intructors from './Intructors';
 
 function ManageSchool() {
     
@@ -102,6 +103,9 @@ function ManageSchool() {
                 :""}
                 {value===3?
                     <Requests/>
+                :""}
+                {value===5?
+                    <Intructors/>
                 :""}
             </Grid>
         </Container>
