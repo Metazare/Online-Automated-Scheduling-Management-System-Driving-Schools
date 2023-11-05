@@ -8,11 +8,9 @@ export default function BaseLayout() {
   return (
     <>
         <Header />
-        <Container>
-          <Outlet />
+        <Outlet />
           
-        </Container>
-        <Footer />
+        {/* <Footer /> */}
     </>
   )
 }

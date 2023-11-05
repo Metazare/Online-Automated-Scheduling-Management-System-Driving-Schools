@@ -5,8 +5,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 //Official Routes
 import Login from './Pages/Login'
 import Register from './Pages/Register'
-import Home from './Pages/Home';
+import Home from './Pages/User/Home';
 import BaseLayout from './Layouts/BaseLayout/BaseLayout';
+import School from './Pages/User/School/School'
+import ManageSchool from './Pages/Admin/School/ManageSchool';
 
 //Test Routes
 import RegisterAdmin from './Test/RegisterAdmin';
@@ -36,8 +38,13 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
+
+        <Route path="/" element={<Home/>} />
+
+        {/* user */}
         <Route element={<BaseLayout />} >
-          <Route path="/" element={<Home/>} />
+          <Route path="/home" element={<Home/>} />
+          <Route path="/school" element={<School/>} />
         </Route>
 
         {/* Test Routes */}
@@ -51,6 +58,15 @@ function App() {
           <Route path="enrollget" element={<EnrollGet/>} />
           <Route path="appointmentcreate" element={<AppointmentCreate/>} />
         </Route>
+        <Route element={<BaseLayout />} >
+          <Route path="" element={<Home/>} />
+          <Route path="admin/school" element={<ManageSchool/>} />
+        </Route>
+
+
+
+
+
       </Routes>
     </ThemeProvider>
   );
