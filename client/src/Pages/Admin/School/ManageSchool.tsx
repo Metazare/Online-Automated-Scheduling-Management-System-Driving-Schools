@@ -13,15 +13,16 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
-// * Components
-import CourseCard from '../../../Components/CourseCard'
+
 
 // * Tabs
+import Home from './Home'
 import Requests from './Requests';
 import Appointments from './Appointments';
 import Courses from './Courses';
 import Students from './Students';
 import Intructors from './Intructors';
+
 
 function ManageSchool() {
     
@@ -95,15 +96,7 @@ function ManageSchool() {
         <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
             <Grid container spacing={2}>
                 {value===0?
-                    <Grid item xs={8} sx={{padding:"40px"}}>
-                        <Typography variant="h6" color="primary" mb={1}>About Us</Typography>
-                        <Typography variant="body2" align='justify'>SMART Driving is the best choice for your quality driving lessons. The company is already trusted by reputable companies to provide road safety education and assessment to their employees, SMART is also conferred by various award-giving bodies in training and services. For more than 20 years in the industry, we have honed our curriculum to make it suitable for all kinds of learners that we will encounter. Together with all the members of SMART Driving School, we will make your driving training a truly worthwhile experience.</Typography>
-                        <Typography variant="h6" color="primary" mt={2} mb={1}>Courses</Typography>
-                        <Box sx={{display:'flex', gap:"25px",flexWrap:"wrap"}}>
-                            <CourseCard variant={"theoretical"} title={"Theoretical Driving"} /> 
-                            <CourseCard variant={"practical"} title={"Practical Driving"} /> 
-                        </Box>
-                    </Grid>
+                    <Home/>
                 :""}
                 {value===1?
                     <Appointments/>

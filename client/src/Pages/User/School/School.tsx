@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState} from 'react';
 
 // * MUI Imports
 import Container from '@mui/material/Container'

@@ -1,14 +1,9 @@
 import React from 'react'
 
 // * MUI IMPORTS
-import Container from '@mui/material/Container'
-import Typography from '@mui/material/Typography'
-import Avatar from '@mui/material/Avatar';
-import { Box, IconButton } from '@mui/material';
-import CallIcon from '@mui/icons-material/Call';
-import EmailIcon from '@mui/icons-material/Email';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
+import { Box,  } from '@mui/material';
+
 
 
 type Props = {}
