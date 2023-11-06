@@ -11,17 +11,18 @@ import { useAuth } from '../../Hooks/useAuth';
 
 function Index() {
   const { login } = useAuth();
+  const styleContainer = {
+    minHeight:"100vh",
+    display:"grid",
+    gridTemplateColumns:".4fr .6fr"
+
+  };
+
 
   const [form, setForm] = useState({
     email: '',
     password:''
   });
-
-  const styleContainer = {
-    minHeight:"100vh",
-    display:"grid",
-    gridTemplateColumns:".4fr .6fr"
-  };
 
   return (
     <div style={styleContainer}>
