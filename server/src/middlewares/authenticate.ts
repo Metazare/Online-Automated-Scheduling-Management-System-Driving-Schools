@@ -1,11 +1,8 @@
+import { AllUserDocument, Payload, Role } from '../api/auth/auth.types';
 import { cookieOptions, signAccess, signRefresh } from '../utilities/cookies';
 import { Forbidden, Unauthorized } from '../utilities/errors';
-import { InstructorDocument } from '../api/instructor/instructor.types';
 import { JwtPayload, verify } from 'jsonwebtoken';
-import { AllUserDocument, Payload, Role } from '../api/auth/auth.types';
 import { RequestHandler } from 'express';
-import { SchoolDocument } from '../api/school/school.types';
-import { StudentDocument } from '../api/student/student.types';
 import envs from '../utilities/envs';
 import InstructorModel from '../api/instructor/instructor.model';
 import SchoolModel from '../api/school/school.model';
@@ -41,16 +38,17 @@ const authenticate: RequestHandler = async (req, res, next) => {
 
     if (payload) {
         let user: AllUserDocument | null;
+        const { userId, role } = payload;
 
         switch (payload.role) {
             case Role.ADMIN:
-                user = <SchoolDocument>await SchoolModel.findOne({ schoolId: payload.userId });
+                user = await SchoolModel.findOne({ schoolId: userId }).exec();
                 break;
             case Role.INSTRUCTOR:
-                user = <InstructorDocument>await InstructorModel.findOne({ instructorId: payload.userId });
+                user = await InstructorModel.findOne({ instructorId: userId }).populate('school').exec();
                 break;
             case Role.STUDENT:
-                user = <StudentDocument>await StudentModel.findOne({ studentId: payload.userId });
+                user = await StudentModel.findOne({ studentId: userId }).exec();
                 break;
             default:
                 return next(new Unauthorized('Invalid user role'));
@@ -58,7 +56,7 @@ const authenticate: RequestHandler = async (req, res, next) => {
 
         if (!user) return next(new Forbidden());
 
-        req.user = { document: user, role: payload.role };
+        req.user = { document: user, role };
 
         return next();
     }
