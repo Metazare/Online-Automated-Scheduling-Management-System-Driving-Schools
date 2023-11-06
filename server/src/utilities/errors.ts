@@ -22,8 +22,8 @@ export class NotFound extends Error {
     name: string = 'Not Found';
     statusCode: number = 404;
 
-    constructor(message = 'Resource not existing') {
-        super(message);
+    constructor(resource = 'Resource') {
+        super(`${resource} not existing`);
     }
 }
 
