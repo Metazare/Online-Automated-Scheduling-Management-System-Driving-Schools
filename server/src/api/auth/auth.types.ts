@@ -1,4 +1,4 @@
-import { InstructorDocument } from '../instructor/instructor.types';
+import { InstructorPopulatedDocument } from '../instructor/instructor.types';
 import { CreateSchool, SchoolDocument } from '../school/school.types';
 import { CreateStudent, StudentDocument } from '../student/student.types';
 
@@ -13,7 +13,7 @@ export interface Payload {
     role: Role;
 }
 
-export type AllUserDocument = SchoolDocument | InstructorDocument | StudentDocument;
+export type AllUserDocument = SchoolDocument | InstructorPopulatedDocument | StudentDocument;
 
 export interface User {
     document: AllUserDocument;
