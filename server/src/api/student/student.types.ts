@@ -27,3 +27,16 @@ export interface StudentDocument extends Student, Document {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export type CreateStudent = {
+    firstName: string;
+    middleName?: string;
+    lastName: string;
+    suffix?: string;
+    address: string;
+    contact: string;
+    birthday: number;
+    sex: Sex;
+    email: string;
+    password: string;
+}

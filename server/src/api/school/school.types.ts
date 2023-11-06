@@ -20,3 +20,12 @@ export interface SchoolDocument extends School, Document {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export type CreateSchool = {
+    name: string;
+    about: string;
+    address: string;
+    contact: string;
+    email: string;
+    password: string;
+};

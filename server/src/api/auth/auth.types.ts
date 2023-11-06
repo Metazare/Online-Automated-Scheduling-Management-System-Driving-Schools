@@ -1,6 +1,6 @@
 import { InstructorDocument } from '../instructor/instructor.types';
-import { SchoolDocument } from '../school/school.types';
-import { Sex, StudentDocument } from '../student/student.types';
+import { CreateSchool, SchoolDocument } from '../school/school.types';
+import { CreateStudent, StudentDocument } from '../student/student.types';
 
 export enum Role {
     ADMIN = 'admin',
@@ -25,30 +25,4 @@ export type UserLogin = {
     password: string;
 };
 
-type BaseRegister = {
-    address: string;
-    contact: string;
-    email: string;
-    role: Role;
-};
-
-export type SchoolRegister = BaseRegister & {
-    name: string;
-    about: string;
-    password: string;
-};
-
-export type InstructorRegister = BaseRegister & {
-    firstName: string;
-    middleName?: string;
-    lastName: string;
-    extensionName?: string;
-};
-
-export type StudentRegister = InstructorRegister & {
-    birthday: Date;
-    sex: Sex;
-    password: string;
-};
-
-export type AllRegister = SchoolRegister | InstructorRegister | StudentRegister;
+export type UserRegister = (CreateSchool | CreateStudent) & { role: Role };
