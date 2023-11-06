@@ -4,7 +4,13 @@ import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import Avatar from '@mui/material/Avatar'
-function AppointmentCard() {
+
+
+type Props= {
+    modalOpen : React.Dispatch<React.SetStateAction<string>>
+}
+
+function AppointmentCard({modalOpen}:Props) {
     return (
         <Paper variant="elevation" elevation={1} sx={{padding:"1em"}}>
             <div style={{display:"flex"}}>
@@ -12,7 +18,7 @@ function AppointmentCard() {
                     <Typography variant="h6" fontWeight={600} color="primary" >Practical Driving</Typography>
                     <Typography variant="body2" mt={"-5px"} color="initial" >Scheduled on Oct 25, 2023 at 1 pm</Typography>
                 </div>
-                <IconButton aria-label="resched" size="large">
+                <IconButton aria-label="resched" size="large" onClick={()=>{modalOpen("resched")}}>
                     <EventRepeatIcon fontSize="inherit" />
                 </IconButton>
             </div>

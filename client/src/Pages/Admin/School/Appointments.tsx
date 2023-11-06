@@ -40,6 +40,10 @@ function Appointments() {
         vehicle:"",
         dateTime: dayjs('2022-04-17T15:30')
     })
+    const [formResched,setFormResched] = useState({
+        reschedDateTime:dayjs('2022-04-17T15:30'),
+        reason:"",
+    })
     // * Open Modal 
     const [open, setOpen] = useState("");
 
@@ -58,22 +62,22 @@ function Appointments() {
 
             <Grid container spacing={2} mt={1}>
                 <Grid item md={6} xs={12}>
-                    <AppointmentCard/>
+                    <AppointmentCard modalOpen={setOpen}/>
                 </Grid>
                 <Grid item md={6} xs={12}>
-                    <AppointmentCard/>
+                    <AppointmentCard modalOpen={setOpen}/>
                 </Grid>
                 <Grid item md={6} xs={12}>
-                    <AppointmentCard/>
+                    <AppointmentCard modalOpen={setOpen}/>
                 </Grid>
                 <Grid item md={6} xs={12}>
-                    <AppointmentCard/>
+                    <AppointmentCard modalOpen={setOpen}/>
                 </Grid>
                 <Grid item md={6} xs={12}>
-                    <AppointmentCard/>
+                    <AppointmentCard modalOpen={setOpen}/>
                 </Grid>
                 <Grid item md={6} xs={12}>
-                    <AppointmentCard/>
+                    <AppointmentCard modalOpen={setOpen}/>
                 </Grid>
             </Grid>
         </Grid>
@@ -177,6 +181,60 @@ function Appointments() {
                             <Grid item sm={8} xs={12}>
                                 <Button variant="contained" fullWidth color="primary">
                                     Add
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </form>
+                </>:""}
+                {open === "resched"?<>
+                    <form action="">
+                        <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
+                            Reschedule Appointment
+                        </Typography>
+                        <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
+                            Please input your desired date
+                        </Typography>
+
+                        <Grid container spacing={2}>
+                            
+                            <Grid item xs={12}>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <DemoContainer components={['DateTimePicker']}>
+                                        <DateTimePicker label="Date and Time" 
+                                            slotProps={{ textField: { fullWidth: true } }}
+                                            value={form.dateTime}
+                                            onChange={(newValue) => {
+                                                setForm({...form, dateTime: dayjs(newValue)});
+                                            }}
+                                        />
+                                    </DemoContainer>
+                                </LocalizationProvider>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="reason"
+                                    label="Reason of Resched"
+                                    value={formResched.reason}
+                                    onChange={(event) => {
+                                        setFormResched({...formResched, reason: event.target.value});
+                                }}
+                                  
+                                />
+                            </Grid>
+                            <Grid item  xs={12} mt={"4"} height={"40px"}>
+                                
+                            </Grid>
+
+                            <Grid item sm={4} xs={12}>
+                                <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                                    cancel
+                                </Button>
+                            </Grid>
+                            <Grid item sm={8} xs={12}>
+                                <Button variant="contained" fullWidth color="primary">
+                                    Send
                                 </Button>
                             </Grid>
                         </Grid>
