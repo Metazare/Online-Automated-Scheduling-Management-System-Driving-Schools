@@ -6,6 +6,9 @@ import asynchronousHandler from "../../middlewares/asynchronousHandler";
 
 const router: Router = Router();
 
+/**
+ * type
+ */
 router.post('/', limitUsers(Role.ADMIN), asynchronousHandler(createCourse));
 
 export default router;

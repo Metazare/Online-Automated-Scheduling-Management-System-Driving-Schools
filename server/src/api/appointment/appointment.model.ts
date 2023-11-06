@@ -10,30 +10,37 @@ const appointmentSchema = new Schema(
             unique: true,
             default: id
         },
-        student: {
+        enrollment: {
             type: Types.ObjectId,
-            ref: 'Student',
-            requyed: [true, 'Student is required']
+            ref: 'Enrollment',
+            required: true
         },
         instructor: {
             type: Types.ObjectId,
             ref: 'Instructor',
-            required: [true, 'Instructor is required']
+            required: true
+        },
+        school: {
+            type: Types.ObjectId,
+            ref: 'School',
+            required: true
         },
         vehicle: {
             type: String,
-            required: [true, 'Vehicle is required']
+            minLength: 1,
+            required: true
         },
         schedule: {
             type: Date,
-            required: [true, 'Schedule is required']
+            required: true
         },
         status: {
             type: String,
             enum: {
                 values: ['pending', 'accepted', 'reschedule'],
                 message: '"{VALUE}" is not supported'
-            }
+            },
+            default: 'pending'
         }
     },
     {
@@ -41,8 +48,13 @@ const appointmentSchema = new Schema(
         versionKey: false,
         toJSON: {
             transform: (_doc, ret) => {
-                const { _id, __v, ...rest } = ret;
-                return rest;
+                const {
+                    _id,
+                    instructor: { school, ...instructor },
+                    ...rest
+                } = ret;
+
+                return { ...rest, instructor };
             }
         }
     }

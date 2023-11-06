@@ -1,11 +1,11 @@
 import { hashSync } from 'bcrypt';
 import { id } from '../../utilities/ids';
 import { Schema, model } from 'mongoose';
-import { StudentDocument } from './student.types';
+import { Sex, StudentDocument } from './student.types';
 
 const studentSchema = new Schema(
     {
-        instructorId: {
+        studentId: {
             type: String,
             unique: true,
             default: id
@@ -14,58 +14,80 @@ const studentSchema = new Schema(
             type: {
                 first: {
                     type: String,
-                    required: [true, 'First name is required']
+                    minLength: 1,
+                    required: true
                 },
                 middle: String,
                 last: {
                     type: String,
-                    required: [true, 'Last name is required']
+                    minLength: 1,
+                    required: true
                 },
-                extension: String
+                suffix: String
             },
-            required: [true, 'Name is required']
+            required: true
         },
         address: {
             type: String,
-            required: [true, 'Address is required']
+            minLength: 1,
+            required: true
         },
         contact: {
             type: String,
-            required: [true, 'Contact is required']
+            minLength: 1,
+            required: true
         },
         birthday: {
             type: Date,
-            required: [true, 'Birthday is required']
+            minLength: 1,
+            required: true
         },
         sex: {
             type: String,
-            enum: ['male', 'female'],
-            required: [true, 'Sex is required']
+            enum: {
+                values: Object.values(Sex),
+                message: '"{VALUE}" is not supported'
+            },
+            required: true
         },
         credentials: {
             type: {
                 email: {
                     type: String,
-                    required: [true, 'Email is required'],
+                    unique: true,
                     match: /^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$/,
-                    unique: true
+                    required: true
                 },
                 password: {
                     type: String,
-                    required: [true, 'Password is required'],
-                    set: (value: string): string => hashSync(value, 10)
+                    set: (value: string): string => hashSync(value, 10),
+                    required: true
                 }
             },
-            required: [true, 'Admin credentials are required']
+            required: true
         }
     },
     {
         timestamps: true,
         versionKey: false,
         toJSON: {
-            transform(_doc, ret: Record<string, unknown>) {
-                const { credentials, _id, __v, ...rest } = ret;
-                return rest;
+            transform(_doc, ret) {
+                const {
+                    _id,
+                    credentials,
+                    name: { first, middle, last, suffix },
+                    ...rest
+                } = ret;
+
+                return {
+                    ...rest,
+                    name: {
+                        first,
+                        middle,
+                        last,
+                        suffix
+                    }
+                };
             }
         }
     }

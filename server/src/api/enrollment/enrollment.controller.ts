@@ -1,5 +1,6 @@
 import { BodyRequest, QueryRequest, RequestHandler } from 'express';
-import { CourseDocument } from '../course/course.types';
+import { CheckData } from '../../utilities/checkData';
+import { Course } from '../course/course.types';
 import {
     CreateEnrollment,
     EnrollmentPopulatedDocument,
@@ -11,8 +12,8 @@ import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/err
 import { Role } from '../auth/auth.types';
 import { SchoolDocument } from '../school/school.types';
 import { StudentDocument } from '../student/student.types';
-import CourseModel from '../course/course.model';
 import EnrollmentModel from './enrollment.model';
+import SchoolModel from '../school/school.model';
 
 export const getEnrollments: RequestHandler = async (req: QueryRequest<GetEnrollment>, res) => {
     if (!req.user) throw new Unauthorized();
@@ -22,27 +23,26 @@ export const getEnrollments: RequestHandler = async (req: QueryRequest<GetEnroll
 
     const enrollmentQuery: Record<string, unknown> = {};
     if (typeof enrollmentId === 'string') enrollmentQuery.enrollmentId = enrollmentId;
+    if (typeof courseId === 'string') enrollmentQuery.courseId = courseId;
     if (typeof status === 'string') enrollmentQuery.status = status;
 
     if (role === Role.STUDENT) enrollmentQuery.student = user._id;
-
-    if (role === Role.ADMIN) {
-        const courses: CourseDocument[] = await CourseModel.find({ school: user._id }).exec();
-        const coursesObjectIds: string[] = courses.map((course) => course._id);
-
-        enrollmentQuery.course = { $in: coursesObjectIds };
-    }
+    if (role === Role.ADMIN) enrollmentQuery.school = user._id;
 
     let enrollments: EnrollmentPopulatedDocument[] = await EnrollmentModel.find(enrollmentQuery)
-        .populate({ path: 'course', populate: 'school' })
-        .populate('student')
+        .populate('school student')
         .exec();
 
-    if (typeof courseType === 'string')
-        enrollments = enrollments.filter((enrollment) => enrollment.course.type === courseType);
+    if (typeof courseType === 'string') {
+        const courses: Course[] = enrollments.reduce(
+            (list, enrollment) => [...list, ...enrollment.school.courses],
+            <Course[]>[]
+        );
 
-    if (typeof courseId === 'string')
-        enrollments = enrollments.filter((enrollment) => enrollment.course.courseId === courseId);
+        enrollments = enrollments.filter(
+            ({ courseId }) => courses.find((c) => c.courseId === courseId)?.type === courseType
+        );
+    }
 
     res.json(enrollments);
 };
@@ -52,20 +52,21 @@ export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEn
     const user = <StudentDocument>req.user.document;
 
     const { courseId, days, startTime, endTime } = req.body;
+    const checker = new CheckData();
 
-    // prettier-ignore
-    if (
-        !(days instanceof Array) ||
-        days.length === 0 ||
-        days.some((day) => typeof day !== 'number' || day < 0 || day > 6)
-    ) throw new UnprocessableEntity();
+    checker.checkType(courseId, 'string', 'courseId');
+    checker.checkArray(days, 'number', 'days');
+    checker.checkType(startTime, 'number', 'startTime');
+    checker.checkType(endTime, 'number', 'endTime');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
-    const course: CourseDocument | null = await CourseModel.findOne({ courseId }).exec();
-    if (!course) throw new NotFound('Course not found');
+    const school = await SchoolModel.findOne({ 'courses.courseId': courseId }).exec();
+    if (!school) throw new NotFound('Course not found');
 
     await EnrollmentModel.create({
-        course: course._id,
+        school: school._id,
         student: user._id,
+        courseId,
         availability: {
             days: [...new Set(days)],
             time: {
@@ -83,27 +84,30 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
     const user = <SchoolDocument>req.user.document;
 
     const { enrollmentId, status } = req.body;
-    if (typeof enrollmentId !== 'string' || typeof status !== 'string') throw new UnprocessableEntity();
+    const checker = new CheckData();
 
-    const enrollment: EnrollmentPopulatedDocument | null = await EnrollmentModel.findOne({
+    checker.checkType(enrollmentId, 'string', 'enrollmentId');
+    checker.checkType(status, 'string', 'status');
+    checker.checkValue(status, EnrollmentStatus.PENDING, 'status');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
+
+    const enrollment = await EnrollmentModel.findOne({
         enrollmentId,
-        status: EnrollmentStatus.PENDING
-    })
-        .populate({ path: 'course', populate: 'school' })
-        .exec();
+        school: user._id,
+        status: { $ne: EnrollmentStatus.PENDING }
+    }).exec();
     if (!enrollment) throw new NotFound('Enrollment not found');
-
-    if (enrollment.course.school.schoolId !== user.schoolId) throw new Unauthorized();
 
     if (status === EnrollmentStatus.DECLINED) {
         const { reason } = req.body;
-        if (typeof reason !== 'string') throw new UnprocessableEntity();
+
+        checker.checkType(reason, 'string', 'reason');
+        if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
         enrollment.reason = reason;
     }
 
     enrollment.status = status;
-
     await enrollment.save();
 
     res.sendStatus(204);

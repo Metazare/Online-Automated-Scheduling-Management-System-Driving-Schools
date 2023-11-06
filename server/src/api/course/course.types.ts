@@ -1,6 +1,3 @@
-import { Document, Types } from 'mongoose';
-import { School, SchoolDocument } from '../school/school.types';
-
 export enum CourseType {
     TDC_F2F = 'TDC Face to Face',
     PDC_AUTO_MC = 'PDC Automatic Motorcycle',
@@ -10,21 +7,10 @@ export enum CourseType {
 }
 
 export interface Course {
-    courseId: string;
+    courseId?: string;
     type: CourseType;
-    school: Types.ObjectId | Record<string, unknown>;
-}
-
-export interface CourseDocument extends Course, Document {
-    school: SchoolDocument['_id'];
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-export interface CoursePopulatedDocument extends CourseDocument {
-    school: School;
 }
 
 export type CreateCourse = {
     type: CourseType;
-}
+};

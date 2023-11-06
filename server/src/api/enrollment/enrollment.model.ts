@@ -1,4 +1,4 @@
-import { Enrollment, EnrollmentDocument } from './enrollment.types';
+import { Enrollment, EnrollmentDocument, EnrollmentStatus } from './enrollment.types';
 import { id } from '../../utilities/ids';
 import { Schema, Types, model } from 'mongoose';
 
@@ -9,15 +9,19 @@ const enrollmentSchema = new Schema(
             unique: true,
             default: id
         },
-        course: {
+        school: {
             type: Types.ObjectId,
-            ref: 'Course',
-            required: [true, 'Course is required']
+            ref: 'School',
+            required: true
         },
         student: {
             type: Types.ObjectId,
             ref: 'Student',
-            required: [true, 'Student is required']
+            required: true
+        },
+        courseId: {
+            type: String,
+            required: true
         },
         availability: {
             type: {
@@ -26,10 +30,10 @@ const enrollmentSchema = new Schema(
                         {
                             type: Number,
                             min: [0, 'Invalid day'],
-                            max: [6, 'Invalid day'],
+                            max: [6, 'Invalid day']
                         }
                     ],
-                    required: [true, 'Avaliable days required']
+                    required: true
                 },
                 time: {
                     type: {
@@ -37,19 +41,18 @@ const enrollmentSchema = new Schema(
                             type: Number,
                             min: [0, 'Invalid start time'],
                             max: [23, 'Invalid start time'],
-                            required: [true, 'Start time is required']
+                            required: true
                         },
                         end: {
                             type: Number,
                             min: [0, 'Invalid end time'],
                             max: [23, 'Invalid end time'],
-                            required: [true, 'End time is required']
+                            required: true
                         }
                     },
                     validate: {
-                        validator: function (value: Enrollment['availability']['time']) {
-                            if (value.start >= value.end) return false;
-                            return true;
+                        validator: function ({ start, end }: Enrollment['availability']['time']) {
+                            return start < end;
                         },
                         message: 'Invalid time'
                     },
@@ -62,7 +65,7 @@ const enrollmentSchema = new Schema(
         status: {
             type: String,
             enum: {
-                values: ['pending', 'accepted', 'declined'],
+                values: Object.values(EnrollmentStatus),
                 message: '"{VALUE}" is not supported'
             },
             default: 'pending'
@@ -73,8 +76,25 @@ const enrollmentSchema = new Schema(
         versionKey: false,
         toJSON: {
             transform: (_doc, ret) => {
-                const { _id, __v, ...rest } = ret;
-                return rest;
+                const {
+                    _id: id,
+                    availability: {
+                        day,
+                        time: { start, end }
+                    },
+                    ...rest
+                } = ret;
+
+                return {
+                    ...rest,
+                    availability: {
+                        day,
+                        time: {
+                            start,
+                            end
+                        }
+                    }
+                };
             }
         }
     }

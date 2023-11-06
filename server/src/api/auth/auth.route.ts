@@ -1,4 +1,4 @@
-import { checkIfAdmin, login, logout, register } from './auth.controller';
+import { login, logout, register } from './auth.controller';
 import { Router } from 'express';
 import asynchronousHandler from '../../middlewares/asynchronousHandler';
 import authenticate from '../../middlewares/authenticate';
@@ -6,10 +6,13 @@ import authenticate from '../../middlewares/authenticate';
 const router = Router();
 
 router.post('/login', asynchronousHandler(login));
-router.post('/register', checkIfAdmin, asynchronousHandler(register));
 
-router.use(authenticate);
+/**
+ * email
+ * password
+ */
+router.post('/register', asynchronousHandler(register));
 
-router.post('/logout', asynchronousHandler(logout));
+router.post('/logout', authenticate, asynchronousHandler(logout));
 
 export default router;

@@ -1,20 +1,23 @@
 import { BodyRequest, RequestHandler } from 'express';
+import { CheckData } from '../../utilities/checkData';
+import { Conflict, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import { CreateCourse } from './course.types';
 import { SchoolDocument } from '../school/school.types';
-import { Unauthorized, UnprocessableEntity } from '../../utilities/errors';
-import CourseModel from './course.model';
 
 export const createCourse: RequestHandler = async (req: BodyRequest<CreateCourse>, res) => {
     if (!req.user) throw new Unauthorized();
     const user = <SchoolDocument>req.user.document;
 
     const { type } = req.body;
-    if (typeof type !== 'string') throw new UnprocessableEntity();
+    const checker = new CheckData();
 
-    await CourseModel.create({
-        type,
-        school: user._id
-    });
+    checker.checkType(type, 'string', 'type');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
+
+    if (user.courses.find(course => course.type === type)) throw new Conflict('Course already exists');
+    
+    user.courses.push({ type });
+    await user.save();
 
     res.sendStatus(201);
 };
