@@ -4,7 +4,7 @@ import { str, port } from 'envalid/dist/validators';
 const devDefault = (key: string, value: string) =>
     makeValidator<string>((): string => {
         const foundValue = process.env[key];
-        if (process.env.NODE === 'production' && foundValue) return foundValue;
+        if (process.env.NODE_ENV === 'production' && foundValue) return foundValue;
         return value;
     })();
 
