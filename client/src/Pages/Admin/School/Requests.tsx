@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {  Grid, IconButton, Typography,Modal , TextField } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import Box from '@mui/material/Box';
-
+import useReqEnroll from '../../../Hooks/useReqEnroll';
 
 
 const style = {
@@ -41,8 +41,27 @@ function Requests() {
     // * Modal Open
     const [open, setOpen] = useState("");
     // * Reason Value 
-    const [reason,setReason] = useState("")
+    const [reason,setReason] = useState("");
+    const [selected,setSelected] = useState("")
 
+    const { data, loading, getEnrollments, updateEnrollments } = useReqEnroll();
+    const [form, setForm] = useState({
+      enrollmentId: null,
+      courseId: null,
+      status: 'pending',
+      courseType: null,
+    });
+    
+    useEffect(()=> {
+      getEnrollments(form);
+      console.log(data);
+    }, [])
+
+    const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
+
+    if (loading) {
+      return <p>Loading...</p>
+    }
 
     return (
         <Grid item xs={12} sx={{padding:"40px"}}>
@@ -64,27 +83,29 @@ function Requests() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    <TableRow  hover role="checkbox" >
-                        <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
-                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                            <div>
-                                <Typography variant="subtitle1" color="initial">Harold James Castillo</Typography>
-                                <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>Sent 5mins ago</Typography>
-                            </div>
-                        </TableCell>
-                        <TableCell >Theoretical Driving</TableCell>
-                        <TableCell >
-                            Monday, Tuesday, Saturday at 1 to 10:30 am
-                        </TableCell>
-                        <TableCell align="right">
-                            <IconButton aria-label=""  onClick={()=>{setOpen("Decline")}}>
-                                <ClearIcon/>
-                            </IconButton>
-                            <IconButton aria-label="" onClick={()=>{setOpen("Accept")}}>
-                                <CheckIcon/>
-                            </IconButton>
-                        </TableCell>
-                    </TableRow>
+                    {data?.map((request) => (
+                      <TableRow  hover role="checkbox" >
+                          <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
+                              <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                              <div>
+                                  <Typography variant="subtitle1" color="initial">{request?.student?.name?.first} {request?.student?.name?.last}</Typography>
+                                  <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>{request?.createdAt}</Typography>
+                              </div>
+                          </TableCell>
+                          <TableCell >Theoretical Driving</TableCell>
+                          <TableCell >
+                              {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
+                          </TableCell>
+                          <TableCell align="right">
+                              <IconButton aria-label=""  onClick={()=>{setOpen("Decline"); setSelected(request.enrollmentId)}}>
+                                  <ClearIcon/>
+                              </IconButton>
+                              <IconButton aria-label="" onClick={()=>{setOpen("Accept"); setSelected(request.enrollmentId)}}>
+                                  <CheckIcon/>
+                              </IconButton>
+                          </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
                 </Table>
             </TableContainer>
@@ -121,7 +142,12 @@ function Requests() {
                                     </Button>
                                 </Grid>
                                 <Grid item sm={8} xs={12}>
-                                    <Button variant="contained" fullWidth color="primary">
+                                    <Button 
+                                      variant="contained" 
+                                      fullWidth color="primary" 
+                                      onClick={() => updateEnrollments({
+                                      enrollmentId: selected, status: 'accepted', reason: null
+                                    })}>
                                         Admit
                                     </Button>
                                 </Grid>
@@ -151,7 +177,12 @@ function Requests() {
                                     </Button>
                                 </Grid>
                                 <Grid item sm={8} xs={12}>
-                                    <Button variant="contained" fullWidth color="primary">
+                                    <Button 
+                                      variant="contained" 
+                                      fullWidth color="primary" 
+                                      onClick={() => updateEnrollments({
+                                      enrollmentId: selected, status: 'declined', reason: reason
+                                    })}>
                                         Decline
                                     </Button>
                                 </Grid>

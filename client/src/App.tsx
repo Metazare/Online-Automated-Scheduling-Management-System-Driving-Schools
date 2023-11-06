@@ -44,7 +44,7 @@ function App() {
         {/* user */}
         <Route element={<BaseLayout />} >
           <Route path="/home" element={<Home/>} />
-          <Route path="/school" element={<School/>} />
+          <Route path="/school/:id" element={<School/>} />
         </Route>
 
         {/* Test Routes */}

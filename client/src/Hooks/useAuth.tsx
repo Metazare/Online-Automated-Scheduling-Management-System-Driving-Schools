@@ -76,7 +76,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               lastName: last,
               extensionName: extension,
               sex: sex,
-              birthday: birthday,
+              birthday: birthday.getTime(),
               address: address || ' ',
               contact: contact || ' ',
               about: about || ' ',

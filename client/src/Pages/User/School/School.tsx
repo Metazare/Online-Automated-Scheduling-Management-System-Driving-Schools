@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 
 // * MUI Imports
 import Container from '@mui/material/Container'
@@ -11,14 +11,24 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 // * Components
 import CourseCard from '../../../Components/CourseCard'
 import MenuItem from '@mui/material/MenuItem';
 
+import useReqSchool from '../../../Hooks/useReqSchool';
+import useReqEnroll from '../../../Hooks/useReqEnroll';
 
+import { useParams } from 'react-router-dom';
 
 function School() {
+  const {data, loading, getSchool} = useReqSchool();
+  const {enroll} = useReqEnroll();
+  const {id} = useParams();
+
     const [form, setForm] = useState({
         course:'',
         sunday: false,
@@ -28,9 +38,56 @@ function School() {
         thursday:false,
         friday:false,
         saturday:false,
-        startTime:"17:59",
-        endTime:"17:59"
+        startTime: new Date(),
+        endTime: new Date()
     });
+
+
+    useEffect(()=>{
+      getSchool(id);
+    }, [])
+
+    const appendSelectedDays = (form): number[] => {
+      const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+      const selectedDays: number[] = [];
+    
+      days.forEach((day, index) => {
+        if (form[day]) {
+          selectedDays.push(index);
+        }
+      });
+    
+      return selectedDays;
+    };
+
+    const handleChangeStart = (time: any) => {
+      setForm({
+        ...form,
+        startTime: time,
+      });
+    };
+  
+    const handleChangeEnd = (time: any) => {
+      setForm({
+        ...form,
+        endTime: time,
+      });
+    };
+
+    async function submit(e: any) {
+      e.preventDefault();
+      enroll({
+        courseId: form.course,
+        days: appendSelectedDays(form),
+        startTime: form.startTime,
+        endTime: form.endTime
+      });
+    }
+    
+
+    if (loading) {
+        return <p>Loading...</p>
+    }
     
     return <>
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em"}}>
@@ -53,7 +110,7 @@ function School() {
                         sx={{ width: 80, height: 80 }}
                         />
                         <div style={{flexGrow:"1"}}>
-                        <Typography variant="h4" fontWeight={500} color="initial">SMART Driving</Typography>
+                        <Typography variant="h4" fontWeight={500} color="initial">{data?.name}</Typography>
                         <Box
                             sx={{
                             display: 'flex',
@@ -67,7 +124,7 @@ function School() {
                             }}
                             >
                             <CallIcon/> 
-                            <Typography variant="body1" fontWeight={500}>0915-666-147</Typography>
+                            <Typography variant="body1" fontWeight={500}>{data?.contact}</Typography>
                             </Box>
                             <Box
                             sx={{
@@ -75,8 +132,8 @@ function School() {
                             gap:"5px"
                             }}
                             >
-                            <EmailIcon/> 
-                            <Typography variant="body1" fontWeight={500}>0915-666-147</Typography>
+                            {/* <EmailIcon/> 
+                            <Typography variant="body1" fontWeight={500}>0915-666-147</Typography> */}
                             </Box>
                         </Box>
                         </div>
@@ -94,7 +151,7 @@ function School() {
             <Grid container spacing={2}>
                 <Grid item md={8} sm={8} xs={12} sx={{padding:"40px"}}>
                     <Typography variant="h6" color="primary" mb={1}>About Us</Typography>
-                    <Typography variant="body2" align='justify'>SMART Driving is the best choice for your quality driving lessons. The company is already trusted by reputable companies to provide road safety education and assessment to their employees, SMART is also conferred by various award-giving bodies in training and services. For more than 20 years in the industry, we have honed our curriculum to make it suitable for all kinds of learners that we will encounter. Together with all the members of SMART Driving School, we will make your driving training a truly worthwhile experience.</Typography>
+                    <Typography variant="body2" align='justify'>{data?.about}</Typography>
                     <Typography variant="h6" color="primary" mt={2} mb={1}>Courses</Typography>
                     <Box sx={{display:'flex', gap:"25px",flexWrap:"wrap"}}>
                         <CourseCard variant={"theoretical"} title={"Theoretical Driving"} /> 
@@ -104,7 +161,7 @@ function School() {
                 <Grid item md={4} sm={4} xs={12}>
                     <Paper sx={{padding:"1em"}}>
                         <Typography variant="h6" color="primary">Enroll Now</Typography>
-                        <form action="">
+                        <form onSubmit={submit}>
                             <Grid container spacing={2} width={"100%"} mt="20px" mb={"40px"}>
                                 <Grid item xs={12}>
                                     <TextField
@@ -119,12 +176,11 @@ function School() {
                                             
                                         }}
                                     >
-                                        <MenuItem  value={"male"}>
-                                        Male
-                                        </MenuItem>
-                                        <MenuItem  value={"female"}>
-                                        Female
-                                        </MenuItem>
+                                        {data?.courses?.map((course) => (
+                                          <MenuItem key={course.courseId} value={course.courseId}>
+                                            {course.type}
+                                          </MenuItem>
+                                        ))}
                                     </TextField>
                                 </Grid>
                                 
@@ -209,36 +265,33 @@ function School() {
                                     // TODO Update text field to much better component
                                  */}
                                 <Grid item md={6} sm={12}>
-                                    <TextField
-                                        fullWidth
-                                        id="startTime"
+                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <TimePicker
+                                        // fullWidth
+                                        // id="startTime"
                                         label="Start Time"
-                                        variant="outlined"
-                                        type='time'
-                                        required
-                                        value={form.startTime}
-                                        onChange={(event) => {
-                                        setForm({...form, startTime: event.target.value });
-                                        alert(event.target.value )
-                                        }}
+                                        // variant="outlined"
+                                        // type='time'
+                                        // required
+                                        onChange={handleChangeStart}
                                     />
+                                  </LocalizationProvider>
                                 </Grid>
                                 {/* 
                                     // TODO Update text field to much better component
                                 */}
                                 <Grid item md={6} sm={12}>
-                                    <TextField
-                                        fullWidth
-                                        id="endTime"
+                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <TimePicker
+                                        // fullWidth
+                                        // id="endTime"
                                         label="End Time"
-                                        variant="outlined"
-                                        type='time'
-                                        required
-                                        value={form.endTime}
-                                        onChange={(event) => {
-                                        setForm({...form, endTime: event.target.value });
-                                        }}
+                                        // variant="outlined"
+                                        // type='time'
+                                        // required
+                                        onChange={handleChangeEnd}
                                     />
+                                  </LocalizationProvider>
                                 </Grid>
                                 <Grid item xs={12} mt="15px">
                                     <Button type='submit' fullWidth variant="contained" color="primary">
