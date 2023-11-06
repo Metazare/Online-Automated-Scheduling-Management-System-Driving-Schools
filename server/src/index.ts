@@ -12,12 +12,21 @@ import errorHandler from './middlewares/errorHandler';
 // Routes
 import authRoute from './api/auth/auth.route';
 
+// Websocket
+import { Server } from "socket.io";
+
 import { NotFound } from './utilities/errors';
 import envs from './utilities/envs';
 
 const { PORT, MONGO_URI, CORS_ORIGIN } = envs;
 
 const app = express();
+
+const io = new Server(5000, { 
+    cors: {
+        origin: "http://localhost:3000"
+    },
+});
 
 app.use(cors({ credentials: true, origin: CORS_ORIGIN }));
 app.use(cookieParser());
@@ -37,3 +46,30 @@ mongoose
         app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
     })
     .catch(console.error);
+
+
+// Websocket Functions
+
+// Setting up the school id as the socket id
+// const schoolId = getSchoolId();
+
+io.on("connection", socket => {
+
+    // getting data from client
+    socket.on('send_notification', (studentName, appointmentDate, course) => {
+        console.log(studentName, appointmentDate, course);
+
+        // Initiallizing the socket id with the school id
+        // socket.data.schoolId = schoolId;
+        
+        // sending to every client
+        io.emit('recieve_notification', studentName, appointmentDate, course);
+        
+        // Sending to a specific school using school id
+        // io.to(socket.schoolId).emit(studentName, appointmentDate, course)
+    })
+    
+    socket.on("disconnect", () => {
+        console.log("user disconnected");
+    });
+});
