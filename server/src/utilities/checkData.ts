@@ -31,19 +31,6 @@ export class CheckData {
      * Checks the type of a value and adds an error to the errors array if the type doesn't match the target type.
      *
      * @param {any} value - The value to check the type of.
-     * @param {string} key - The key or path of the value being checked.
-     */
-    checkDate(value: any, key: string) {
-        const valueType = typeof value;
-        if (valueType !== 'string') this.errors.push({ path: key, message: `${key} is ${valueType}` });
-        if (valueType === 'string' && typeof Date.parse(value) !== 'number')
-            this.errors.push({ path: key, message: `${key} is not date` });
-    }
-
-    /**
-     * Checks the type of a value and adds an error to the errors array if the type doesn't match the target type.
-     *
-     * @param {any} value - The value to check the type of.
      * @param {string} target - The target type to compare against.
      * @param {string} key - The key or path of the value being checked.
      */
