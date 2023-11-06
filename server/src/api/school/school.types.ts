@@ -21,6 +21,12 @@ export interface SchoolDocument extends School, Document {
     updatedAt: Date;
 }
 
+/* REQUEST */
+
+export type GetSchools = {
+    schoolId?: string;
+};
+
 export type CreateSchool = {
     name: string;
     about: string;
