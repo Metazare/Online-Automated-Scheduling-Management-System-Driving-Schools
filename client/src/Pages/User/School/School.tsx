@@ -32,6 +32,7 @@ function School() {
         endTime:"17:59"
     });
     
+    const [enrolled,setEnrolled] = useState(false)
     return <>
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em"}}>
             <Container maxWidth="lg">
@@ -102,152 +103,162 @@ function School() {
                     </Box>
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
-                    <Paper sx={{padding:"1em"}}>
-                        <Typography variant="h6" color="primary">Enroll Now</Typography>
-                        <form action="">
-                            <Grid container spacing={2} width={"100%"} mt="20px" mb={"40px"}>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        id="outlined-select-currency"
-                                        select
-                                        label="Select Course"
-                                        required
-                                        value={form.course}
-                                        onChange={(event) => {
-                                            setForm({...form, course: event.target.value });
-                                            
-                                        }}
-                                    >
-                                        <MenuItem  value={"male"}>
-                                        Male
-                                        </MenuItem>
-                                        <MenuItem  value={"female"}>
-                                        Female
-                                        </MenuItem>
-                                    </TextField>
-                                </Grid>
-                                
-                                <Grid item xs={12}>
-                                    <Typography fontWeight={500}>Set Availability</Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Grid container spacing={2}>
-                                        <Grid item >
-                                            <div
-                                                className={form.sunday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, sunday: !form.sunday });
-                                                }}
-                                            >
-                                                <p>Su</p>
-                                            </div>
-                                        </Grid>
-                                        <Grid item >
-                                            <div
-                                                className={form.monday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, monday: !form.monday });
-                                                }}
-                                            >
-                                                <p>Mo</p>
-                                            </div>
-                                        </Grid>
-                                        <Grid item >
-                                            <div
-                                                className={form.tuesday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, tuesday: !form.tuesday });
-                                                }}
-                                            >
-                                                <p>Tu</p>
-                                            </div>
-                                        </Grid>
-                                        <Grid item >
-                                            <div
-                                                className={form.wednesday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, wednesday: !form.wednesday });
-                                                }}
-                                            >
-                                                <p>We</p>
-                                            </div>
-                                        </Grid>
-                                        <Grid item >
-                                            <div
-                                                className={form.thursday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, thursday: !form.thursday });
-                                                }}
-                                            >
-                                                <p>Th</p>
-                                            </div>
-                                        </Grid>
-                                        <Grid item >
-                                            <div
-                                                className={form.friday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, friday: !form.friday });
-                                                }}
-                                            >
-                                                <p>Fr</p>
-                                            </div>
-                                        </Grid>
-                                        <Grid item >
-                                            <div
-                                                className={form.saturday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, saturday: !form.saturday });
-                                                }}
-                                            >
-                                                <p>St</p>
-                                            </div>
+                    {enrolled?
+                        <Paper sx={{padding:"1em"}}  elevation={3}>
+                            <Typography variant="h6" color="primary">Enroll Now</Typography>
+                            <form action="">
+                                <Grid container spacing={2} width={"100%"} mt="20px" mb={"40px"}>
+                                    <Grid item xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            id="outlined-select-currency"
+                                            select
+                                            label="Select Course"
+                                            required
+                                            value={form.course}
+                                            onChange={(event) => {
+                                                setForm({...form, course: event.target.value });
+                                                
+                                            }}
+                                        >
+                                            <MenuItem  value={"male"}>
+                                            Male
+                                            </MenuItem>
+                                            <MenuItem  value={"female"}>
+                                            Female
+                                            </MenuItem>
+                                        </TextField>
+                                    </Grid>
+                                    
+                                    <Grid item xs={12}>
+                                        <Typography fontWeight={500}>Set Availability</Typography>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        <Grid container spacing={2}>
+                                            <Grid item >
+                                                <div
+                                                    className={form.sunday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
+                                                    onClick={() => {
+                                                        setForm({ ...form, sunday: !form.sunday });
+                                                    }}
+                                                >
+                                                    <p>Su</p>
+                                                </div>
+                                            </Grid>
+                                            <Grid item >
+                                                <div
+                                                    className={form.monday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
+                                                    onClick={() => {
+                                                        setForm({ ...form, monday: !form.monday });
+                                                    }}
+                                                >
+                                                    <p>Mo</p>
+                                                </div>
+                                            </Grid>
+                                            <Grid item >
+                                                <div
+                                                    className={form.tuesday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
+                                                    onClick={() => {
+                                                        setForm({ ...form, tuesday: !form.tuesday });
+                                                    }}
+                                                >
+                                                    <p>Tu</p>
+                                                </div>
+                                            </Grid>
+                                            <Grid item >
+                                                <div
+                                                    className={form.wednesday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
+                                                    onClick={() => {
+                                                        setForm({ ...form, wednesday: !form.wednesday });
+                                                    }}
+                                                >
+                                                    <p>We</p>
+                                                </div>
+                                            </Grid>
+                                            <Grid item >
+                                                <div
+                                                    className={form.thursday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
+                                                    onClick={() => {
+                                                        setForm({ ...form, thursday: !form.thursday });
+                                                    }}
+                                                >
+                                                    <p>Th</p>
+                                                </div>
+                                            </Grid>
+                                            <Grid item >
+                                                <div
+                                                    className={form.friday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
+                                                    onClick={() => {
+                                                        setForm({ ...form, friday: !form.friday });
+                                                    }}
+                                                >
+                                                    <p>Fr</p>
+                                                </div>
+                                            </Grid>
+                                            <Grid item >
+                                                <div
+                                                    className={form.saturday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
+                                                    onClick={() => {
+                                                        setForm({ ...form, saturday: !form.saturday });
+                                                    }}
+                                                >
+                                                    <p>St</p>
+                                                </div>
+                                            </Grid>
                                         </Grid>
                                     </Grid>
+                                    {/* 
+                                        // TODO Update text field to much better component
+                                    */}
+                                    <Grid item md={6} sm={12}>
+                                        <TextField
+                                            fullWidth
+                                            id="startTime"
+                                            label="Start Time"
+                                            variant="outlined"
+                                            type='time'
+                                            required
+                                            value={form.startTime}
+                                            onChange={(event) => {
+                                            setForm({...form, startTime: event.target.value });
+                                            alert(event.target.value )
+                                            }}
+                                        />
+                                    </Grid>
+                                    {/* 
+                                        // TODO Update text field to much better component
+                                    */}
+                                    <Grid item md={6} sm={12}>
+                                        <TextField
+                                            fullWidth
+                                            id="endTime"
+                                            label="End Time"
+                                            variant="outlined"
+                                            type='time'
+                                            required
+                                            value={form.endTime}
+                                            onChange={(event) => {
+                                            setForm({...form, endTime: event.target.value });
+                                            }}
+                                        />
+                                    </Grid>
+                                    <Grid item xs={12} mt="15px">
+                                        <Button type='submit' fullWidth variant="contained" color="primary">
+                                            Enroll
+                                        </Button>
+                                    </Grid>
                                 </Grid>
-                                {/* 
-                                    // TODO Update text field to much better component
-                                 */}
-                                <Grid item md={6} sm={12}>
-                                    <TextField
-                                        fullWidth
-                                        id="startTime"
-                                        label="Start Time"
-                                        variant="outlined"
-                                        type='time'
-                                        required
-                                        value={form.startTime}
-                                        onChange={(event) => {
-                                        setForm({...form, startTime: event.target.value });
-                                        alert(event.target.value )
-                                        }}
-                                    />
-                                </Grid>
-                                {/* 
-                                    // TODO Update text field to much better component
-                                */}
-                                <Grid item md={6} sm={12}>
-                                    <TextField
-                                        fullWidth
-                                        id="endTime"
-                                        label="End Time"
-                                        variant="outlined"
-                                        type='time'
-                                        required
-                                        value={form.endTime}
-                                        onChange={(event) => {
-                                        setForm({...form, endTime: event.target.value });
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} mt="15px">
-                                    <Button type='submit' fullWidth variant="contained" color="primary">
-                                        Enroll
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </form>
-                    </Paper>
+                            </form>
+                        </Paper>
+                        :
+                        <Paper sx={{padding:"1em"}} elevation={3}>
+                            <Typography variant="h6" color="primary">Your Request is Pending..</Typography>
+                            <Typography variant="subtitle2" mt={2} mb={1} color="initial">Selected Course</Typography>
+                            <Typography variant="body2" color="initial">Practical Driving Course</Typography>
+                            <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
+                            <Typography variant="body2" color="initial">Mon, Tues and Friday from 1 to 5 pm</Typography>
+                        </Paper>
+                    }
                 </Grid>
             </Grid>
         </Container>
