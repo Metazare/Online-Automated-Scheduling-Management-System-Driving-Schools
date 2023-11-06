@@ -48,10 +48,10 @@ function CourseAccordion() {
                     <div style={{flexGrow:"1"}}>
                         <Typography variant="body1" color="initial">Lesson #1</Typography>
                     </div>
-                    <IconButton aria-label="add" onClick={()=>{}}>
+                    <IconButton aria-label="add" onClick={()=>{setOpen('edit')}}>
                         <EditIcon />
                     </IconButton>
-                    <IconButton aria-label="add" onClick={()=>{}}>
+                    <IconButton aria-label="add" onClick={()=>{setOpen('delete')}}>
                         <DeleteIcon />
                     </IconButton>
                 </Paper>
@@ -66,9 +66,10 @@ function CourseAccordion() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    {open === "add"?<>
+                {open === "edit"?<>
+                    <form action="">
                         <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
-                            Add Lesson
+                            Edit Lesson
                         </Typography>
                         <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
                             Please fill up lesson form 
@@ -114,6 +115,90 @@ function CourseAccordion() {
                                 </Button>
                             </Grid>
                         </Grid>
+                    </form>
+                </>:""}
+                    {open === "add"?<>
+                        <form action="">
+                            <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
+                                Add Lesson
+                            </Typography>
+                            <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
+                                Please fill up lesson form 
+                            </Typography>
+
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        required
+                                        id="title"
+                                        label="Title"
+                                        value={form.title}
+                                        onChange={(event)=>{setForm({...form, title : event.target.value })}}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        required
+                                        id="description"
+                                        label="Description"
+                                        value={form.description}
+                                        onChange={(event)=>{setForm({...form, description : event.target.value })}}
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <TextField
+                                        fullWidth
+                                        id="description"
+                                        type='file'
+                                    />
+                                </Grid>
+                                
+                                <Grid item sm={4} xs={12}>
+                                    <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                                        cancel
+                                    </Button>
+                                </Grid>
+                                <Grid item sm={8} xs={12}>
+                                    <Button variant="contained" fullWidth color="primary">
+                                        Add
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </form>
+                    </>:""}
+                    {open === "delete"?<>
+                        <form action="">
+                            <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
+                                Delete Lesson
+                            </Typography>
+                            <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
+                                Are you sure you want to remove this lesson? 
+                            </Typography>
+
+                            <TextField
+                                fullWidth
+                                required
+                                id="reason"
+                                label="Reason"
+                                value={form.title}
+                                onChange={(event)=>{setForm({...form, title : event.target.value })}}
+                            />
+
+                            <Grid container spacing={1} mt={3}>
+                                <Grid item sm={4} xs={12}>
+                                    <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                                        cancel
+                                    </Button>
+                                </Grid>
+                                <Grid item sm={8} xs={12}>
+                                    <Button variant="contained" fullWidth color="primary">
+                                        Decline
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </form>
                     </>:""}
                 </Box>
             </Modal>
