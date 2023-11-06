@@ -1,8 +1,7 @@
 import { hashSync } from 'bcrypt';
 import { id } from '../../utilities/ids';
-import { InstructorDocument } from './instructor.types';
+import { InstructorDocument, InstructorStatus } from './instructor.types';
 import { Schema, Types, model } from 'mongoose';
-import { School } from '../school/school.types';
 
 const instructorSchema = new Schema(
     {
@@ -15,51 +14,55 @@ const instructorSchema = new Schema(
             type: {
                 first: {
                     type: String,
-                    required: [true, 'First name is required']
+                    minLength: 1,
+                    required: true
                 },
                 middle: String,
                 last: {
                     type: String,
-                    required: [true, 'Last name is required']
+                    minLength: 1,
+                    required: true
                 },
-                extension: String
+                suffix: String
             },
-            required: [true, 'Name is required']
+            required: true
         },
         address: {
             type: String,
-            required: [true, 'Address is required']
+            minLength: 1,
+            required: true
         },
         contact: {
             type: String,
-            required: [true, 'Contact is required']
+            minLength: 1,
+            required: true
         },
         credentials: {
             type: {
                 email: {
                     type: String,
-                    required: [true, 'Email is required'],
+                    required: true,
                     match: /^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$/,
                     unique: true
                 },
                 password: {
                     type: String,
-                    required: [true, 'Password is required'],
+                    required: true,
                     set: (value: string): string => hashSync(value, 10)
                 }
             },
-            required: [true, 'Admin credentials are required']
+            required: true
         },
         school: {
             type: Types.ObjectId,
             ref: 'School',
-            required: [true, 'School is required']
+            required: true
         },
         status: {
             type: String,
             enum: {
-                values: ['active', 'inactive'],
-                message: '{VALUE} is not a valid status'
+                values: Object.values(InstructorStatus),
+                message: '"{VALUE}" is not a valid status'
             },
             default: 'active'
         }
@@ -68,9 +71,23 @@ const instructorSchema = new Schema(
         timestamps: true,
         versionKey: false,
         toJSON: {
-            transform(_doc, ret: Record<string, unknown>) {
-                const { credentials, _id, __v, school, ...rest } = ret;
-                return { ...rest, school: (<School>school).schoolId };
+            transform(_doc, ret) {
+                const {
+                    _id,
+                    credentials,
+                    name: { first, middle, last, suffix },
+                    ...rest
+                } = ret;
+
+                return {
+                    ...rest,
+                    name: {
+                        first,
+                        middle,
+                        last,
+                        suffix
+                    }
+                };
             }
         }
     }

@@ -2,6 +2,7 @@ import { hashSync } from 'bcrypt';
 import { id } from '../../utilities/ids';
 import { Schema, model } from 'mongoose';
 import { SchoolDocument } from './school.types';
+import { CourseType } from '../course/course.types';
 
 const schoolSchema = new Schema(
     {
@@ -12,44 +13,68 @@ const schoolSchema = new Schema(
         },
         name: {
             type: String,
-            required: [true, 'Name is required']
+            minlength: 1,
+            required: true
         },
         about: {
             type: String,
-            required: [true, 'About is required']
+            minLength: 1,
+            required: true
         },
         address: {
             type: String,
-            required: [true, 'Address is required']
+            minLength: 1,
+            required: true
         },
         contact: {
             type: String,
-            required: [true, 'Contact is required']
+            minLength: 1,
+            required: true
         },
+        courses: [
+            {
+                courseId: {
+                    type: String,
+                    unique: true,
+                    default: id
+                },
+                type: {
+                    type: String,
+                    enum: {
+                        values: Object.values(CourseType),
+                        message: '"{VALUE}" is not supported'
+                    },
+                    required: true
+                }
+            }
+        ],
         credentials: {
             type: {
                 email: {
                     type: String,
-                    required: [true, 'Email is required'],
+                    unique: true,
                     match: /^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$/,
-                    unique: true
+                    required: true
                 },
                 password: {
                     type: String,
-                    required: [true, 'Password is required'],
-                    set: (value: string): string => hashSync(value, 10)
+                    set: (value: string): string => hashSync(value, 10),
+                    required: true
                 }
             },
-            required: [true, 'Admin credentials are required']
+            required: true
         }
     },
     {
         timestamps: true,
         versionKey: false,
         toJSON: {
-            transform(_doc, ret: Record<string, unknown>) {
-                const { credentials, _id, __v, ...rest } = ret;
-                return rest;
+            transform(_doc, ret) {
+                const { _id, courses, credentials, ...rest } = ret as SchoolDocument;
+                return {
+                    ...rest,
+                    courses: courses.map(({ courseId, type }) => ({ courseId, type }))
+                };
             }
         }
     }

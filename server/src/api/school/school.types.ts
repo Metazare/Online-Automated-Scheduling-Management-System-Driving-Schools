@@ -1,4 +1,7 @@
 import { Document } from 'mongoose';
+import { Course } from '../course/course.types';
+
+/* MODEL */
 
 export interface School {
     schoolId: string;
@@ -6,6 +9,7 @@ export interface School {
     about: string;
     address: string;
     contact: string;
+    courses: Course[];
     credentials: {
         email: string;
         password: string;

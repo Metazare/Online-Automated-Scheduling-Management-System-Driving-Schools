@@ -1,6 +1,7 @@
 import { Document, Types } from "mongoose";
-import { CourseDocument, CoursePopulatedDocument, CourseType } from "../course/course.types";
+import { CourseType } from "../course/course.types";
 import { Student, StudentDocument } from "../student/student.types";
+import { SchoolDocument } from "../school/school.types";
 
 export enum EnrollmentStatus {
     PENDING = 'pending',
@@ -9,10 +10,13 @@ export enum EnrollmentStatus {
     FINISHED = 'finished'
 }
 
+/* MODEL */
+
 export interface Enrollment {
     enrollmentId: string;
-    course: Types.ObjectId | Record<string, unknown>;
+    school: Types.ObjectId | Record<string, unknown>;
     student: Types.ObjectId | Record<string, unknown>;
+    courseId: string;
     availability: {
         days: number[];
         time: {
@@ -25,22 +29,24 @@ export interface Enrollment {
 }
 
 export interface EnrollmentDocument extends Enrollment, Document {
-    course: CourseDocument['_id'];
+    school: SchoolDocument['_id'];
     student: StudentDocument['_id'];
     createdAt: Date;
     updatedAt: Date;
 }
 
 export interface EnrollmentPopulatedDocument extends EnrollmentDocument {
-    course: CoursePopulatedDocument;
+    school: SchoolDocument;
     student: Student;
 }
+
+/* REQUEST */
 
 export type GetEnrollment = {
     enrollmentId?: string;
     courseId?: string;
-    status?: EnrollmentStatus;
     courseType?: CourseType;
+    status?: EnrollmentStatus;
 }
 
 export type CreateEnrollment = {

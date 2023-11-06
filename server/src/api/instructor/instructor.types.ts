@@ -1,11 +1,12 @@
 import { Document, Types } from 'mongoose';
 import { School, SchoolDocument } from '../school/school.types';
-import { Sex } from '../student/student.types';
 
 export enum InstructorStatus {
     ACTIVE = 'active',
     INACTIVE = 'inactive'
 }
+
+/* MODEL */
 
 export interface Instructor {
     instructorId: string;
@@ -13,11 +14,10 @@ export interface Instructor {
         first: string;
         middle?: string;
         last: string;
-        extension?: string;
+        suffix?: string;
     };
     address: string;
     contact: string;
-    sex: Sex;
     credentials: {
         email: string;
         password: string;
@@ -34,4 +34,26 @@ export interface InstructorDocument extends Instructor, Document {
 
 export interface InstructorPopulatedDocument extends InstructorDocument {
     school: School;
+}
+
+/* REQUEST */
+
+export type CreateInstructor = {
+    firstName: string;
+    middleName?: string;
+    lastName: string;
+    suffix?: string;
+    address: string;
+    contact: string;
+    email: string;
+}
+
+export type GetInstructors = {
+    instructorId?: string;
+    status?: InstructorStatus;
+}
+
+export type UpdateInstructorStatus = {
+    instructorId: string;
+    status: InstructorStatus;
 }
