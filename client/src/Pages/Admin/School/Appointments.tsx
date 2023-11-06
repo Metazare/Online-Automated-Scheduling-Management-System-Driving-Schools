@@ -18,106 +18,107 @@ import MenuItem from '@mui/material/MenuItem';
 // Components
 import AppointmentCard from '../../../Components/AppointmentCard';
 
-// Style for Modal
-const style = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 500,
-    bgcolor: 'background.paper',
-    borderRadius:'8px',
-    boxShadow: 24,
-    p: 4,
-}; 
+// // Style for Modal
+// const style = {
+//     position: 'absolute' as 'absolute',
+//     top: '50%',
+//     left: '50%',
+//     transform: 'translate(-50%, -50%)',
+//     width: 500,
+//     bgcolor: 'background.paper',
+//     borderRadius:'8px',
+//     boxShadow: 24,
+//     p: 4,
+// }; 
 
-function getRandomNumber(min: number, max: number) {
-    return Math.round(Math.random() * (max - min) + min);
-}
-function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
-    return new Promise<{ daysToHighlight: number[] }>((resolve, reject) => {
-        const timeout = setTimeout(() => {
-        const daysInMonth = date.daysInMonth();
-        const daysToHighlight = [1, 2, 3].map(() => getRandomNumber(1, daysInMonth));
-            resolve({ daysToHighlight });
-        }, 500);
-        signal.onabort = () => {
-            clearTimeout(timeout);
-            reject(new DOMException('aborted', 'AbortError'));
-        };
-    });
-}
-const initialValue = dayjs('2022-04-17');
-function ServerDay(props: PickersDayProps<Dayjs> & { highlightedDays?: number[] }) {
-    const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
-    const isSelected = !props.outsideCurrentMonth && highlightedDays.indexOf(props.day.date()) >= 0;
-    return (
-        <Badge
-            key={props.day.toString()}
-            overlap="circular"
-            badgeContent={isSelected ? '🌚' : undefined}
-        >
-            <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
-        </Badge>
-    );
-}
+// function getRandomNumber(min: number, max: number) {
+//     return Math.round(Math.random() * (max - min) + min);
+// }
+// function fakeFetch(date: Dayjs, { signal }: { signal: AbortSignal }) {
+//     return new Promise<{ daysToHighlight: number[] }>((resolve, reject) => {
+//         const timeout = setTimeout(() => {
+//         const daysInMonth = date.daysInMonth();
+//         const daysToHighlight = [1, 2, 3].map(() => getRandomNumber(1, daysInMonth));
+//             resolve({ daysToHighlight });
+//         }, 500);
+//         signal.onabort = () => {
+//             clearTimeout(timeout);
+//             reject(new DOMException('aborted', 'AbortError'));
+//         };
+//     });
+// }
+// const initialValue = dayjs('2022-04-17');
+// function ServerDay(props: PickersDayProps<Dayjs> & { highlightedDays?: number[] }) {
+//     const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
+//     const isSelected = !props.outsideCurrentMonth && highlightedDays.indexOf(props.day.date()) >= 0;
+//     return (
+//         <Badge
+//             key={props.day.toString()}
+//             overlap="circular"
+//             badgeContent={isSelected ? '🌚' : undefined}
+//         >
+//             <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
+//         </Badge>
+//     );
+// }
+
 function Appointments() {
 
-    // Calendar Controlled Value
-    const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-01-13'));
-    // * Reason Value 
-    const [reason,setReason] = useState("")
+//     // Calendar Controlled Value
+//     const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-01-13'));
+//     // * Reason Value 
+//     const [reason,setReason] = useState("")
 
-    const [form,setForm] = useState({
-        student:"",
-        instructor:"",
-        vehicle:"",
-        dateNtime:""
-    })
+//     const [form,setForm] = useState({
+//         student:"",
+//         instructor:"",
+//         vehicle:"",
+//         dateNtime:""
+//     })
 
-    const requestAbortController = React.useRef<AbortController | null>(null);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
+//     const requestAbortController = React.useRef<AbortController | null>(null);
+//     const [isLoading, setIsLoading] = React.useState(false);
+//     const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
 
-    const fetchHighlightedDays = (date: Dayjs) => {
-    const controller = new AbortController();
-    fakeFetch(date, {
-        signal: controller.signal,
-    })
-    .then(({ daysToHighlight }) => {
-        setHighlightedDays(daysToHighlight);
-        setIsLoading(false);
-    })
-    .catch((error) => {
-        // ignore the error if it's caused by `controller.abort`
-        if (error.name !== 'AbortError') {
-        throw error;
-        }
-    });
-        requestAbortController.current = controller;
-    };
-    React.useEffect(() => {
-        fetchHighlightedDays(initialValue);
-      // abort request on unmount
-        return () => requestAbortController.current?.abort();
-    }, []);
-    const handleMonthChange = (date: Dayjs) => {
-        if (requestAbortController.current) {
-            // make sure that you are aborting useless requests
-            // because it is possible to switch between months pretty quickly
-            requestAbortController.current.abort();
-        }
+//     const fetchHighlightedDays = (date: Dayjs) => {
+//     const controller = new AbortController();
+//     fakeFetch(date, {
+//         signal: controller.signal,
+//     })
+//     .then(({ daysToHighlight }) => {
+//         setHighlightedDays(daysToHighlight);
+//         setIsLoading(false);
+//     })
+//     .catch((error) => {
+//         // ignore the error if it's caused by `controller.abort`
+//         if (error.name !== 'AbortError') {
+//         throw error;
+//         }
+//     });
+//         requestAbortController.current = controller;
+//     };
+//     React.useEffect(() => {
+//         fetchHighlightedDays(initialValue);
+//       // abort request on unmount
+//         return () => requestAbortController.current?.abort();
+//     }, []);
+//     const handleMonthChange = (date: Dayjs) => {
+//         if (requestAbortController.current) {
+//             // make sure that you are aborting useless requests
+//             // because it is possible to switch between months pretty quickly
+//             requestAbortController.current.abort();
+//         }
     
-    setIsLoading(true);
-    setHighlightedDays([]);
-    fetchHighlightedDays(date);
-};
+//     setIsLoading(true);
+//     setHighlightedDays([]);
+//     fetchHighlightedDays(date);
+// };
 
-    const [open, setOpen] = useState("");
+//     const [open, setOpen] = useState("");
 
     return <>
         {/* // * Appointment body  */}
-        <Grid item xs={8} sx={{padding:"40px"}}>
+        {/* <Grid item xs={8} sx={{padding:"40px"}}>
             <div style={{display:"flex", alignItems:"center"}}>
                 <div style={{flexGrow:"1"}}>
                     <Typography variant="h6" color="primary" >My Appointments</Typography>
@@ -269,7 +270,7 @@ function Appointments() {
                     </>:""}
                 </Box>
             </Modal>
-        </div>
+        </div> */}
     </>
     
 }
