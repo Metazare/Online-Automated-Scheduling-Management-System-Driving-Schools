@@ -1,48 +1,59 @@
-import { AppointmentDocument, AppointmentPopulatedDocument, AppointmentStatus, CreateAppointment, GetAppointments, UpdateAppointment } from './appointment.types';
+import {
+    AppointmentPopulatedDocument,
+    AppointmentStatus,
+    CreateAppointment,
+    GetAppointments,
+    UpdateAppointment
+} from './appointment.types';
 import { BodyRequest, QueryRequest, RequestHandler } from 'express';
 import { CheckData } from '../../utilities/checkData';
-import { EnrollmentStatus } from '../enrollment/enrollment.types';
-import { InstructorDocument } from '../instructor/instructor.types';
+import { Enrollment, EnrollmentStatus } from '../enrollment/enrollment.types';
 import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import { Role } from '../auth/auth.types';
 import { SchoolDocument } from '../school/school.types';
-import { StudentDocument } from '../student/student.types';
 import AppointmentModel from './appointment.model';
+import EnrollmentModel from '../enrollment/enrollment.model';
 import InstructorModel from '../instructor/instructor.model';
-import studentModel from '../student/student.model';
+
+const checkSchedule = (dateSchedule: Date, availability: Enrollment['availability']) => {
+    const {
+        days,
+        time: { start, end }
+    } = availability;
+
+    if (!days.includes(dateSchedule.getDay())) return false;
+    if (dateSchedule.getHours() < start || dateSchedule.getHours() >= end) return false;
+    return true;
+};
 
 export const getAppointments: RequestHandler = async (req: QueryRequest<GetAppointments>, res) => {
     if (!req.user) throw new Unauthorized();
-    const { document, role } = req.user;
+    const { document: user, role } = req.user;
 
-    const { appointmentId, studentId, instructorId, status } = req.query;
+    const { appointmentId, enrollmentId, instructorId, status } = req.query;
 
     const appointmentQuery: Record<string, unknown> = {};
     if (typeof appointmentId === 'string') appointmentQuery.appointmentid = appointmentId;
     if (typeof status === 'string') appointmentQuery.status = status;
 
-    if (role === Role.INSTRUCTOR) {
-        const user = <InstructorDocument>document;
-        appointmentQuery.instructor = user._id;
-    }
-
-    if (role === Role.STUDENT) {
-        const user = <StudentDocument>document;
-        appointmentQuery.student = user._id;
+    switch (role) {
+        case Role.ADMIN:
+            appointmentQuery.school = user._id;
+            break;
+        case Role.INSTRUCTOR:
+            appointmentQuery.instructor = user._id;
+            break;
+        case Role.STUDENT:
+            appointmentQuery.student = user._id;
+            break;
     }
 
     let appointments: AppointmentPopulatedDocument[] = await AppointmentModel.find(appointmentQuery)
-        .populate({ path: 'instructor', populate: 'school' })
-        .populate('student')
+        .populate('instructor enrollment school')
         .exec();
 
-    if (role === Role.ADMIN) {
-        const user = <SchoolDocument>document;
-        appointments = appointments.filter((appointment) => appointment.instructor.school.schoolId === user.schoolId);
-    }
-
-    if (typeof studentId === 'string')
-        appointments = appointments.filter((appointment) => appointment.student.studentId === studentId);
+    if (typeof enrollmentId === 'string')
+        appointments = appointments.filter((appointment) => appointment.enrollment.enrollmentId === enrollmentId);
 
     if (typeof instructorId === 'string')
         appointments = appointments.filter((appointment) => appointment.instructor.instructorId === instructorId);
@@ -52,32 +63,39 @@ export const getAppointments: RequestHandler = async (req: QueryRequest<GetAppoi
 
 export const createAppointment: RequestHandler = async (req: BodyRequest<CreateAppointment>, res) => {
     if (!req.user) throw new Unauthorized();
-
     const user = <SchoolDocument>req.user.document;
 
-    const { studentId, instructorId, vehicle, schedule } = req.body;
+    const { enrollmentId, instructorId, vehicle, schedule } = req.body;
     const checker = new CheckData();
 
-    checker.checkType(studentId, 'string', 'studentId');
+    checker.checkType(enrollmentId, 'string', 'enrollmentId');
     checker.checkType(instructorId, 'string', 'instructorId');
     checker.checkType(vehicle, 'string', 'vehicle');
-    checker.checkDate(schedule, 'schedule');
-    
+    checker.checkType(schedule, 'number', 'string');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
-    const [student, instructor] = await Promise.all([
-        studentModel.findOne({ studentId, status: EnrollmentStatus.ACCEPTED }).exec(),
-        InstructorModel.findOne({ instructorId, school: user._id }).exec()
-    ]);
+    const instructor = await InstructorModel.findOne({ instructorId, school: user._id }).exec();
+    if (!instructor) throw new NotFound('Instructor');
 
-    if (!student) throw new NotFound();
-    if (!instructor) throw new NotFound();
+    const enrollment = await EnrollmentModel.findOne({
+        enrollmentId,
+        school: user._id,
+        status: EnrollmentStatus.ACCEPTED
+    }).exec();
+    if (!enrollment) throw new NotFound('Enrollment');
+
+    const dateSchedule = new Date(schedule);
+    if (!checkSchedule(dateSchedule, enrollment.availability)) {
+        checker.addError('schedule', "Schedule is out of student's availability");
+        throw new UnprocessableEntity(checker.errors);
+    }
 
     await AppointmentModel.create({
-        student: student._id,
+        enrollment: enrollment._id,
         instructor: instructor._id,
+        school: user._id,
         vehicle,
-        schedule: new Date(schedule)
+        schedule: dateSchedule
     });
 
     res.sendStatus(201);
@@ -85,7 +103,7 @@ export const createAppointment: RequestHandler = async (req: BodyRequest<CreateA
 
 export const updateAppointment: RequestHandler = async (req: BodyRequest<UpdateAppointment>, res) => {
     if (!req.user) throw new Unauthorized();
-    const { document, role } = req.user;
+    const { document: user, role } = req.user;
 
     const { appointmentId } = req.body;
     const checker = new CheckData();
@@ -94,46 +112,48 @@ export const updateAppointment: RequestHandler = async (req: BodyRequest<UpdateA
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     if (role === Role.ADMIN) {
-        const { schedule = '' } = req.body;
+        const { schedule } = req.body;
 
-        checker.checkDate(schedule, 'schedule');
+        checker.checkType(schedule, 'number', 'schedule');
         if (checker.size()) throw new UnprocessableEntity(checker.errors);
-
-        const user = <SchoolDocument>document;
 
         const appointment: AppointmentPopulatedDocument | null = await AppointmentModel.findOne({
             appointmentId,
-            status: AppointmentStatus.RESCHEDULE
+            school: user._id,
+            status: { $ne: AppointmentStatus.ACCEPTED }
         })
-            .populate({ path: 'instructor', populate: 'school' })
+            .populate('enrollment')
             .exec();
-        if (!appointment || appointment.instructor.school.schoolId !== user.schoolId) throw new NotFound();
+        if (!appointment) throw new NotFound('Appointment');
 
-        appointment.schedule = new Date(schedule);
+        const dateSchedule = new Date(<number>schedule);
+        if (!checkSchedule(dateSchedule, appointment.enrollment.availability)) {
+            checker.addError('schedule', "Schedule is out of student's availability");
+            throw new UnprocessableEntity(checker.errors);
+        }
+
+        appointment.schedule = dateSchedule;
         appointment.status = AppointmentStatus.PENDING;
-
         await appointment.save();
     }
 
     if (role === Role.STUDENT) {
-        const user = <StudentDocument>document;
-
         const { status } = req.body;
 
         checker.checkType(status, 'string', 'status');
         checker.checkValue(status, AppointmentStatus.PENDING, 'status');
         if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
-        const appointment: AppointmentDocument | null = await AppointmentModel.findOne({
-            appointmentId,
-            student: user._id,
-            status: AppointmentStatus.PENDING
-        }).exec();
-        if (!appointment) throw new NotFound();
+        const appointment = await AppointmentModel.findOneAndUpdate(
+            {
+                appointmentId,
+                student: user._id,
+                status: AppointmentStatus.PENDING
+            },
+            { status }
+        ).exec();
 
-        appointment.status = <AppointmentStatus>status;
-
-        await appointment.save();
+        if (!appointment) throw new NotFound('Appointment');
     }
 
     res.sendStatus(204);
