@@ -13,6 +13,7 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 
+import Footer from '../Layouts/Footer/Footer'
 
 function LandingPage() {
     return <>
@@ -95,7 +96,7 @@ function LandingPage() {
             </Accordion>
         </Container>
     
-    
+        <Footer/>
     </>
 }
 

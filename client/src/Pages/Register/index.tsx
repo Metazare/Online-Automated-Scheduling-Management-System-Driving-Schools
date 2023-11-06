@@ -201,8 +201,6 @@ function Index() {
                 </Grid>
                 
               </Grid>
-              
-              
 
               <Button fullWidth variant="contained" color="primary">
                 Sign Up
@@ -212,23 +210,6 @@ function Index() {
               </Button>
             </form>
           :""}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
           {(role === "student")? 
