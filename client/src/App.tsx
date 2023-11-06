@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+import LandingPage from './Pages/LandingPage';
 import Login from './Pages/Login'
 import Register from './Pages/Register'
 import Home from './Pages/User/Home';
@@ -29,7 +30,10 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
 
-        <Route path="/" element={<Home/>} />
+        {/* public */}
+        <Route element={<BaseLayout />} >
+          <Route path="/" element={<LandingPage/>} />
+        </Route>
 
         {/* users */}
         <Route element={<BaseLayout />} >
