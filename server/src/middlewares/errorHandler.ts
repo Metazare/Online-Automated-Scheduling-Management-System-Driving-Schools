@@ -1,10 +1,12 @@
 import { Error } from 'mongoose';
 import { ErrorRequestHandler } from 'express';
 import { TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
+import { UnprocessableEntity } from '../utilities/errors';
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     // Destructure the error object and provide default values if properties are missing
     let { name = 'Internal server error', message = 'Something went wrong', statusCode = 500 } = err;
+    let messageKey = 'message';
 
     // Check if the error is a duplicate key error
     if (err.code && err.code === 11000) {
@@ -20,11 +22,17 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     // Check if the error is a validation error
     if (err instanceof Error.ValidationError) {
         // Map the error messages to an array of objects containing the path and message
+        messageKey = 'errors';
         message = Object.values(err.errors).map(({ path, message }) => ({
             path,
             message
         }));
         statusCode = 422;
+    }
+
+    if (err instanceof UnprocessableEntity) {
+        messageKey = 'errors';
+        message = err.errors;
     }
 
     // Check if the error is a JsonWebTokenError
@@ -42,7 +50,7 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     }
 
     // Set the status code and send the response with the updated name and message
-    res.status(statusCode).json({ name, message });
+    res.status(statusCode).json({ name, [messageKey]: message });
 };
 
 export default errorHandler;

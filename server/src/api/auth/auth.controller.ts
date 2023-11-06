@@ -1,87 +1,44 @@
+import { BodyRequest, RequestHandler } from 'express';
+import { CheckData } from '../../utilities/checkData';
 import { compareSync } from 'bcrypt';
 import { cookieOptions, signAccess, signRefresh } from '../../utilities/cookies';
-import { DrivingSchoolDocument } from '../drivingSchool/drivingSchool.types';
-import { AllRegister, DrivingSchoolRegister, InstructorRegister, Payload, StudentRegister, UserLogin } from './auth.types';
-import { InstructorPopulatedDocument } from '../instructor/instructor.types';
-import { password } from '../../utilities/ids';
-import { RequestHandler } from 'express';
-import { BodyRequest, Role } from '../../@types/types';
-import { StudentDocument } from '../student/student.types';
+import { createSchool } from '../school/school.controller';
+import { CreateSchool } from '../school/school.types';
+import { createStudent } from '../student/student.controller';
+import { CreateStudent } from '../student/student.types';
+import { Payload, Role, UserLogin, UserRegister } from './auth.types';
 import { Unauthorized, UnprocessableEntity } from '../../utilities/errors';
-import authenticate from '../../middlewares/authenticate';
-import DrivingSchoolModel from '../drivingSchool/drivingSchool.model';
 import InstructorModel from '../instructor/instructor.model';
+import SchoolModel from '../school/school.model';
 import StudentModel from '../student/student.model';
 
-const RegisterDrivingSchool = (body: DrivingSchoolRegister): Promise<DrivingSchoolDocument> => {
-    const { name, address, contact, email, password } = body;
+export const register: RequestHandler = async (req: BodyRequest<UserRegister>, res) => {
+    const { role, ...body } = req.body;
+    const { email } = body;
 
-    return DrivingSchoolModel.create({
-        name,
-        address,
-        contact,
-        credentials: { email, password }
-    });
-};
+    const checker: CheckData = new CheckData();
 
-const RegisterInstructor = async (body: InstructorRegister, admin: DrivingSchoolDocument): Promise<UserLogin> => {
-    const { firstName, middleName, lastName, extensionName, address, contact, sex, email } = body;
+    checker.checkType(role, 'string', 'role');
+    checker.checkType(email, 'string', 'email');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
-    const newPassword = password();
+    const checkDuplicateEmail = await Promise.all([
+        SchoolModel.exists({ 'credentials.email': email }).exec(),
+        InstructorModel.exists({ 'credentials.email': email }).exec(),
+        StudentModel.exists({ 'credentials.email': email }).exec()
+    ]);
+    if (checkDuplicateEmail.find(Boolean)) {
+        checker.addError('email', 'Duplicate email');
+        throw new UnprocessableEntity(checker.errors);
+    }
 
-    await InstructorModel.create({
-        name: {
-            first: firstName,
-            middle: middleName,
-            last: lastName,
-            extension: extensionName
-        },
-        address,
-        contact,
-        sex,
-        credentials: { email, password: newPassword },
-        drivingSchool: admin._id
-    });
+    let payload: Payload;
 
-    return { email, password: newPassword, role: Role.INSTRUCTOR };
-};
-
-const RegisterStudent = (body: StudentRegister): Promise<StudentDocument> => {
-    const { firstName, middleName, lastName, extensionName, address, birthday, contact, sex, email, password } = body;
-
-    return StudentModel.create({
-        name: {
-            first: firstName,
-            middle: middleName,
-            last: lastName,
-            extension: extensionName
-        },
-        address,
-        contact,
-        sex,
-        birthday,
-        credentials: { email, password }
-    });
-};
-
-export const register: RequestHandler = async (req: BodyRequest<AllRegister>, res) => {
-    const { role } = req.body;
-    let payload: Payload = { userId: '', role };
-
-    switch (role) {
-        case Role.ADMIN:
-            const { schoolId } = await RegisterDrivingSchool(<DrivingSchoolRegister>req.body);
-            payload.userId = schoolId;
-            break;
-        case Role.INSTRUCTOR:
-            const credentials = await RegisterInstructor(<InstructorRegister>req.body, <DrivingSchoolDocument>req.user);
-            return res.status(201).json(credentials);
-        case Role.STUDENT:
-            const { studentId } = await RegisterStudent(<StudentRegister>req.body);
-            payload.userId = studentId;
-            break;
-        default:
-            throw new UnprocessableEntity('Invalid role');
+    if (role === Role.ADMIN) payload = await createSchool(<CreateSchool>body);
+    else if (role === Role.STUDENT) payload = await createStudent(<CreateStudent>body);
+    else {
+        checker.addError('role', 'Invalid role');
+        throw new UnprocessableEntity(checker.errors);
     }
 
     return res
@@ -91,37 +48,33 @@ export const register: RequestHandler = async (req: BodyRequest<AllRegister>, re
 };
 
 export const login: RequestHandler = async (req: BodyRequest<UserLogin>, res) => {
-    const { email, password, role } = req.body;
+    const { email, password } = req.body;
+    const checker = new CheckData();
 
-    let user: DrivingSchoolDocument | InstructorPopulatedDocument | StudentDocument | null;
-    let userId: string | null;
+    checker.checkType(email, 'string', 'email');
+    checker.checkType(password, 'string', 'password');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
-    switch (role) {
-        case Role.ADMIN:
-            user = <DrivingSchoolDocument>await DrivingSchoolModel.findOne({ 'credentials.email': email }).exec();
-            userId = user?.schoolId;
-            break;
-        case Role.INSTRUCTOR:
-            user = <InstructorPopulatedDocument>(
-                await InstructorModel.findOne({ 'credentials.email': email }).populate('drivingSchool').exec()
-            );
-            userId = user?.instructorId;
-            break;
-        case Role.STUDENT:
-            user = <StudentDocument>await StudentModel.findOne({ 'credentials.email': email }).exec();
-            userId = user?.studentId;
-            break;
-        default:
-            throw new UnprocessableEntity('Invalid user role');
-    }
+    const findUser = await Promise.all([
+        SchoolModel.findOne({ 'credentials.email': email }).exec(),
+        InstructorModel.findOne({ 'credentials.email': email }).exec(),
+        StudentModel.findOne({ 'credentials.email': email }).exec()
+    ]);
 
-    if (!user || !password || !compareSync(password, user.credentials.password)) throw new Unauthorized();
+    const user = findUser.find(Boolean);
+    if (!user || !compareSync(password, user.credentials.password)) throw new Unauthorized();
 
-    const payload: Payload = { userId, role };
+    let payload: Payload;
+
+    // prettier-ignore
+    if (user instanceof SchoolModel) payload = { userId: user.schoolId, role: Role.ADMIN };
+    else if (user instanceof InstructorModel) payload = { userId: user.instructorId, role: Role.INSTRUCTOR };
+    else if (user instanceof StudentModel) payload = { userId: user.studentId, role: Role.STUDENT };
+    else throw new Unauthorized();
 
     res.cookie('access-token', signAccess(payload), cookieOptions.access)
         .cookie('refresh-token', signRefresh(payload), cookieOptions.refresh)
-        .json(user.toJSON());
+        .json({ ...user.toJSON(), role: payload.role });
 };
 
 export const logout: RequestHandler = async (_req, res) =>
@@ -129,8 +82,3 @@ export const logout: RequestHandler = async (_req, res) =>
     res.cookie('access-token', '', cookieOptions.default)
         .cookie('refresh-token', '', cookieOptions.default)
         .sendStatus(205);
-
-export const checkIfAdmin: RequestHandler = (req: BodyRequest<AllRegister>, res, next) => {
-    if (req.body.role === Role.INSTRUCTOR) return authenticate(req, res, next);
-    next();
-};

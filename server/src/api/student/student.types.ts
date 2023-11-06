@@ -1,5 +1,12 @@
 import { Document } from 'mongoose';
-import { Sex } from '../../@types/types';
+import { Enrollment } from '../enrollment/enrollment.types';
+
+export enum Sex {
+    MALE = 'male',
+    FEMALE = 'female'
+}
+
+/* MODEL */
 
 export interface Student {
     studentId: string;
@@ -7,7 +14,7 @@ export interface Student {
         first: string;
         middle?: string;
         last: string;
-        extension?: string;
+        suffix?: string;
     };
     address: string;
     contact: string;
@@ -23,3 +30,27 @@ export interface StudentDocument extends Student, Document {
     createdAt: Date;
     updatedAt: Date;
 }
+
+/* REQUEST */
+
+export type GetStudents = {
+    studentId?: string;
+    courseType?: string;
+}
+
+export type CreateStudent = {
+    firstName: string;
+    middleName?: string;
+    lastName: string;
+    suffix?: string;
+    address: string;
+    contact: string;
+    birthday: number;
+    sex: Sex;
+    email: string;
+    password: string;
+}
+
+/* OTHER */
+
+export type StudentsList = Student & { enrollments: Omit<Enrollment, 'school' | 'student'>[] };

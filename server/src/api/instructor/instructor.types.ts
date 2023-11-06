@@ -1,6 +1,12 @@
 import { Document, Types } from 'mongoose';
-import { DrivingSchool, DrivingSchoolDocument } from '../drivingSchool/drivingSchool.types';
-import { Sex } from '../../@types/types';
+import { School, SchoolDocument } from '../school/school.types';
+
+export enum InstructorStatus {
+    ACTIVE = 'active',
+    INACTIVE = 'inactive'
+}
+
+/* MODEL */
 
 export interface Instructor {
     instructorId: string;
@@ -8,25 +14,46 @@ export interface Instructor {
         first: string;
         middle?: string;
         last: string;
-        extension?: string;
+        suffix?: string;
     };
     address: string;
     contact: string;
-    sex: Sex;
     credentials: {
         email: string;
         password: string;
     };
-    drivingSchool: Types.ObjectId | Record<string, unknown>;
-    status: 'active' | 'inactive';
+    school: Types.ObjectId | Record<string, unknown>;
+    status: InstructorStatus;
 }
 
 export interface InstructorDocument extends Instructor, Document {
-    drivingSchool: DrivingSchoolDocument['_id'];
+    school: SchoolDocument['_id'];
     createdAt: Date;
     updatedAt: Date;
 }
 
 export interface InstructorPopulatedDocument extends InstructorDocument {
-    drivingSchool: DrivingSchool;
+    school: School;
+}
+
+/* REQUEST */
+
+export type CreateInstructor = {
+    firstName: string;
+    middleName?: string;
+    lastName: string;
+    suffix?: string;
+    address: string;
+    contact: string;
+    email: string;
+}
+
+export type GetInstructors = {
+    instructorId?: string;
+    status?: InstructorStatus;
+}
+
+export type UpdateInstructorStatus = {
+    instructorId: string;
+    status: InstructorStatus;
 }

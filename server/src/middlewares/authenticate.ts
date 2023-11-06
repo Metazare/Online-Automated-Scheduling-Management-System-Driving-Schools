@@ -1,15 +1,11 @@
+import { AllUserDocument, Payload, Role } from '../api/auth/auth.types';
 import { cookieOptions, signAccess, signRefresh } from '../utilities/cookies';
-import { DrivingSchoolDocument } from '../api/drivingSchool/drivingSchool.types';
 import { Forbidden, Unauthorized } from '../utilities/errors';
-import { InstructorDocument } from '../api/instructor/instructor.types';
 import { JwtPayload, verify } from 'jsonwebtoken';
-import { Payload } from '../api/auth/auth.types';
 import { RequestHandler } from 'express';
-import { Role } from '../@types/types';
-import { StudentDocument } from '../api/student/student.types';
-import DrivingSchoolModel from '../api/drivingSchool/drivingSchool.model';
 import envs from '../utilities/envs';
 import InstructorModel from '../api/instructor/instructor.model';
+import SchoolModel from '../api/school/school.model';
 import StudentModel from '../api/student/student.model';
 
 const refreshTime = 5 * 24 * 60 * 60 * 1000; // 5 days
@@ -41,21 +37,26 @@ const authenticate: RequestHandler = async (req, res, next) => {
     }
 
     if (payload) {
+        let user: AllUserDocument | null;
+        const { userId, role } = payload;
+
         switch (payload.role) {
             case Role.ADMIN:
-                req.user = <DrivingSchoolDocument>await DrivingSchoolModel.findOne({ schoolId: payload.userId });
+                user = await SchoolModel.findOne({ schoolId: userId }).exec();
                 break;
             case Role.INSTRUCTOR:
-                req.user = <InstructorDocument>await InstructorModel.findOne({ instructorId: payload.userId });
+                user = await InstructorModel.findOne({ instructorId: userId }).populate('school').exec();
                 break;
             case Role.STUDENT:
-                req.user = <StudentDocument>await StudentModel.findOne({ studentId: payload.userId });
+                user = await StudentModel.findOne({ studentId: userId }).exec();
                 break;
             default:
                 return next(new Unauthorized('Invalid user role'));
         }
 
-        if (!req.user) return next(new Forbidden());
+        if (!user) return next(new Forbidden());
+
+        req.user = { document: user, role };
 
         return next();
     }

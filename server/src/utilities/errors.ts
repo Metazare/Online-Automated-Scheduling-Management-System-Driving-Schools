@@ -1,4 +1,6 @@
-class Unauthorized extends Error {
+import { Data } from "./checkData";
+
+export class Unauthorized extends Error {
     name: string = 'Unauthorized';
     statusCode: number = 401;
 
@@ -7,7 +9,7 @@ class Unauthorized extends Error {
     }
 }
 
-class Forbidden extends Error {
+export class Forbidden extends Error {
     name: string = 'Forbidden';
     statusCode: number = 403;
 
@@ -16,16 +18,16 @@ class Forbidden extends Error {
     }
 }
 
-class NotFound extends Error {
+export class NotFound extends Error {
     name: string = 'Not Found';
     statusCode: number = 404;
 
-    constructor(message = 'Resource not existing') {
-        super(message);
+    constructor(resource = 'Resource') {
+        super(`${resource} not existing`);
     }
 }
 
-class Conflict extends Error {
+export class Conflict extends Error {
     name: string = 'Duplicate';
     statusCode: number = 409;
 
@@ -34,13 +36,13 @@ class Conflict extends Error {
     }
 }
 
-class UnprocessableEntity extends Error {
+export class UnprocessableEntity extends Error {
     name: string = 'Unprocessable Entity';
     statusCode: number = 422;
+    errors: Data[] = [];
 
-    constructor(message = 'Invalid input data') {
-        super(message);
+    constructor(errors: Data[]) {
+        super('Invalid input data');
+        this.errors = errors;
     }
 }
-
-export { Conflict, Forbidden, NotFound, Unauthorized, UnprocessableEntity };
