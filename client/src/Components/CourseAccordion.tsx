@@ -7,8 +7,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Box from '@mui/material/Box';
 import {  Grid, IconButton, Typography,Modal , TextField, Button } from '@mui/material';
-
-
+import CircularProgress, {CircularProgressProps,} from '@mui/material/CircularProgress';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
 type Props ={
     variant: "manage"|"use",
@@ -27,6 +27,32 @@ const style = {
     p: 4,
 }; 
 
+
+function CircularProgressWithLabel(props: CircularProgressProps & { value: number },) {
+    return (
+        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+            <CircularProgress variant="determinate" {...props} />
+            <Box
+                sx={{
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                position: 'absolute',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                }}
+            >
+                <Typography
+                variant="caption"
+                component="div"
+                color="#ffffff"
+                >{`${Math.round(props.value)}%`}</Typography>
+            </Box>
+        </Box>
+    );
+}
 
 
 function CourseAccordion({variant,title}:Props) {
@@ -57,13 +83,15 @@ function CourseAccordion({variant,title}:Props) {
                     <IconButton aria-label="add" onClick={()=>{setOpen("add")}}>
                         <AddIcon sx={{fill:"#F0F0F0"}}/>
                     </IconButton>
-                :""}
+                :
+                    <CircularProgressWithLabel defaultValue={0} value={60} />
+                }
                 <IconButton aria-label="add" onClick={()=>{setOpenAccordion(!openAccordion)}}>
                     {openAccordion?<KeyboardArrowDownIcon sx={{fill:"#F0F0F0"}}/>:<NavigateNextIcon sx={{fill:"#F0F0F0"}}/>}
                 </IconButton>
             </Paper>
             {openAccordion?
-                <Paper variant="elevation" elevation={2} sx={{background:"white",display:"flex",gap:"5px",alignItems:"center",cursor:"pointer"}}>
+                <Paper variant="elevation" elevation={2} sx={{background:"white",display:"flex",gap:"5px",alignItems:"center",cursor:"pointer",paddingRight:"1em"}}>
                     <div style={{flexGrow:"1"}}>
                         <a href="courses/lesson" >
                             <div style={{padding:"1em"}}>
@@ -79,7 +107,7 @@ function CourseAccordion({variant,title}:Props) {
                             <DeleteIcon />
                         </IconButton>
                     </>:<>
-                    
+                        <VerifiedIcon sx={{fill:"#E24B5B"}}/>
                     </>}
                     
                 </Paper>
