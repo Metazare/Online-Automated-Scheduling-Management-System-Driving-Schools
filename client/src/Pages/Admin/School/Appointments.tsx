@@ -219,8 +219,7 @@ function Appointments() {
                                     value={formResched.reason}
                                     onChange={(event) => {
                                         setFormResched({...formResched, reason: event.target.value});
-                                }}
-                                  
+                                    }}
                                 />
                             </Grid>
                             <Grid item  xs={12} mt={"4"} height={"40px"}>
