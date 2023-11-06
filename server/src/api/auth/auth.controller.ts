@@ -64,29 +64,17 @@ export const login: RequestHandler = async (req: BodyRequest<UserLogin>, res) =>
     const user = findUser.find(Boolean);
     if (!user || !compareSync(password, user.credentials.password)) throw new Unauthorized();
 
-    let userId: string;
-    let role: Role;
+    let payload: Payload;
 
     // prettier-ignore
-    if (user instanceof SchoolModel) {
-        userId = user.schoolId;
-        role = Role.ADMIN;
-    }
-    else if (user instanceof InstructorModel) {
-        userId = user.instructorId;
-        role = Role.INSTRUCTOR;
-    }
-    else if (user instanceof StudentModel) {
-        userId = user.studentId;
-        role = Role.STUDENT;
-    }
+    if (user instanceof SchoolModel) payload = { userId: user.schoolId, role: Role.ADMIN };
+    else if (user instanceof InstructorModel) payload = { userId: user.instructorId, role: Role.INSTRUCTOR };
+    else if (user instanceof StudentModel) payload = { userId: user.studentId, role: Role.STUDENT };
     else throw new Unauthorized();
-
-    const payload: Payload = { userId, role };
 
     res.cookie('access-token', signAccess(payload), cookieOptions.access)
         .cookie('refresh-token', signRefresh(payload), cookieOptions.refresh)
-        .json({ ...user.toJSON(), role });
+        .json({ ...user.toJSON(), role: payload.role });
 };
 
 export const logout: RequestHandler = async (_req, res) =>
