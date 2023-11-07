@@ -96,7 +96,7 @@ function useReqInstructor(): Data {
       })
       .then((response:any)=>{
         console.log(response.data);
-        alert(response.data);
+        alert("Instructor Deleted!");
       });
     } catch (error: any) {
       setError(error);

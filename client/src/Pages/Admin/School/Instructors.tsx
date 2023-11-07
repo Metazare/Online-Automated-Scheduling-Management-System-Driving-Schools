@@ -81,6 +81,8 @@ function Instructors() {
       status: "active",
     })
 
+    const[selected, setSelected] = useState()
+
     useEffect(()=>{
       getInstructor(instructorData);
     }, [])
@@ -124,10 +126,10 @@ function Instructors() {
                           {instructor.email}
                         </TableCell>
                         <TableCell align="right">
-                            <IconButton aria-label=""  onClick={()=>{setOpen("edit")}}>
+                            <IconButton aria-label=""  onClick={()=>{setSelected(instructor.instructorId);setOpen("edit")}}>
                                 <EditIcon/>
                             </IconButton>
-                            <IconButton aria-label="" onClick={()=>{setOpen("delete")}}>
+                            <IconButton aria-label="" onClick={()=>{setSelected(instructor.instructorId);setOpen("delete")}}>
                                 <DeleteIcon/>
                             </IconButton>
                         </TableCell>
@@ -419,7 +421,21 @@ function Instructors() {
                                         </Button>
                                     </Grid>
                                     <Grid item sm={8} xs={12}>
-                                        <Button variant="contained" fullWidth color="primary" onClick={()=>{setOpen("Credential")}}>
+                                        <Button 
+                                          variant="contained" 
+                                          fullWidth 
+                                          color="primary" 
+                                          onClick={()=>{
+                                            setOpen("");
+                                            console.log(selected);
+                                            updateInstructor({
+                                              instructorId: selected,
+                                              status: "inactive"
+                                            });
+                                            getInstructor(instructorData);
+                                            getInstructor(instructorData);
+                                          }}
+                                        >
                                             Delete
                                         </Button>
                                     </Grid>
