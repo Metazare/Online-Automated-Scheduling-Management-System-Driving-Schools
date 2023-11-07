@@ -79,7 +79,7 @@ const enrollmentSchema = new Schema(
                 const {
                     _id: id,
                     availability: {
-                        day,
+                        days,
                         time: { start, end }
                     },
                     ...rest
@@ -88,7 +88,7 @@ const enrollmentSchema = new Schema(
                 return {
                     ...rest,
                     availability: {
-                        day,
+                        days,
                         time: {
                             start,
                             end
