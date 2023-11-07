@@ -68,7 +68,7 @@ const enrollmentSchema = new Schema(
                 values: Object.values(EnrollmentStatus),
                 message: '"{VALUE}" is not supported'
             },
-            default: 'pending'
+            default: EnrollmentStatus.PENDING
         }
     },
     {
