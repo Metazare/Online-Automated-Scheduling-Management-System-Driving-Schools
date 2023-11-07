@@ -63,7 +63,7 @@ export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEn
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const school = await SchoolModel.findOne({ 'courses.courseId': courseId }).exec();
-    if (!school) throw new NotFound('Course not found');
+    if (!school) throw new NotFound('Course');
 
     await EnrollmentModel.create({
         school: school._id,
@@ -98,7 +98,7 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
         school: user._id,
         status: { $ne: EnrollmentStatus.PENDING }
     }).exec();
-    if (!enrollment) throw new NotFound('Enrollment not found');
+    if (!enrollment) throw new NotFound('Enrollment');
 
     if (status === EnrollmentStatus.DECLINED) {
         const { reason } = req.body;
