@@ -39,18 +39,25 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Routes>
-        <Route path="/login" element={<Login/>} />
-        <Route path="/register" element={<Register/>} />
 
         {/* public */}
+        <Route path="/login" element={<Login/>} />
+        <Route path="/register" element={<Register/>} />
         <Route element={<BaseLayout />} >
           <Route path="/" element={<LandingPage/>} />
+        </Route>
+
+        {/* admin */}
+        <Route element={<BaseLayout />} >
+          <Route path="" element={<Home/>} />
+          <Route path="dashboard" element={<ManageSchool/>} />
         </Route>
 
         {/* users */}
         <Route element={<BaseLayout />} >
           <Route path="/courses/lesson" element={<LessonView/>} />
         </Route>
+
         {/* student */}
         <Route element={<BaseLayout />} >
           <Route path="/home" element={<Home/>} />
@@ -58,7 +65,7 @@ function App() {
           <Route path="/courses" element={<CoursesList/>} />
         </Route>
 
-        {/* Test Routes */}
+        {/* test */}
         <Route path="/test">
           <Route path="registeradmin" element={<RegisterAdmin/>}/>
           <Route path="registerstudent" element={<RegisterStudent/>}/>
@@ -68,12 +75,6 @@ function App() {
           <Route path="enrollstudent" element={<EnrollStudent/>} />
           <Route path="enrollget" element={<EnrollGet/>} />
           <Route path="appointmentcreate" element={<AppointmentCreate/>} />
-        </Route>
-          
-        {/* admin */}
-        <Route element={<BaseLayout />} >
-          <Route path="" element={<Home/>} />
-          <Route path="admin/school" element={<ManageSchool/>} />
         </Route>
 
       </Routes>

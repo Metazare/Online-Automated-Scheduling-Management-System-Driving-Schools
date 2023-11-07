@@ -12,12 +12,14 @@ import MenuItem from '@mui/material/MenuItem';
 import ChatIcon from '@mui/icons-material/Chat';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Button from '@mui/material/Button'
+import { useNavigate } from 'react-router-dom';
 
 type Props = {}
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 // eslint-disable-next-line 
 export default function Header({}: Props) {
+  const navigate = useNavigate();
   
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -84,8 +86,8 @@ export default function Header({}: Props) {
               <Button variant="text" sx={{color:"white"}}>About Us</Button>
               <Button variant="text" sx={{color:"white"}}>Courses</Button>
               <Button variant="text" sx={{color:"white"}}>FAQ</Button>
-              <Button variant="outlined" sx={{color:"white",borderRadius:"20px",borderColor:"white"}}>login</Button>
-              <Button variant="contained" color="primary" sx={{borderRadius:"20px"}}>Signup</Button>
+              <Button variant="outlined" sx={{color:"white",borderRadius:"20px",borderColor:"white"}} onClick={()=>navigate("/login")}>login</Button>
+              <Button variant="contained" color="primary" sx={{borderRadius:"20px"}} onClick={()=>navigate("/register")}>Signup</Button>
             </>}
           </Box>
         </Toolbar>

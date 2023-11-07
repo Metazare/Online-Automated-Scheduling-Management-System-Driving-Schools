@@ -54,8 +54,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             .then((response: any) => {
                 console.log(response.data)
                 setUser(response.data);
+
+                if (response.data.schoolId) {
+                  navigate("/dashboard")  
+                }
+                else if (response.data.studentId) {
+                  navigate("/home")  
+                }
+                else if (response.data.instructorId) {
+                  navigate("/dashboard")  
+                }
+
                 localStorage.setItem('user', JSON.stringify(response.data))
-                navigate("/profile")
             });
         }
         catch (error: any){
