@@ -74,13 +74,14 @@ const instructorSchema = new Schema(
             transform(_doc, ret) {
                 const {
                     _id,
-                    credentials,
+                    credentials: { email },
                     name: { first, middle, last, suffix },
                     ...rest
                 } = ret;
 
                 return {
                     ...rest,
+                    email,
                     name: {
                         first,
                         middle,
