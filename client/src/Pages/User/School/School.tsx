@@ -29,6 +29,7 @@ function School() {
   const {enroll} = useReqEnroll();
   const {id} = useParams();
 
+  const [enrolled,setEnrolled] = useState(false)
     const [form, setForm] = useState({
         course:'',
         sunday: false,
@@ -159,9 +160,10 @@ function School() {
                     </Box>
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
-                    <Paper sx={{padding:"1em"}}>
+                {enrolled?
+                    <Paper sx={{padding:"1em"}}  elevation={3}>
                         <Typography variant="h6" color="primary">Enroll Now</Typography>
-                        <form onSubmit={submit}>
+                        <form action="">
                             <Grid container spacing={2} width={"100%"} mt="20px" mb={"40px"}>
                                 <Grid item xs={12}>
                                     <TextField
@@ -265,33 +267,19 @@ function School() {
                                     // TODO Update text field to much better component
                                  */}
                                 <Grid item md={6} sm={12}>
-                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <TimePicker
-                                        // fullWidth
-                                        // id="startTime"
-                                        label="Start Time"
-                                        // variant="outlined"
-                                        // type='time'
-                                        // required
-                                        onChange={handleChangeStart}
-                                    />
-                                  </LocalizationProvider>
+                                  <TimePicker
+                                      label="Start Time"
+                                      onChange={handleChangeStart}
+                                  />
                                 </Grid>
                                 {/* 
                                     // TODO Update text field to much better component
                                 */}
                                 <Grid item md={6} sm={12}>
-                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <TimePicker
-                                        // fullWidth
-                                        // id="endTime"
-                                        label="End Time"
-                                        // variant="outlined"
-                                        // type='time'
-                                        // required
-                                        onChange={handleChangeEnd}
-                                    />
-                                  </LocalizationProvider>
+                                  <TimePicker
+                                      label="End Time"
+                                      onChange={handleChangeEnd}
+                                  />
                                 </Grid>
                                 <Grid item xs={12} mt="15px">
                                     <Button type='submit' fullWidth variant="contained" color="primary">
@@ -301,6 +289,15 @@ function School() {
                             </Grid>
                         </form>
                     </Paper>
+                    :
+                    <Paper sx={{padding:"1em"}} elevation={3}>
+                        <Typography variant="h6" color="primary">Your Request is Pending..</Typography>
+                        <Typography variant="subtitle2" mt={2} mb={1} color="initial">Selected Course</Typography>
+                        <Typography variant="body2" color="initial">Practical Driving Course</Typography>
+                        <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
+                        <Typography variant="body2" color="initial">Mon, Tues and Friday from 1 to 5 pm</Typography>
+                    </Paper>
+                }
                 </Grid>
             </Grid>
         </Container>

@@ -7,7 +7,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import Box from '@mui/material/Box';
 import {  Grid, IconButton, Typography,Modal , TextField, Button } from '@mui/material';
+import CircularProgress, {CircularProgressProps,} from '@mui/material/CircularProgress';
+import VerifiedIcon from '@mui/icons-material/Verified';
 
+type Props ={
+    variant: "manage"|"use",
+    title: String,
+
+}
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -20,7 +27,35 @@ const style = {
     p: 4,
 }; 
 
-function CourseAccordion() {
+
+function CircularProgressWithLabel(props: CircularProgressProps & { value: number },) {
+    return (
+        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+            <CircularProgress variant="determinate" {...props} />
+            <Box
+                sx={{
+                top: 0,
+                left: 0,
+                bottom: 0,
+                right: 0,
+                position: 'absolute',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                }}
+            >
+                <Typography
+                variant="caption"
+                component="div"
+                color="#ffffff"
+                >{`${Math.round(props.value)}%`}</Typography>
+            </Box>
+        </Box>
+    );
+}
+
+
+function CourseAccordion({variant,title}:Props) {
     // * Modal Open
     const [open, setOpen] = useState("");
     const [form,setForm] = useState({
@@ -33,27 +68,48 @@ function CourseAccordion() {
         <div style={{display:"flex",flexDirection:"column",gap:"25px"}}>
             <Paper variant="elevation" elevation={3} sx={{padding:"1em",gap:"5px",background:"#2F2E5A",display:"flex",alignItems:"center",cursor:"pointer"}}>
                 <div style={{flexGrow:"1"}} onClick={()=>{setOpenAccordion(!openAccordion)}}>
-                    <Typography variant="h6" color="primary"> Theoretical Driving</Typography>
-                    <Typography variant="body2" color="#F0F0F0"> Theoretical Driving</Typography>
+                    <Typography variant="h6" color="primary">{title}</Typography>
+                    <div style={{display:"flex",gap:"15px"}}>
+                        {variant === "manage"?<>
+                                <Typography variant="body2" color="#F0F0F0">2 Total Lessons</Typography>
+                            </>:<>
+                                <Typography variant="body2" color="#F0F0F0"> 4 Done</Typography>
+                                <Typography variant="body2" color="#F0F0F0"> 3 Remaining</Typography>
+                            </>
+                        }
+                    </div>
                 </div>
-                <IconButton aria-label="add" onClick={()=>{setOpen("add")}}>
-                    <AddIcon sx={{fill:"#F0F0F0"}}/>
-                </IconButton>
+                {variant === "manage"?
+                    <IconButton aria-label="add" onClick={()=>{setOpen("add")}}>
+                        <AddIcon sx={{fill:"#F0F0F0"}}/>
+                    </IconButton>
+                :
+                    <CircularProgressWithLabel defaultValue={0} value={60} />
+                }
                 <IconButton aria-label="add" onClick={()=>{setOpenAccordion(!openAccordion)}}>
                     {openAccordion?<KeyboardArrowDownIcon sx={{fill:"#F0F0F0"}}/>:<NavigateNextIcon sx={{fill:"#F0F0F0"}}/>}
                 </IconButton>
             </Paper>
             {openAccordion?
-                <Paper variant="elevation" elevation={2} sx={{padding:"1em",background:"white",display:"flex",gap:"5px",alignItems:"center",cursor:"pointer"}}>
+                <Paper variant="elevation" elevation={2} sx={{background:"white",display:"flex",gap:"5px",alignItems:"center",cursor:"pointer",paddingRight:"1em"}}>
                     <div style={{flexGrow:"1"}}>
-                        <Typography variant="body1" color="initial">Lesson #1</Typography>
+                        <a href="courses/lesson" >
+                            <div style={{padding:"1em"}}>
+                                <Typography variant="body1" color="initial">Lesson #1</Typography>
+                            </div>
+                        </a>
                     </div>
-                    <IconButton aria-label="add" onClick={()=>{setOpen('edit')}}>
-                        <EditIcon />
-                    </IconButton>
-                    <IconButton aria-label="add" onClick={()=>{setOpen('delete')}}>
-                        <DeleteIcon />
-                    </IconButton>
+                    {variant === "manage"?<>
+                        <IconButton aria-label="add" onClick={()=>{setOpen('edit')}}>
+                            <EditIcon />
+                        </IconButton>
+                        <IconButton aria-label="add" onClick={()=>{setOpen('delete')}}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </>:<>
+                        <VerifiedIcon sx={{fill:"#E24B5B"}}/>
+                    </>}
+                    
                 </Paper>
             :""}
 

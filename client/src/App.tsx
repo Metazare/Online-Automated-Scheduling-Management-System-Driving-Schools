@@ -2,13 +2,14 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-//Official Routes
+import LandingPage from './Pages/LandingPage';
 import Login from './Pages/Login'
 import Register from './Pages/Register'
 import Home from './Pages/User/Home';
 import BaseLayout from './Layouts/BaseLayout/BaseLayout';
 import School from './Pages/User/School/School'
-import ManageSchool from './Pages/Admin/School/ManageSchool';
+import LessonView from './Pages/User/School/LessonView';
+import CoursesList from './Pages/User/School/CourseList'
 
 //Test Routes
 import RegisterAdmin from './Test/RegisterAdmin';
@@ -19,6 +20,8 @@ import AddCourse from './Test/AddCourse';
 import EnrollStudent from './Test/EnrollStudent';
 import EnrollGet from './Test/EnrollGet';
 import AppointmentCreate from './Test/AppointmentCreate';
+
+import ManageSchool from './Pages/Admin/School/ManageSchool';
 
 const theme = createTheme({
   palette:{
@@ -39,12 +42,20 @@ function App() {
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
 
-        <Route path="/" element={<Home/>} />
+        {/* public */}
+        <Route element={<BaseLayout />} >
+          <Route path="/" element={<LandingPage/>} />
+        </Route>
 
-        {/* user */}
+        {/* users */}
+        <Route element={<BaseLayout />} >
+          <Route path="/courses/lesson" element={<LessonView/>} />
+        </Route>
+        {/* student */}
         <Route element={<BaseLayout />} >
           <Route path="/home" element={<Home/>} />
           <Route path="/school/:id" element={<School/>} />
+          <Route path="/courses" element={<CoursesList/>} />
         </Route>
 
         {/* Test Routes */}
@@ -58,14 +69,12 @@ function App() {
           <Route path="enrollget" element={<EnrollGet/>} />
           <Route path="appointmentcreate" element={<AppointmentCreate/>} />
         </Route>
+          
+        {/* admin */}
         <Route element={<BaseLayout />} >
           <Route path="" element={<Home/>} />
           <Route path="admin/school" element={<ManageSchool/>} />
         </Route>
-
-
-
-
 
       </Routes>
     </ThemeProvider>

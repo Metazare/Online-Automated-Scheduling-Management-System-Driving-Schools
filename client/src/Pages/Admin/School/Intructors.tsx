@@ -15,12 +15,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AddIcon from '@mui/icons-material/Add';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -108,28 +106,12 @@ function Intructors() {
                             haroldcastillo@gmail.com
                         </TableCell>
                         <TableCell align="right">
-                            <IconButton 
-                                aria-label=""  
-                                aria-controls={open ? 'basic-menu' : undefined}
-                                aria-haspopup="true"
-                                aria-expanded={open ? 'true' : undefined}
-                                onClick={handleClick}
-                                >
-                                <MoreVertIcon/>
+                            <IconButton aria-label=""  onClick={()=>{setOpen("edit")}}>
+                                <EditIcon/>
                             </IconButton>
-                            
-                            <Menu
-                                id="basic-menu"
-                                anchorEl={anchorEl}
-                                open={openAnchor}
-                                onClose={handleClose}
-                                MenuListProps={{
-                                'aria-labelledby': 'basic-button',
-                                }}
-                            >
-                                <MenuItem onClick={handleClose}>Delete</MenuItem>
-                                <MenuItem onClick={handleClose}>Edit</MenuItem>
-                            </Menu>
+                            <IconButton aria-label="" onClick={()=>{setOpen("delete")}}>
+                                <DeleteIcon/>
+                            </IconButton>
                         </TableCell>
                     </TableRow>
                 </TableBody>
@@ -210,7 +192,7 @@ function Intructors() {
                                         </Button>
                                     </Grid>
                                     <Grid item sm={8} xs={12}>
-                                        <Button variant="contained" fullWidth color="primary" onClick={()=>{setOpen("Credential")}}>
+                                        <Button variant="contained" fullWidth color="primary" onClick={()=>{setOpen("credential")}}>
                                             Create
                                         </Button>
                                     </Grid>
@@ -218,7 +200,7 @@ function Intructors() {
                             </form>
                         </>:""}
 
-                        {open === "Credential"?<>
+                        {open === "credential"?<>
                             <form action="">
                                 <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
                                     Add New Instructor
@@ -284,6 +266,94 @@ function Intructors() {
                                     <Grid item sm={8} xs={12}>
                                         <Button variant="contained" fullWidth color="primary" onClick={()=>{setOpen("Credential")}}>
                                             Done
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </form>
+                        </>:""}
+
+                        {open === "edit"?<>
+                            <form action="">
+                                <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
+                                    Edit info Instructor
+                                </Typography>
+                                <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
+                                    Fill up the details of the instructor
+                                </Typography>
+                                <Grid container spacing={2} mt={3}>
+                                    <Grid item md={6}  xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            required
+                                            id="firstName"
+                                            label="First Name"
+                                            value={form.firstName}
+                                            onChange={(event)=>{ setForm({...form, firstName: event.target.value });}}
+                                        />
+                                    </Grid>
+                                    <Grid item md={6} xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            required
+                                            id="lastName"
+                                            label="Last Name"
+                                            value={form.lastName}
+                                            onChange={(event)=>{ setForm({...form, lastName: event.target.value });}}
+                                        />
+                                    </Grid>
+                                    <Grid item  xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            required
+                                            id="contactNo"
+                                            label="Contact Number"
+                                            value={form.contactNo}
+                                            onChange={(event)=>{ setForm({...form, contactNo: event.target.value });}}
+                                        />
+                                    </Grid>
+                                    <Grid item  xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            required
+                                            id="email"
+                                            label="Email"
+                                            value={form.email}
+                                            onChange={(event)=>{ setForm({...form, email: event.target.value });}}
+                                        />
+                                    </Grid>
+                                </Grid>
+
+                                <Grid container spacing={1} mt={4}>
+                                    <Grid item sm={4} xs={12}>
+                                        <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                                            cancel
+                                        </Button>
+                                    </Grid>
+                                    <Grid item sm={8} xs={12}>
+                                        <Button variant="contained" fullWidth color="primary" onClick={()=>{setOpen("credential")}}>
+                                            Update
+                                        </Button>
+                                    </Grid>
+                                </Grid>
+                            </form>
+                        </>:""}
+                        {open === "delete"?<>
+                            <form action="">
+                                <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
+                                    Delete Instructor
+                                </Typography>
+                                <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
+                                    Are you sure you want to delete this instructor?
+                                </Typography>
+                                <Grid container spacing={1} mt={4}>
+                                    <Grid item sm={4} xs={12}>
+                                        <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                                            cancel
+                                        </Button>
+                                    </Grid>
+                                    <Grid item sm={8} xs={12}>
+                                        <Button variant="contained" fullWidth color="primary" onClick={()=>{setOpen("Credential")}}>
+                                            Delete
                                         </Button>
                                     </Grid>
                                 </Grid>

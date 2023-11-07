@@ -1,74 +1,68 @@
 import React from 'react'
 
-// * MUI IMPORTS
-// import Container from '@mui/material/Container'
-// import Typography from '@mui/material/Typography'
-// import Avatar from '@mui/material/Avatar';
-// import { Box, IconButton } from '@mui/material';
-// import CallIcon from '@mui/icons-material/Call';
-// import EmailIcon from '@mui/icons-material/Email';
-// import MoreVertIcon from '@mui/icons-material/MoreVert';
-// import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+// * MUI Imports
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
+import { Box, Grid, Paper, Button } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
-function Home()  {
-  return (
-    <div>Default</div>
-    // <Box  sx={{ background: 'secondary.dark',width:"100vw",margin:'auto',padding:"1em"}}>
-    //   <h1>wew</h1>
-    //   <Container maxWidth="lg">
-    //     <div style={{padding:"4rem 0",}}>
-    //       <a href="#" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"10px"}}>  
-    //         <ArrowBackIcon/>
-    //         <Typography variant="subtitle1" color="initial"> Go Back</Typography>
-    //       </a>
-    //       <Box
-    //         sx={{
-    //           display: 'flex',
-    //           gap:"25px",
-    //           alignItems:"center"
-    //         }}
-    //       >
-    //         <Avatar
-    //           alt="Remy Sharp"
-    //           src="/static/images/avatar/1.jpg"
-    //           sx={{ width: 80, height: 80 }}
-    //         />
-    //         <div style={{flexGrow:"1"}}>
-    //           <Typography variant="h4" fontWeight={500} color="initial">SMART Driving</Typography>
-    //           <Box
-    //             sx={{
-    //               display: 'flex',
-    //               gap:"10px"
-    //             }}
-    //           >
-    //             <Box
-    //             sx={{
-    //               display: 'flex',
-    //               gap:"5px"
-    //             }}
-    //             >
-    //               <CallIcon/> 
-    //               <Typography variant="body1" fontWeight={500}>0915-666-147</Typography>
-    //             </Box>
-    //             <Box
-    //             sx={{
-    //               display: 'flex',
-    //               gap:"5px"
-    //             }}
-    //             >
-    //               <EmailIcon/> 
-    //               <Typography variant="body1" fontWeight={500}>0915-666-147</Typography>
-    //             </Box>
-    //           </Box>
-    //         </div>
-    //         <IconButton aria-label="" onClick={()=>alert}>
-    //           <MoreVertIcon/>
-    //         </IconButton>
-    //       </Box>
-    //     </div>
-    //   </Container>
-    // </Box>
-  )
+import SchoolCard from '../../Components/SchoolCard';
+type Props = {}
+
+function Home({}: Props)  {
+  return <>
+    <div style={{ background: '#2F2E5A',width:"100vw",margin:'auto',padding:"1em 1em 0"}}>
+      <Container maxWidth="lg">
+          <div style={{padding:"3.8rem 0 2em",}}>
+              <Box
+                  sx={{
+                  display: 'flex',
+                  gap:"25px",
+                  alignItems:"center",
+                  justifyContent:"center"
+                  }}
+              >
+                <Typography variant="h5" color="#ffffff" >Look for a driving school</Typography>
+              </Box>
+          </div>
+          <Paper variant="elevation" elevation={3} sx={{borderRadius:"20px",display:"flex",alignItems:"center", padding:"0 0 0 .5em",width:"50%",minWidth:"300px",margin:" auto ",transform:" translateY(15px)"} }>
+            <SearchIcon/>
+            <input type="text" style={{flexGrow:"1",border:"none",outline:"none",height:'100%'}}/>
+            <Button variant="contained" color="primary" sx={{borderRadius:"20px"}}>
+              Search
+            </Button>
+          </Paper>
+      </Container>
+    </div>
+    <Container maxWidth="lg" sx={{padding:"4em 1em"}}>
+      <Typography variant="h6" color="initial" mb={2}>Enrolled Schools</Typography>
+      <Grid container spacing={2}>
+        <Grid item md={3} sm={4} xs={12}>
+          <SchoolCard schoolName={"Smart Driving"} variant="enrolled"/>
+        </Grid>
+        <Grid item md={3} sm={4} xs={12}>
+          <SchoolCard schoolName={"Prestige Driving School"} variant="enrolled"/>
+        </Grid>
+        
+      </Grid>
+      <Typography variant="h6" mt={4} color="initial" mb={2}>Available Schools</Typography>
+      <Grid container spacing={2}>
+        <Grid item md={3} sm={4} xs={12}>
+          <SchoolCard schoolName={"Smart Driving"} variant=""/>
+        </Grid>
+        <Grid item md={3} sm={4} xs={12}>
+          <SchoolCard schoolName={"Smart Driving"} variant=""/>
+        </Grid>
+        <Grid item md={3} sm={4} xs={12}>
+          <SchoolCard schoolName={"Smart Driving"} variant=""/>
+        </Grid>
+        <Grid item md={3} sm={4} xs={12}>
+          <SchoolCard schoolName={"Smart Driving"} variant=""/>
+        </Grid>
+      </Grid>
+    </Container>
+  </>
+  
 }
 
 export default Home
