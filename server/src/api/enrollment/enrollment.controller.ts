@@ -8,11 +8,13 @@ import {
     GetEnrollment,
     UpdateEnrollmentStatus
 } from './enrollment.types';
+import { LessonDocument, ProgressLesson } from '../lesson/lessont.types';
 import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import { Role } from '../auth/auth.types';
 import { SchoolDocument } from '../school/school.types';
 import { StudentDocument } from '../student/student.types';
 import EnrollmentModel from './enrollment.model';
+import LessonModel from '../lesson/lesson.model';
 import SchoolModel from '../school/school.model';
 
 export const getEnrollments: RequestHandler = async (req: QueryRequest<GetEnrollment>, res) => {
@@ -105,6 +107,11 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
         if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
         enrollment.reason = reason;
+    }
+
+    if (status === EnrollmentStatus.ACCEPTED) {
+        const lessons: LessonDocument[] = await LessonModel.find({ courseId: enrollment.courseId }).exec();
+        enrollment.progress = lessons.reduce((acc, lesson) => [...acc, <ProgressLesson>lesson], <ProgressLesson[]>[]);
     }
 
     enrollment.status = status;
