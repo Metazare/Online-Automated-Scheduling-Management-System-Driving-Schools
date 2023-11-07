@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import axios from './useAxios'
+import {useNavigate} from 'react-router-dom';
 
 interface Data {
   data: any;
@@ -31,6 +32,7 @@ interface UpdateEnrollmentData {
 }
 
 function useReqEnroll(): Data {
+  const navigate = useNavigate();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -47,9 +49,9 @@ function useReqEnroll(): Data {
           endTime: new Date(data.endTime).getHours()
         })
         .then((response:any)=>{
-          setData(response.data);
           console.log(response.data);
-          alert(response.data);
+          alert("Enroll request sent!");
+          navigate("/home");
         });
       } catch (error: any) {
         setError(error);

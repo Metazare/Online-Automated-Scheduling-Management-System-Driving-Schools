@@ -83,6 +83,7 @@ function School() {
         startTime: form.startTime,
         endTime: form.endTime
       });
+      
     }
     
 
@@ -164,10 +165,10 @@ function School() {
                     </Box>
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
-                {enrolled?
+                {!enrolled?
                     <Paper sx={{padding:"1em"}}  elevation={3}>
                         <Typography variant="h6" color="primary">Enroll Now</Typography>
-                        <form action="">
+                        <form onSubmit={submit}>
                             <Grid container spacing={2} width={"100%"} mt="20px" mb={"40px"}>
                                 <Grid item xs={12}>
                                     <TextField
@@ -268,22 +269,26 @@ function School() {
                                     </Grid>
                                 </Grid>
                                 {/* 
-                                    // TODO Update text field to much better component
-                                 */}
+                                  // TODO Update text field to much better component
+                                */}
                                 <Grid item md={6} sm={12}>
-                                  <TimePicker
-                                      label="Start Time"
-                                      onChange={handleChangeStart}
-                                  />
+                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <TimePicker
+                                        label="Start Time"
+                                        onChange={handleChangeStart}
+                                    />
+                                  </LocalizationProvider>
                                 </Grid>
                                 {/* 
                                     // TODO Update text field to much better component
                                 */}
                                 <Grid item md={6} sm={12}>
-                                  <TimePicker
-                                      label="End Time"
-                                      onChange={handleChangeEnd}
-                                  />
+                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <TimePicker
+                                        label="End Time"
+                                        onChange={handleChangeEnd}
+                                    />
+                                  </LocalizationProvider>
                                 </Grid>
                                 <Grid item xs={12} mt="15px">
                                     <Button type='submit' fullWidth variant="contained" color="primary">
