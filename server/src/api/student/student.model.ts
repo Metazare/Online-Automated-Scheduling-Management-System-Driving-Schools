@@ -17,19 +17,13 @@ const studentSchema = new Schema(
                     minLength: 1,
                     required: true
                 },
-                middle: {
-                    type: String,
-                    minlength: 1
-                },
+                middle: String,
                 last: {
                     type: String,
                     minLength: 1,
                     required: true
                 },
-                suffix: {
-                    type: String,
-                    minlength: 1
-                }
+                suffix: String
             },
             required: true
         },
@@ -45,7 +39,6 @@ const studentSchema = new Schema(
         },
         birthday: {
             type: Date,
-            minLength: 1,
             required: true
         },
         sex: {
@@ -80,13 +73,14 @@ const studentSchema = new Schema(
             transform(_doc, ret) {
                 const {
                     _id,
-                    credentials,
+                    credentials: { email },
                     name: { first, middle, last, suffix },
                     ...rest
                 } = ret;
 
                 return {
                     ...rest,
+                    email,
                     name: {
                         first,
                         middle,

@@ -29,8 +29,7 @@ export const createInstructor: RequestHandler = async (req: BodyRequest<CreateIn
     if (!req.user) throw new Unauthorized();
     const { document: user } = req.user;
 
-    const { firstName, lastName, address, contact, email } = req.body;
-    let { middleName, suffix } = req.body;
+    const { firstName, middleName, lastName, suffix, address, contact, email } = req.body;
 
     const checker = new CheckData();
 
@@ -39,10 +38,9 @@ export const createInstructor: RequestHandler = async (req: BodyRequest<CreateIn
     checker.checkType(address, 'string', 'address');
     checker.checkType(contact, 'string', 'contact');
     checker.checkType(email, 'string', 'email');
+    if (middleName) checker.checkType(middleName, 'string', 'middleName');
+    if (suffix) checker.checkType(suffix, 'string', 'suffix');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
-
-    middleName = typeof middleName === 'string' ? middleName : undefined;
-    suffix = typeof suffix === 'string' ? suffix : undefined;
 
     const credentials = { email, password: password() };
     await InstructorModel.create({

@@ -58,10 +58,9 @@ export const createStudent = async (body: CreateStudent): Promise<Payload> => {
     checker.checkType(sex, 'string', 'sex');
     checker.checkType(email, 'string', 'email');
     checker.checkType(password, 'string', 'password');
+    if (middleName) checker.checkType(middleName, 'string', 'middleName');
+    if (suffix) checker.checkType(suffix, 'string', 'suffix');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
-
-    middleName = typeof middleName === 'string' ? middleName : undefined;
-    suffix = typeof suffix === 'string' ? suffix : undefined;
 
     const { studentId } = await StudentModel.create({
         name: {

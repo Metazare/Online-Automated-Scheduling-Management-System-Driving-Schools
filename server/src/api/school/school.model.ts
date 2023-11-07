@@ -70,9 +70,10 @@ const schoolSchema = new Schema(
         versionKey: false,
         toJSON: {
             transform(_doc, ret) {
-                const { _id, courses, credentials, ...rest } = ret as SchoolDocument;
+                const { _id, courses, credentials: { email }, ...rest } = ret as SchoolDocument;
                 return {
                     ...rest,
+                    email,
                     courses: courses.map(({ courseId, type }) => ({ courseId, type }))
                 };
             }
