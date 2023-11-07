@@ -89,7 +89,7 @@ function Requests() {
                 </Select>
             </FormControl>
 
-            {(requestType === "Enrollment")? <></>
+            {(requestType === "Enrollment")? <>
             <TableContainer>
                 <Table stickyHeader aria-label="sticky table">
                 <TableHead>
@@ -130,6 +130,7 @@ function Requests() {
                                 </IconButton>
                             </TableCell>
                         </TableRow>
+                    ))}
                     </TableBody>
                     </Table>
                 </TableContainer>
@@ -211,8 +212,8 @@ function Requests() {
                     aria-describedby="modal-modal-description"
                 >
                     <Box sx={style}>
-                        {/* //* Enrollment Request */}
-                        {open === "AcceptEnrollment"?<>
+                        {/* Enrollment Request  */}
+                        {(open === "AcceptEnrollment")?<>
                             <form action="">
                                 <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
                                     Admit Student
@@ -234,6 +235,7 @@ function Requests() {
                                     </Button>
                                 </Grid>
                             </Grid>
+                            </form>
                         </>:""}
 
                         {open === "DeclineEnrollment"?<>
