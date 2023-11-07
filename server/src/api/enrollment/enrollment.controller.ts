@@ -90,13 +90,12 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
 
     checker.checkType(enrollmentId, 'string', 'enrollmentId');
     checker.checkType(status, 'string', 'status');
-    checker.checkValue(status, EnrollmentStatus.PENDING, 'status');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const enrollment = await EnrollmentModel.findOne({
         enrollmentId,
         school: user._id,
-        status: { $ne: EnrollmentStatus.PENDING }
+        status: status === EnrollmentStatus.FINISHED ? EnrollmentStatus.ACCEPTED : EnrollmentStatus.PENDING
     }).exec();
     if (!enrollment) throw new NotFound('Enrollment');
 
