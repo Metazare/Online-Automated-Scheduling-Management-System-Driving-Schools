@@ -1,7 +1,7 @@
-import { Document, Types } from "mongoose";
 import { CourseType } from "../course/course.types";
-import { Student, StudentDocument } from "../student/student.types";
+import { Document, Types } from "mongoose";
 import { SchoolDocument } from "../school/school.types";
+import { Student, StudentDocument } from "../student/student.types";
 
 export enum EnrollmentStatus {
     PENDING = 'pending',
