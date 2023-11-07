@@ -104,7 +104,7 @@ function useReqInstructor(): Data {
       setLoading(false);
     }
   }
-    
+
   return {
     data,
     loading,

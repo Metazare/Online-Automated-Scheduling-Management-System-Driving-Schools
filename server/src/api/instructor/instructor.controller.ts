@@ -11,14 +11,14 @@ export const getInstructors: RequestHandler = async (req, res) => {
     if (!req.user) throw new Unauthorized();
     const { document: user, role } = req.user;
 
-    const { stauts, instructorId } = req.query;
+    const { status, instructorId } = req.query;
 
     let school: SchoolDocument = <SchoolDocument>user;
     if (role === Role.INSTRUCTOR) school = (<InstructorDocument>user).school;
 
     const instructorQuery: Record<string, unknown> = { school: school._id };
     if (typeof instructorId === 'string') instructorQuery.instructorId = instructorId;
-    if (typeof stauts === 'string') instructorQuery.status = stauts;
+    if (typeof status === 'string') instructorQuery.status = status;
 
     const instructors = await InstructorModel.find(instructorQuery, { school: 0 }).exec();
 

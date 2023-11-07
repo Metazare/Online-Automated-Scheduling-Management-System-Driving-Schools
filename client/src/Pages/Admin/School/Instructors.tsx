@@ -126,9 +126,9 @@ function Instructors() {
                           {instructor.email}
                         </TableCell>
                         <TableCell align="right">
-                            <IconButton aria-label=""  onClick={()=>{setSelected(instructor.instructorId);setOpen("edit")}}>
+                            {/* <IconButton aria-label=""  onClick={()=>{setSelected(instructor.instructorId);setOpen("edit")}}>
                                 <EditIcon/>
-                            </IconButton>
+                            </IconButton> */}
                             <IconButton aria-label="" onClick={()=>{setSelected(instructor.instructorId);setOpen("delete")}}>
                                 <DeleteIcon/>
                             </IconButton>
