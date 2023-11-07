@@ -98,7 +98,6 @@ function useReqEnroll(): Data {
       })
       .then((response:any)=>{
         console.log(response.data);
-        alert(response.data);
       });
     } catch (error: any) {
       setError(error);

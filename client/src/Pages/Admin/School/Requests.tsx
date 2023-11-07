@@ -113,8 +113,8 @@ function Requests() {
                         <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
                             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                             <div>
-                                <Typography variant="subtitle1" color="initial">Harold James Castillo</Typography>
-                                <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>Sent 5mins ago</Typography>
+                                <Typography variant="subtitle1" color="initial">{request?.student?.name?.first} {request?.student?.name?.last}</Typography>
+                                <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>{request?.createdAt}</Typography>
                             </div>
                         </TableCell>
                         <TableCell >Theoretical Driving</TableCell>
@@ -122,10 +122,10 @@ function Requests() {
                           {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
                         </TableCell>
                         <TableCell align="right">
-                        <IconButton aria-label=""  onClick={()=>{setOpen("DeclineEnrollment")}}>
+                        <IconButton aria-label=""  onClick={()=>{setOpen("DeclineEnrollment"); setSelected(request.enrollmentId)}}>
                                     <ClearIcon/>
                                 </IconButton>
-                                <IconButton aria-label="" onClick={()=>{setOpen("AcceptEnrollment")}}>
+                                <IconButton aria-label="" onClick={()=>{setOpen("AcceptEnrollment"); setSelected(request.enrollmentId)}}>
                                     <CheckIcon/>
                                 </IconButton>
                             </TableCell>
@@ -230,7 +230,14 @@ function Requests() {
                                     </Button>
                                 </Grid>
                                 <Grid item sm={8} xs={12}>
-                                    <Button variant="contained" fullWidth color="primary">
+                                    <Button variant="contained" fullWidth color="primary"
+                                      onClick={() => {
+                                        updateEnrollments({enrollmentId: selected, status: 'accepted', reason: null});
+                                        setOpen("");
+                                        getEnrollments(form);
+                                        getEnrollments(form);
+                                      }}
+                                    >
                                         Admit
                                     </Button>
                                 </Grid>
@@ -259,12 +266,19 @@ function Requests() {
                                 <Grid container spacing={1} mt={3}>
                                     <Grid item sm={4} xs={12}>
                                         <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
-                                            cancel
+                                          cancel
                                         </Button>
                                     </Grid>
                                     <Grid item sm={8} xs={12}>
-                                        <Button variant="contained" fullWidth color="primary">
-                                            Decline
+                                        <Button variant="contained" fullWidth color="primary"
+                                          onClick={() => {
+                                            updateEnrollments({enrollmentId: selected, status: 'declined', reason: reason});
+                                            setOpen("");
+                                            getEnrollments(form);
+                                            getEnrollments(form);
+                                          }}
+                                        >
+                                          Decline
                                         </Button>
                                     </Grid>
                                 </Grid>
@@ -288,7 +302,9 @@ function Requests() {
                                         </Button>
                                     </Grid>
                                     <Grid item sm={8} xs={12}>
-                                        <Button variant="contained" fullWidth color="primary">
+                                        <Button variant="contained" fullWidth color="primary" 
+                                          
+                                        >
                                             Proceed
                                         </Button>
                                     </Grid>
