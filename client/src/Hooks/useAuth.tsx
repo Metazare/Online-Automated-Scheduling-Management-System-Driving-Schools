@@ -70,7 +70,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
         catch (error: any){
             console.log(error);
-            alert(error.message);
+            alert(error.response.data.message);
         }
     };
 
@@ -95,10 +95,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               role: role,
           })
           .then((response: any) => {
-              console.log(response)
-              setUser(response.data.user);
-              localStorage.setItem('user', JSON.stringify(response.data.user))
-              navigate("/dashboard")
+              console.log(response.data)
+              alert("Account created!")
+              navigate("/login")
           });
       }
       catch (error: any){
@@ -114,21 +113,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const isAuth = (id:any) => {
-		if (!user) {
-			// User is not logged in, so they are not authorized
-			return false;
-		}
+      if (!user) {
+        // User is not logged in, so they are not authorized
+        return false;
+      }
 
-		// User is logged in and authorized
-		return true;
-	};
+      // User is logged in and authorized
+      return true;
+    };
 
     useEffect(() => {
         // Check if user is already logged in on first mount
-        // const loggedInUser = localStorage.getItem("user");
-        // if (loggedInUser) {
-        //     setUser(JSON.parse(loggedInUser));
-        // }
+        const loggedInUser = localStorage.getItem("user");
+        if (loggedInUser) {
+            setUser(JSON.parse(loggedInUser));
+        }
     }, []);
 
     return (
