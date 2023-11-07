@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import {  Grid, Typography, IconButton, TextField } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -17,6 +17,8 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+
+import useReqStudent from '../../../Hooks/useReqStudent';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -56,6 +58,9 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
     );
 }
 function Students() {
+
+    const { data, loading, error, getStudent } = useReqStudent();
+
     // * Modal Open
     const [open, setOpen] = useState("");
     // TODO Pagination
@@ -74,6 +79,13 @@ function Students() {
         lesson:"",
         feedback:""
     })
+
+    useEffect(() => {
+      getStudent({
+        studentId:null,
+        courseType:null
+      })
+    }, []);
 
     return (
         <Grid item xs={12} sx={{padding:"40px"}}>
