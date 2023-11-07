@@ -30,9 +30,29 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 type Props = {}
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-// eslint-disable-next-line 
+
+// Connection to the server with port 5000
+const socket = io('http://localhost:5000')
+
+// Setting up the badge content number
+let badgeContentNumber = 0
+
 export default function Header({}: Props) {
-  
+
+  // Recieving the chat message from the server
+  socket.on('recieve_chat', (message) => {
+    console.log(message)
+  })
+
+
+  // Recieveing the notification from the server
+  socket.on('recieve_notification', (studentName, appointmentDate, course) => {
+    console.log(studentName, appointmentDate, course)
+    
+    // function to check the number of notifications based on the number of appointments & messages
+    // show it and add on the badgeContentNumber
+  })
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -62,8 +82,11 @@ export default function Header({}: Props) {
             <IconButton  sx={{ p: "0" , display: { md:'flex', xs:'none', sm:'flex'} }}>
               <ChatIcon style={{fill:"#E8E8E8"}}/>
             </IconButton>
+            
             <IconButton  sx={{ p: "0", display: { md:'flex', xs:'none', sm:'flex'} }}>
-              <NotificationsIcon style={{fill:"#E8E8E8"}}/>
+              <Badge badgeContent={badgeContentNumber} color="error">
+                <NotificationsIcon style={{fill:"#E8E8E8"}}/>
+              </Badge>
             </IconButton>
             
             <Tooltip title="Open settings">
