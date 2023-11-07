@@ -13,6 +13,8 @@ export const getStudents: RequestHandler = async (req: QueryRequest<GetStudents>
     if (!req.user) throw new Unauthorized();
     const { document: user, role } = req.user;
 
+    if (role === Role.STUDENT) return res.json(user);
+
     const { studentId, courseType } = req.query;
 
     let school: SchoolDocument = <SchoolDocument>user;
@@ -45,7 +47,7 @@ export const getStudents: RequestHandler = async (req: QueryRequest<GetStudents>
 export const createStudent = async (body: CreateStudent): Promise<Payload> => {
     const { firstName, lastName, address, contact, birthday, sex, email, password } = body;
     let { middleName, suffix } = body;
-    
+
     const checker = new CheckData();
 
     checker.checkType(firstName, 'string', 'firstName');
