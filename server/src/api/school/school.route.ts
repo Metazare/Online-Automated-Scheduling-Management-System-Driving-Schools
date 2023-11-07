@@ -1,14 +1,19 @@
 import { getSchools } from "./school.controller";
 import { Router } from "express";
 import asynchronousHandler from "../../middlewares/asynchronousHandler";
-import { limitUsers } from "../../middlewares/authorize";
-import { Role } from "../auth/auth.types";
 
 const router: Router = Router();
 
 /**
+ * ADMIN
+ * [get own data]
+ * 
+ * INSTRUCTOR
+ * [get school data]
+ * 
+ * STUDENT
  * schoolId (optional)
  */
-router.get('/', limitUsers(Role.STUDENT), asynchronousHandler(getSchools));
+router.get('/', asynchronousHandler(getSchools));
 
 export default router;

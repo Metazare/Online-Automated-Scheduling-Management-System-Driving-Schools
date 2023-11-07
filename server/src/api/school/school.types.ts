@@ -1,5 +1,5 @@
-import { Document } from 'mongoose';
 import { Course } from '../course/course.types';
+import { Document } from 'mongoose';
 
 /* MODEL */
 

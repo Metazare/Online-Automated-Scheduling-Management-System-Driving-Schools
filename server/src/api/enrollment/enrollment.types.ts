@@ -1,7 +1,8 @@
-import { Document, Types } from "mongoose";
 import { CourseType } from "../course/course.types";
-import { Student, StudentDocument } from "../student/student.types";
+import { Document, Types } from "mongoose";
+import { ProgressLesson } from "../lesson/lessont.types";
 import { SchoolDocument } from "../school/school.types";
+import { Student, StudentDocument } from "../student/student.types";
 
 export enum EnrollmentStatus {
     PENDING = 'pending',
@@ -24,6 +25,7 @@ export interface Enrollment {
             end: number;
         };
     };
+    progress: ProgressLesson[];
     reason?: string;
     status: EnrollmentStatus;
 }

@@ -1,5 +1,6 @@
 import { Enrollment, EnrollmentDocument, EnrollmentStatus } from './enrollment.types';
 import { id } from '../../utilities/ids';
+import { ProgressStatus } from '../lesson/lessont.types';
 import { Schema, Types, model } from 'mongoose';
 
 const enrollmentSchema = new Schema(
@@ -61,6 +62,31 @@ const enrollmentSchema = new Schema(
             },
             required: true
         },
+        progress: [
+            {
+                lessonId: {
+                    type: String,
+                    required: true
+                },
+                title: {
+                    type: String,
+                    required: true
+                },
+                description: {
+                    type: String,
+                    required: true
+                },
+                file: String,
+                status: {
+                    type: String,
+                    enum: {
+                        values: Object.values(ProgressStatus),
+                        message: '"{VALUE}" is not supported'
+                    },
+                    default: ProgressStatus.INCOMPLETE
+                }
+            }
+        ],
         reason: String,
         status: {
             type: String,
@@ -68,7 +94,7 @@ const enrollmentSchema = new Schema(
                 values: Object.values(EnrollmentStatus),
                 message: '"{VALUE}" is not supported'
             },
-            default: 'pending'
+            default: EnrollmentStatus.PENDING
         }
     },
     {
@@ -82,6 +108,7 @@ const enrollmentSchema = new Schema(
                         days,
                         time: { start, end }
                     },
+                    progress,
                     ...rest
                 } = ret;
 
@@ -93,7 +120,8 @@ const enrollmentSchema = new Schema(
                             start,
                             end
                         }
-                    }
+                    },
+                    progress: (<Record<string, unknown>[]>progress).map(({ _id, ...rest }) => rest)
                 };
             }
         }

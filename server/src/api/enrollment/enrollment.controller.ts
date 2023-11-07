@@ -8,11 +8,13 @@ import {
     GetEnrollment,
     UpdateEnrollmentStatus
 } from './enrollment.types';
+import { LessonDocument, ProgressLesson } from '../lesson/lessont.types';
 import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import { Role } from '../auth/auth.types';
 import { SchoolDocument } from '../school/school.types';
 import { StudentDocument } from '../student/student.types';
 import EnrollmentModel from './enrollment.model';
+import LessonModel from '../lesson/lesson.model';
 import SchoolModel from '../school/school.model';
 
 export const getEnrollments: RequestHandler = async (req: QueryRequest<GetEnrollment>, res) => {
@@ -61,7 +63,7 @@ export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEn
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const school = await SchoolModel.findOne({ 'courses.courseId': courseId }).exec();
-    if (!school) throw new NotFound('Course not found');
+    if (!school) throw new NotFound('Course');
 
     await EnrollmentModel.create({
         school: school._id,
@@ -88,15 +90,14 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
 
     checker.checkType(enrollmentId, 'string', 'enrollmentId');
     checker.checkType(status, 'string', 'status');
-    checker.checkValue(status, EnrollmentStatus.PENDING, 'status');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const enrollment = await EnrollmentModel.findOne({
         enrollmentId,
         school: user._id,
-        status: { $ne: EnrollmentStatus.PENDING }
+        status: status === EnrollmentStatus.FINISHED ? EnrollmentStatus.ACCEPTED : EnrollmentStatus.PENDING
     }).exec();
-    if (!enrollment) throw new NotFound('Enrollment not found');
+    if (!enrollment) throw new NotFound('Enrollment');
 
     if (status === EnrollmentStatus.DECLINED) {
         const { reason } = req.body;
@@ -105,6 +106,11 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
         if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
         enrollment.reason = reason;
+    }
+
+    if (status === EnrollmentStatus.ACCEPTED) {
+        const lessons: LessonDocument[] = await LessonModel.find({ courseId: enrollment.courseId }).exec();
+        enrollment.progress = lessons.reduce((acc, lesson) => [...acc, <ProgressLesson>lesson], <ProgressLesson[]>[]);
     }
 
     enrollment.status = status;
