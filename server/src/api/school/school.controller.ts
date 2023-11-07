@@ -3,17 +3,22 @@ import { CreateSchool, GetSchools } from './school.types';
 import { Payload, Role } from '../auth/auth.types';
 import { QueryRequest, RequestHandler } from 'express';
 import { Unauthorized, UnprocessableEntity } from '../../utilities/errors';
-import schoolModel from './school.model';
+import SchoolModel from './school.model';
+import { InstructorPopulatedDocument } from '../instructor/instructor.types';
 
 export const getSchools: RequestHandler = async (req: QueryRequest<GetSchools>, res) => {
     if (!req.user) throw new Unauthorized();
+    const { document: user, role } = req.user;
+
+    if (role === Role.ADMIN) return res.json(user);
+    if (role === Role.INSTRUCTOR) return res.json((<InstructorPopulatedDocument>user).school);
 
     const { schoolId } = req.query;
 
     const schoolQuery: Record<string, string> = {};
     if (typeof schoolId === 'string') schoolQuery.schoolId = schoolId;
 
-    const schools = await schoolModel.find(schoolQuery).exec();
+    const schools = await SchoolModel.find(schoolQuery).exec();
 
     res.json(schools);
 };
@@ -30,7 +35,7 @@ export const createSchool = async (body: CreateSchool): Promise<Payload> => {
     checker.checkType(password, 'string', 'password');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
-    const { schoolId } = await schoolModel.create({
+    const { schoolId } = await SchoolModel.create({
         name,
         about,
         address,
