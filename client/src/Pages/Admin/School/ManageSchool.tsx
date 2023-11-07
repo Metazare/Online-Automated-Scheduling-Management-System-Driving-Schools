@@ -21,7 +21,7 @@ import Requests from './Requests';
 import Appointments from './Appointments';
 import Courses from './Courses';
 import Students from './Students';
-import Intructors from './Intructors';
+import Instructors from './Instructors';
 
 
 function ManageSchool() {
@@ -111,7 +111,7 @@ function ManageSchool() {
                     <Students/>
                 :""}
                 {value===5?
-                    <Intructors/>
+                    <Instructors/>
                 :""}
             </Grid>
         </Container>

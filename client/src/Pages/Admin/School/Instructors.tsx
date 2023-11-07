@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import {  Grid, IconButton, Typography, TextField } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -19,6 +19,9 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import useReqInstructor from '../../../Hooks/useReqInstructor';
+
+
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -30,7 +33,10 @@ const style = {
     boxShadow: 24,
     p: 4,
 }; 
-function Intructors() {
+function Instructors() {
+
+    const {data, loading, credentials, getInstructor, createInstructor, updateInstructor} = useReqInstructor();
+
     // TODO Pagination
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -44,8 +50,6 @@ function Intructors() {
     // TODO End of Pagination
     // * Modal Open
     const [open, setOpen] = useState("");
-    
-
 
     const [credential,setCredential] = useState({
         email:"",
@@ -54,10 +58,12 @@ function Intructors() {
 
     const[form,setForm] = useState({
         firstName:"",
+        middleName:"",
         lastName:"",
-        contactNo:"",
+        suffix:"",
+        address:"",
+        contact:"",
         email:"",
-        
     })
 
 
@@ -70,11 +76,21 @@ function Intructors() {
         setAnchorEl(null);
     };
 
+    const[instructorData,setInstructorData] = useState({
+      instructorId: null,
+      status: "active",
+    })
+
+    useEffect(()=>{
+      getInstructor(instructorData);
+    }, [])
+
     return (
         <Grid item xs={12} sx={{padding:"40px"}}>
             <TableContainer>
                 <Table stickyHeader aria-label="sticky table">
                 <TableHead>
+                  
                     <TableRow>
                         <TableCell >
                             Name
@@ -91,19 +107,21 @@ function Intructors() {
                             </Button>
                         </TableCell>
                     </TableRow>
+                  
                 </TableHead>
                 <TableBody>
+                  {data?.map((instructor) => ( 
                     <TableRow  hover role="checkbox" >
                         <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
                             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                             <div>
-                                <Typography variant="subtitle1" color="initial">Harold James Castillo</Typography>
-                                <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>Sent 5mins ago</Typography>
+                                <Typography variant="subtitle1" color="initial">{instructor.name.first} {instructor.name.middle} {instructor.name.last}</Typography>
+                                <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>{instructor.createdAt}</Typography>
                             </div>
                         </TableCell>
-                        <TableCell >0908-666-2321</TableCell>
+                        <TableCell >{instructor.contact}</TableCell>
                         <TableCell >
-                            haroldcastillo@gmail.com
+                          {instructor.email}
                         </TableCell>
                         <TableCell align="right">
                             <IconButton aria-label=""  onClick={()=>{setOpen("edit")}}>
@@ -114,6 +132,7 @@ function Intructors() {
                             </IconButton>
                         </TableCell>
                     </TableRow>
+                  ))}
                 </TableBody>
                 </Table>
             </TableContainer>
@@ -163,16 +182,49 @@ function Intructors() {
                                             onChange={(event)=>{ setForm({...form, lastName: event.target.value });}}
                                         />
                                     </Grid>
+                                    <Grid item md={6} xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            required
+                                            id="middle"
+                                            label="Middle Name"
+                                            value={form.middleName}
+                                            onChange={(event)=>{ setForm({...form, middleName: event.target.value });}}
+                                        />
+                                    </Grid>
+                                    <Grid item md={6} xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            required
+                                            id="suffix"
+                                            label="Suffix"
+                                            value={form.suffix}
+                                            onChange={(event)=>{ setForm({...form, suffix: event.target.value });}}
+                                        />
+                                    </Grid>
+
                                     <Grid item  xs={12}>
                                         <TextField
                                             fullWidth
                                             required
-                                            id="contactNo"
-                                            label="Contact Number"
-                                            value={form.contactNo}
-                                            onChange={(event)=>{ setForm({...form, contactNo: event.target.value });}}
+                                            id="address"
+                                            label="Address"
+                                            value={form.address}
+                                            onChange={(event)=>{ setForm({...form, address: event.target.value });}}
                                         />
                                     </Grid>
+
+                                    <Grid item  xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            required
+                                            id="contact"
+                                            label="Contact Number"
+                                            value={form.contact}
+                                            onChange={(event)=>{ setForm({...form, contact: event.target.value });}}
+                                        />
+                                    </Grid>
+                                    
                                     <Grid item  xs={12}>
                                         <TextField
                                             fullWidth
@@ -192,7 +244,16 @@ function Intructors() {
                                         </Button>
                                     </Grid>
                                     <Grid item sm={8} xs={12}>
-                                        <Button variant="contained" fullWidth color="primary" onClick={()=>{setOpen("credential")}}>
+                                        <Button 
+                                          variant="contained" 
+                                          fullWidth 
+                                          color="primary" 
+                                          onClick={()=>{
+                                            setOpen("credential");
+                                            createInstructor(form);
+                                          }}
+
+                                        >
                                             Create
                                         </Button>
                                     </Grid>
@@ -215,13 +276,16 @@ function Intructors() {
                                             <OutlinedInput
                                                 id="outlined-adornment-password"
                                                 type={"text"}
-                                                value={credential.email}
+                                                value={credentials?.email}
                                                 disabled
                                                 endAdornment={
                                                 <InputAdornment position="end">
                                                     <IconButton
                                                     aria-label="toggle password visibility"
-                                                    onClick={()=>{}}
+                                                    onClick={()=>{
+                                                      navigator.clipboard.writeText(credentials?.email);
+                                                      alert("Email Copied!")
+                                                    }}
                                                     edge="end"
                                                     >
                                                         <ContentCopyIcon /> 
@@ -238,13 +302,16 @@ function Intructors() {
                                             <OutlinedInput
                                                 id="outlined-adornment-password"
                                                 type={"text"}
-                                                value={credential.email}
+                                                value={credentials?.password}
                                                 disabled
                                                 endAdornment={
                                                 <InputAdornment position="end">
                                                     <IconButton
                                                     aria-label="toggle password visibility"
-                                                    onClick={()=>{}}
+                                                    onClick={()=>{
+                                                      navigator.clipboard.writeText(credentials?.password);
+                                                      alert("Password Copied!")
+                                                    }}
                                                     edge="end"
                                                     >
                                                         <ContentCopyIcon /> 
@@ -264,7 +331,7 @@ function Intructors() {
                                         </Button>
                                     </Grid>
                                     <Grid item sm={8} xs={12}>
-                                        <Button variant="contained" fullWidth color="primary" onClick={()=>{setOpen("Credential")}}>
+                                        <Button variant="contained" fullWidth color="primary" onClick={()=>{setOpen("")}}>
                                             Done
                                         </Button>
                                     </Grid>
@@ -305,10 +372,10 @@ function Intructors() {
                                         <TextField
                                             fullWidth
                                             required
-                                            id="contactNo"
+                                            id="contact"
                                             label="Contact Number"
-                                            value={form.contactNo}
-                                            onChange={(event)=>{ setForm({...form, contactNo: event.target.value });}}
+                                            value={form.contact}
+                                            onChange={(event)=>{ setForm({...form, contact: event.target.value });}}
                                         />
                                     </Grid>
                                     <Grid item  xs={12}>
@@ -366,4 +433,4 @@ function Intructors() {
     )
 }
 
-export default Intructors
+export default Instructors
