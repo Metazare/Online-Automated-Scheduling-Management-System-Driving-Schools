@@ -89,6 +89,10 @@ function School() {
     if (loading) {
         return <p>Loading...</p>
     }
+
+    if (data?.length === 0) {
+        return <p>No data</p>
+    }
     
     return <>
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em"}}>

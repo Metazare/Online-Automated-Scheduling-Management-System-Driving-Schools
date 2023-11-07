@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 
 // * MUI Imports
 import Container from '@mui/material/Container'
@@ -7,9 +7,24 @@ import { Box, Grid, Paper, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
 import SchoolCard from '../../Components/SchoolCard';
+
+import useReqSchool from '../../Hooks/useReqSchool';
 type Props = {}
 
 function Home({}: Props)  {
+
+  const {data, loading, getSchool} = useReqSchool();
+
+  useEffect(()=>{
+    getSchool(null);
+  }, [])
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
+  console.log(data)
+
   return <>
     <div style={{ background: '#2F2E5A',width:"100vw",margin:'auto',padding:"1em 1em 0"}}>
       <Container maxWidth="lg">
@@ -38,27 +53,20 @@ function Home({}: Props)  {
       <Typography variant="h6" color="initial" mb={2}>Enrolled Schools</Typography>
       <Grid container spacing={2}>
         <Grid item md={3} sm={4} xs={12}>
-          <SchoolCard schoolName={"Smart Driving"} variant="enrolled"/>
+          <SchoolCard schoolName={"Smart Driving"} about={"test"} schoolId={"123"} variant="enrolled"/>
         </Grid>
         <Grid item md={3} sm={4} xs={12}>
-          <SchoolCard schoolName={"Prestige Driving School"} variant="enrolled"/>
+          <SchoolCard schoolName={"Prestige Driving School"} about={"test"} schoolId={"123"} variant="enrolled"/>
         </Grid>
         
       </Grid>
       <Typography variant="h6" mt={4} color="initial" mb={2}>Available Schools</Typography>
       <Grid container spacing={2}>
+      {data?.map((school) => ( 
         <Grid item md={3} sm={4} xs={12}>
-          <SchoolCard schoolName={"Smart Driving"} variant=""/>
+          <SchoolCard schoolName={school.name} about={school.about} schoolId={school.schoolId} variant=""/>
         </Grid>
-        <Grid item md={3} sm={4} xs={12}>
-          <SchoolCard schoolName={"Smart Driving"} variant=""/>
-        </Grid>
-        <Grid item md={3} sm={4} xs={12}>
-          <SchoolCard schoolName={"Smart Driving"} variant=""/>
-        </Grid>
-        <Grid item md={3} sm={4} xs={12}>
-          <SchoolCard schoolName={"Smart Driving"} variant=""/>
-        </Grid>
+      ))}
       </Grid>
     </Container>
   </>

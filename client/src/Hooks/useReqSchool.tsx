@@ -28,7 +28,7 @@ function useReqSchool(): Data {
         params: params
       })
       .then((response:any)=>{
-        if (response.data.length ===1){
+        if (data){
           setData(response.data[0]);
           console.log(response.data[0]);
         }

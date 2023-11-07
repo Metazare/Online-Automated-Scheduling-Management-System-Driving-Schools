@@ -4,11 +4,18 @@ import Avatar from '@mui/material/Avatar';
 import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
+
+import { useNavigate } from 'react-router-dom';
+
 type Props = {
     schoolName: String,
+    about: String,
+    schoolId: String,
     variant:"enrolled" | ""
 }
-function SchoolCard({schoolName,variant}:Props) {
+
+function SchoolCard({schoolName,about, schoolId, variant}:Props) {
+  const navigate = useNavigate();
     return (
         <div >
             {variant === "enrolled"?
@@ -25,11 +32,9 @@ function SchoolCard({schoolName,variant}:Props) {
                     sx={{ width: 86, height: 86,margin:"auto" }}
                 />
                 <Typography variant="h6" mt={4} color="initial" >{schoolName}</Typography>
-                <Typography variant="body2" mt={1} color="initial">SMART Driving is the best choice for your quality driving lessons The company is...</Typography>
+                <Typography variant="body2" mt={1} color="initial">{about}</Typography>
 
-
-
-                <Button variant="contained" sx={{mt:"30px",width:"100%"}}  color="primary">
+                <Button variant="contained" sx={{mt:"30px",width:"100%"}} color="primary" onClick={()=>navigate(`/school/${schoolId}`)}>
                     view
                 </Button>
             </Paper>
