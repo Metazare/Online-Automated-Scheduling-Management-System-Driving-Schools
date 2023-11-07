@@ -23,10 +23,7 @@ const lessonSchema = new Schema(
             minLength: 1,
             required: true
         },
-        file: {
-            type: String,
-            minLength: 1
-        }
+        file: String
     },
     {
         timestamps: true,

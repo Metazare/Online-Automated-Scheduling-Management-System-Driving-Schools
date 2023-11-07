@@ -17,19 +17,13 @@ const instructorSchema = new Schema(
                     minLength: 1,
                     required: true
                 },
-                middle: {
-                    type: String,
-                    minlength: 1
-                },
+                middle: String,
                 last: {
                     type: String,
                     minLength: 1,
                     required: true
                 },
-                suffix: {
-                    type: String,
-                    minlength: 1
-                }
+                suffix: String
             },
             required: true
         },
