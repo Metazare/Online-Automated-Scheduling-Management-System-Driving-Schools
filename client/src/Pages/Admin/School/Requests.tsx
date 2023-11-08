@@ -12,7 +12,7 @@ import Button from '@mui/material/Button';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import Box from '@mui/material/Box';
-
+import { io } from 'socket.io-client'
 
 
 const style = {
@@ -25,7 +25,11 @@ const style = {
     borderRadius:'8px',
     boxShadow: 24,
     p: 4,
-};                 
+};       
+
+// Connection to the server with port 5000
+const socket = io('http://localhost:5000');
+
 function Requests() {
     // TODO Pagination
     const [page, setPage] = useState(0);
@@ -43,6 +47,15 @@ function Requests() {
     // * Reason Value 
     const [reason,setReason] = useState("")
 
+    // Notification for sending the approval to student
+    function sendApproval(){
+        
+        // message contains that the student has been approved, and the date of schedule
+        // appointment status contains the status of approval (approved or declined)
+        // studentId contains the id of the student to send the approval
+        
+        // socket.emit('send_approval', message, appointment_status, studentId);
+    }
 
     return (
         <Grid item xs={12} sx={{padding:"40px"}}>

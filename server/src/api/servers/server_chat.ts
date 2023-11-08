@@ -13,33 +13,34 @@ app.use('/students', studentRoute);
 
 const io = new Server(3001, {
     cors: {
-        origin: ['http://localhost:3000', 'https://admin.socket.io/']
+        origin: ['http://localhost:3000', 'https://admin.socket.io']
     }
 });
 
 // Websocket Functions
 
-// Setting up the school id as the socket id
-// const schoolId = getSchoolId();
-
-// Setting up the student id as the socket id
-// const studentId = getStudentId();
-
 io.on('connection', (socket) => {
-    // Initiallizing the socket id with the school id
-    // socket.data.schoolId = schoolId;
-
-    // Initiallizing the socket id with the student id
-    // socket.data.studentId = studentId;
 
     // Chat System
-    // Call back for sending/recieving chat/message
-    socket.on('send_chat', (studentName, appointmentDate, course, cb) => {
-        console.log(studentName, appointmentDate, course);
+    // sending chat to admin
+    socket.on('send_chat_to_admin', (message, adminId, cb) => {
+        console.log(message, adminId, cb);
 
-        // create code for emitting the sending part of the chat here
-        // socket.to(socket.schoolId).emit('recieve_chat', message);
-        // socket.to(socket.studentId).emit('recieve_chat', message);
+        socket.to(adminId).emit('recieve_chat_from_admin', message);
+    });
+
+    // sending chat to student
+    socket.on('send_chat_to_admin', (message, studentId, cb) => {
+        console.log(message, studentId, cb);
+
+        socket.to(studentId).emit('recieve_chat_from_admin', message);
+    });
+
+    // sending chat to instructor
+    socket.on('send_chat_to_admin', (message, instructorId, cb) => {
+        console.log(message, instructorId, cb);
+
+        socket.to(instructorId).emit('recieve_chat_from_admin', message);
     });
 
     socket.on('disconnect', () => {
@@ -47,4 +48,6 @@ io.on('connection', (socket) => {
     });
 });
 
+// admin panel of the websocket
+// the auth is false since idk how to authenticate the user yet
 instrument(io, { auth: false });

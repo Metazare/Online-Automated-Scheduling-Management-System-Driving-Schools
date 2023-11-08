@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState, useEffect} from 'react'
 import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
 import { io } from 'socket.io-client'
@@ -35,23 +35,49 @@ const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 const socket = io('http://localhost:5000')
 
 // Setting up the badge content number
+// but based the number of content if the data is viewed or not (enrollment(approved/declined), appointment, reschedule)
 let badgeContentNumber = 0
 
 export default function Header({}: Props) {
 
-  // Recieving the chat message from the server
-  socket.on('recieve_chat', (message) => {
-    console.log(message)
-  })
+  // Check who is login (Student, Admin, Instructor)
+  // if student, show the notification for student
+  const fetchStudentNotif = () => {
+    socket.on('recieve_approval', (message, appointment_status) => {
+      console.log(message, appointment_status)
+        
+    })
 
+    socket.on('send_new_appointment', (message, appointment_date, appointment_status, studentId, instructorID) => {
+      console.log(message, appointment_date, appointment_status, studentId, instructorID)
+    })
+  }
 
-  // Recieveing the notification from the server
-  socket.on('recieve_notification', (studentName, appointmentDate, course) => {
-    console.log(studentName, appointmentDate, course)
-    
-    // function to check the number of notifications based on the number of appointments & messages
-    // show it and add on the badgeContentNumber
-  })
+  // if Admin, show the notification for Admin
+  const fetchAdminNotif = () => {
+    socket.on('recieve_enrollment', (studentId, date, courseId) => {
+      console.log(studentId, date, courseId)
+        
+    })
+
+    socket.on('recieve_resched', (studentId, date, courseId) => {
+      console.log(studentId, date, courseId)
+    })
+  }
+
+  // if Instructor, show the notification for Instructor
+  const fetchInstructorNotif = () => {
+    socket.on('recieve_new_appointment', (message, studentId, appointment_date) => {
+      console.log(message, studentId, appointment_date)
+        
+    })
+  }
+
+  useEffect(() => {
+    fetchStudentNotif()
+    fetchAdminNotif()
+    fetchInstructorNotif()
+  }, [])
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);

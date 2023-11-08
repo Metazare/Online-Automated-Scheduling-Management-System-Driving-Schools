@@ -20,6 +20,7 @@ import studentRoute from './api/student/student.route';
 
 // Websocket
 import { Server } from "socket.io";
+import { instrument } from '@socket.io/admin-ui';
 
 import { NotFound } from './utilities/errors';
 import envs from './utilities/envs';
@@ -30,7 +31,7 @@ const app = express();
 
 const io = new Server(5000, { 
     cors: {
-        origin: "http://localhost:3000"
+        origin: ["http://localhost:3000", "https://admin.socket.io"]
     },
 });
 
@@ -85,3 +86,7 @@ io.on("connection", socket => {
         console.log("user disconnected");
     });
 });
+
+// admin panel of the websocket
+// the auth is false since idk how to authenticate the user yet
+instrument(io, { auth: false });
