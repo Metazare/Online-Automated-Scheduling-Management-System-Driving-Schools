@@ -1,4 +1,3 @@
-import { Message } from './chat.types';
 import { id } from '../../../utilities/ids';
 import { model } from 'mongoose';
 import { Schema, Types } from 'mongoose';
@@ -19,3 +18,5 @@ const chatSystemSchema = new Schema({
         required: true
     }
 });
+
+export default model<Document>('ChatSystem', chatSystemSchema);

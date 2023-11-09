@@ -1,15 +1,7 @@
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { instrument } from '@socket.io/admin-ui';
-import express from 'express';
-
-// Routes
-import schoolRoute from '../../school/school.route';
-import studentRoute from '../../student/student.route';
-
-const app = express();
-
-app.use('/schools', schoolRoute);
-app.use('/students', studentRoute);
+import { sendSchedule, sendApproval, sendNewAppointment } from './notification.controller';
+import { send } from 'process';
 
 // General Namespace
 const io = new Server(3001, {
@@ -21,46 +13,37 @@ const io = new Server(3001, {
 // Websocket Functions
 io.on('connection', (socket) => {
 
-    // getting enrollment data from student | Admin
-    socket.on('send_enrollment', (studentId, date, courseId, schoolId) => {
-        console.log(studentId, date, courseId, schoolId);
-
-        // upload to data base...
-        // check if that data is in the database
+    // getting enrollment data from student | sending to Admin
+    socket.on('send_enrollment', (request) => {
 
         // Sending to a specific user using school id 
-        socket.to(schoolId).emit('recieve_enrollment', studentId, date, courseId);
+        sendSchedule(request, socket);
     });
 
-    // getting reschedule data from student | Admin
-    socket.on('send_resched', (studentId, date, courseId, schoolId) => {
-        console.log(studentId, date, courseId, schoolId);
 
-        // upload to data base...
-        // check if that data is in the database
+    // getting reschedule data from student | sending to Admin
+    socket.on('send_resched', (request) => {
 
         // Sending to a specific user using school schoolId
-        socket.to(schoolId).emit('recieve_resched', studentId, date, courseId);
+        sendSchedule(request, socket);
     });
 
+
     // getting approval data from Admin | sending to student
-    socket.on('send_approval', (message, appointment_status, studentId) => {
-        console.log(message, appointment_status, studentId);
+    socket.on('send_approval', (request) => {
 
         // sending to the specific student using student id
-        socket.to(studentId).emit('recieve_approval', message, appointment_status);
+        sendApproval(request, socket);
     })
+
 
     // getting new appointment data from Admin | sending to student 
-    socket.on('send_new_appointment', (message, appointment_date, studentId, instructorID) => {
-        console.log(message, appointment_date, studentId, instructorID);
+    socket.on('send_new_appointment', (request) => {
 
-        // sending to the specific student using student id
-        socket.to(studentId).emit('recieve_new_appointment', message, appointment_date);
-
-        // sending to the specific student using instructor id
-        socket.to(instructorID).emit('recieve_new_appointment', message, studentId, appointment_date);
+        // sending to the specific student using student id and instructor id
+        sendNewAppointment(request, socket);
     })
+
 
     socket.on('disconnect', () => {
         console.log('user disconnected');
