@@ -1,6 +1,6 @@
 import { CheckData } from '../../utilities/checkData';
 import { CreateStudent, GetStudents, StudentsList } from './student.types';
-import { EnrollmentPopulatedDocument } from '../enrollment/enrollment.types';
+import { Enrollment, EnrollmentPopulatedDocument } from '../enrollment/enrollment.types';
 import { InstructorDocument } from '../instructor/instructor.types';
 import { Payload, Role } from '../auth/auth.types';
 import { QueryRequest, RequestHandler } from 'express';
@@ -32,10 +32,10 @@ export const getStudents: RequestHandler = async (req: QueryRequest<GetStudents>
         enrollments = enrollments.filter((enrollment) => enrollment.student.studentId === studentId);
 
     const students: StudentsList[] = enrollments.reduce((list, enrollment) => {
-        const { school, student, ...rest } = enrollment;
+        const { school, student, ...rest } = enrollment.toJSON();
         const found = list.find((s) => s.studentId === student.studentId);
 
-        if (found) found.enrollments.push(rest);
+        if (found) found.enrollments.push(<Omit<Enrollment, 'school' | 'student'>>rest);
         else list.push({ ...student, enrollments: [rest] });
 
         return list;
