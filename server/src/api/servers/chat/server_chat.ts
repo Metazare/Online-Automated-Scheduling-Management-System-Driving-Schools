@@ -3,8 +3,8 @@ import { instrument } from '@socket.io/admin-ui';
 import express from 'express';
 
 // Routes
-import schoolRoute from '../school/school.route';
-import studentRoute from '../student/student.route';
+import schoolRoute from '../../school/school.route';
+import studentRoute from '../../student/student.route';
 
 const app = express();
 
