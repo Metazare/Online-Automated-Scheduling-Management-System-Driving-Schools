@@ -7,6 +7,6 @@ export type Message = {
 
 export interface ChatSystem {
     chatId: string;
-    target: User[];
+    members: User[];
     messages: Message[];
 }
