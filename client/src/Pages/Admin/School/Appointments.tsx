@@ -99,7 +99,7 @@ function Appointments() {
             <div style={{display:"flex", alignItems:"center"}}>
                 <div style={{flexGrow:"1"}}>
                     <Typography variant="h6" color="primary" >My Appointments</Typography>
-                    <Typography variant="body2" color="initial" >4 Results</Typography>
+                    <Typography variant="body2" color="initial" >{appointments?.length} Results</Typography>
                 </div>
                 <Button variant="text" color="primary" sx={{background:"white",boxShadow:5}} startIcon={<AddIcon/>} onClick={()=>{setOpen("add")}}>
                     add
