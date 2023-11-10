@@ -89,7 +89,7 @@ function Appointments() {
       })
     }, []);
 
-    if (loading) {
+    if (loading && appointmentLoading && instructorLoading) {
       return <div>Loading...</div>
     }
 
@@ -107,24 +107,17 @@ function Appointments() {
             </div>
 
             <Grid container spacing={2} mt={1}>
+              {appointments?.map((appointment) => ( 
                 <Grid item md={6} xs={12}>
-                    <AppointmentCard modalOpen={setOpen}/>
+                    <AppointmentCard 
+                      modalOpen={setOpen}
+                      studentName={`${appointment.enrollment.student}`}
+                      instructorName={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}
+                      courseName={appointment.enrollment.courseId}
+                      schedule={appointment.schedule}
+                    />
                 </Grid>
-                <Grid item md={6} xs={12}>
-                    <AppointmentCard modalOpen={setOpen}/>
-                </Grid>
-                <Grid item md={6} xs={12}>
-                    <AppointmentCard modalOpen={setOpen}/>
-                </Grid>
-                <Grid item md={6} xs={12}>
-                    <AppointmentCard modalOpen={setOpen}/>
-                </Grid>
-                <Grid item md={6} xs={12}>
-                    <AppointmentCard modalOpen={setOpen}/>
-                </Grid>
-                <Grid item md={6} xs={12}>
-                    <AppointmentCard modalOpen={setOpen}/>
-                </Grid>
+              ))}
             </Grid>
         </Grid>
         {/* //* Calendar  Container */}
