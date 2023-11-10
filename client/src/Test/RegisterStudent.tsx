@@ -13,6 +13,8 @@ import Select from '@mui/material/Select';
 
 import { useAuth } from '../Hooks/useAuth';
 
+
+
 export default function Register() {
   const { register } = useAuth();
 
@@ -50,7 +52,7 @@ export default function Register() {
   const handleChangeBirthday = (date: any) => {
     setForm({
       ...form,
-      birthday: date,
+      birthday: date.toDate(),
     });
   };
 
