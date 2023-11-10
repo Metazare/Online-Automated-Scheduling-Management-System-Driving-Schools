@@ -59,7 +59,7 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 }
 function Students() {
 
-    const { data, loading, error, getStudent } = useReqStudent();
+    const { students, loading, error, getStudent } = useReqStudent();
 
     // * Modal Open
     const [open, setOpen] = useState("");
@@ -80,12 +80,18 @@ function Students() {
         feedback:""
     })
 
+    const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
+
     useEffect(() => {
       getStudent({
         studentId:null,
         courseType:null
       })
     }, []);
+
+    if (loading) {
+      return <div>Loading...</div>
+    }
 
     return (
         <Grid item xs={12} sx={{padding:"40px"}}>
@@ -107,17 +113,24 @@ function Students() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
+                  {students?.map((student) => ( 
                     <TableRow  hover role="checkbox" >
                         <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
                             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                             <div>
-                                <Typography variant="subtitle1" color="initial">Harold James Castillo</Typography>
-                                <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>Sent 5mins ago</Typography>
+                                <Typography variant="subtitle1" color="initial">{student.name.first} {student.name.middle} {student.name.last} </Typography>
+                                <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>{student.createdAt}</Typography>
                             </div>
                         </TableCell>
-                        <TableCell >Theoretical Driving</TableCell>
                         <TableCell >
-                            Monday, Tuesday, Saturday at 1 to 10:30 am
+                          {student.enrollments?.map((enrollment) => ( 
+                            <div>{enrollment.courseId}</div>
+                          ))}
+                        </TableCell>
+                        <TableCell >
+                          {student.enrollments?.map((enrollment) => ( 
+                            <div>{enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {enrollment?.availability?.time?.start}:00 to {enrollment?.availability?.time?.end}:00</div>
+                          ))}   
                         </TableCell>
                         <TableCell >
                             <CircularProgressWithLabel defaultValue={0} value={60} />
@@ -128,6 +141,7 @@ function Students() {
                             </IconButton>
                         </TableCell>
                     </TableRow>
+                  ))}
                 </TableBody>
                 </Table>
             </TableContainer>

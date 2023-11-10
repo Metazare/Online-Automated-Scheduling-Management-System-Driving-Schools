@@ -2,7 +2,7 @@ import {useState} from 'react'
 import axios from './useAxios'
 
 interface Data {
-  data: any;
+  instructors: any;
   loading: boolean;
   error: Error | null;
   credentials: any;
@@ -32,7 +32,7 @@ interface UpdateInstructorData {
 }
 
 function useReqInstructor(): Data {
-  const [data, setData] = useState<any>(null);
+  const [instructors, setInstructors] = useState<any>(null);
   const [credentials, setCredentials] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -75,7 +75,7 @@ function useReqInstructor(): Data {
         params: params
       })
       .then((response:any)=>{
-        setData(response.data);
+        setInstructors(response.data);
         console.log(response.data);
       });
     } catch (error: any) {
@@ -106,7 +106,7 @@ function useReqInstructor(): Data {
   }
 
   return {
-    data,
+    instructors,
     loading,
     error,
     credentials,

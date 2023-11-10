@@ -19,7 +19,7 @@ import Logout from './Test/Logout';
 import AddCourse from './Test/AddCourse';
 import EnrollStudent from './Test/EnrollStudent';
 import EnrollGet from './Test/EnrollGet';
-import AppointmentCreate from './Test/AppointmentCreate';
+// import AppointmentCreate from './Test/AppointmentCreate';
 
 import ManageSchool from './Pages/Admin/School/ManageSchool';
 
@@ -74,7 +74,7 @@ function App() {
           <Route path="addcourse" element={<AddCourse/>} />
           <Route path="enrollstudent" element={<EnrollStudent/>} />
           <Route path="enrollget" element={<EnrollGet/>} />
-          <Route path="appointmentcreate" element={<AppointmentCreate/>} />
+          {/* <Route path="appointmentcreate" element={<AppointmentCreate/>} /> */}
         </Route>
 
       </Routes>

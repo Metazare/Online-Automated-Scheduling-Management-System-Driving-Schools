@@ -35,7 +35,7 @@ const style = {
 }; 
 function Instructors() {
 
-    const {data, loading, credentials, getInstructor, createInstructor, updateInstructor} = useReqInstructor();
+    const {instructors, loading, credentials, getInstructor, createInstructor, updateInstructor} = useReqInstructor();
 
     // TODO Pagination
     const [page, setPage] = useState(0);
@@ -76,7 +76,7 @@ function Instructors() {
         setAnchorEl(null);
     };
 
-    const[instructorData,setInstructorData] = useState({
+    const[instructorinstructors,setInstructorinstructors] = useState({
       instructorId: null,
       status: "active",
     })
@@ -84,7 +84,7 @@ function Instructors() {
     const[selected, setSelected] = useState()
 
     useEffect(()=>{
-      getInstructor(instructorData);
+      getInstructor(instructorinstructors);
     }, [])
 
     return (
@@ -112,7 +112,7 @@ function Instructors() {
                   
                 </TableHead>
                 <TableBody>
-                  {data?.map((instructor) => ( 
+                  {instructors?.map((instructor) => ( 
                     <TableRow  hover role="checkbox" >
                         <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
                             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
@@ -432,8 +432,8 @@ function Instructors() {
                                               instructorId: selected,
                                               status: "inactive"
                                             });
-                                            getInstructor(instructorData);
-                                            getInstructor(instructorData);
+                                            getInstructor(instructorinstructors);
+                                            getInstructor(instructorinstructors);
                                           }}
                                         >
                                             Delete

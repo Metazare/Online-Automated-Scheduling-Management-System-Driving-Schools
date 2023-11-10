@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import Typography from '@mui/material/Typography'
 import { Grid,Button, Paper , Modal,Box, TextField,IconButton } from '@mui/material'
 import dayjs, { Dayjs } from 'dayjs';
@@ -9,6 +9,10 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+
+import useReqStudent from '../../../Hooks/useReqStudent';
+import useReqInstructor from '../../../Hooks/useReqInstructor';
+import useReqAppointment from '../../../Hooks/useReqAppointment';
 
 // TODO Calendar and resched Modal
 
@@ -28,17 +32,26 @@ const style = {
     p: 4,
 }; 
 
+// Define a generic type for your state
+type YourStateType<T> = T | undefined;
+
 function Appointments() {
+
+  const { students, loading, error, getStudent } = useReqStudent();
+  const { instructors, loading: instructorLoading, error: instructorError, credentials, getInstructor, createInstructor, updateInstructor} = useReqInstructor();
+  const { appointments, loading: appointmentLoading, error: appointmentError, createAppointment, getAppointments, updateAppointment } = useReqAppointment();
+
 
     // * Reason Value 
     const [reason,setReason] = useState("")
+    const [selectedStudent, setSelectedStudent] = useState<YourStateType<any>>(undefined);
 
     // * Declaration for adding new appointments form
-    const [form,setForm] = useState({
-        student:"",
-        instructor:"",
+    const [form, setForm] = useState({
+        enrollmentId:"",
+        instructorId:"",
         vehicle:"",
-        dateTime: dayjs('2022-04-17T15:30')
+        schedule: new Date()
     })
     const [formResched,setFormResched] = useState({
         reschedDateTime:dayjs('2022-04-17T15:30'),
@@ -46,6 +59,39 @@ function Appointments() {
     })
     // * Open Modal 
     const [open, setOpen] = useState("");
+
+    const handleChangeDateTime = (date: any) => {
+      setForm({
+        ...form,
+        schedule: date.toDate(),
+      });
+    };
+
+    async function create(e: React.FormEvent<HTMLFormElement>){
+      e.preventDefault();
+      createAppointment(form);
+    };
+
+    useEffect(() => {
+      getStudent({
+        studentId:null,
+        courseType:null
+      })
+      getInstructor({
+        instructorId: null,
+        status: "active"
+      });
+      getAppointments({
+        appointmentId: null,
+        studentId: null,
+        instructorId: null,
+        status: null,
+      })
+    }, []);
+
+    if (loading) {
+      return <div>Loading...</div>
+    }
 
     return <>
         {/* // * Appointment body Container  */}
@@ -97,7 +143,7 @@ function Appointments() {
         >
             <Box sx={style}>
                 {open === "add"?<>
-                    <form action="">
+                    <form onSubmit={create}>
                         <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
                             Add Appointment
                         </Typography>
@@ -113,17 +159,38 @@ function Appointments() {
                                     select
                                     label="Student"
                                     required
-                                    value={form.student}
+                                    // value={form.studentId}
+                                    onChange={(event) => 
+                                    {
+                                      setSelectedStudent(event.target.value);
+                                      console.log(event.target.value)
+                                    }
+                                  }
+                                >
+                                  {students?.map((student) => ( 
+                                    <MenuItem value={student} key={student.studentId}>
+                                        {student.name.first} {student.name.middle} {student.name.last}
+                                    </MenuItem>
+                                  ))}
+                                </TextField>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <TextField
+                                    fullWidth
+                                    id="outlined-select-currency"
+                                    select
+                                    label="Course"
+                                    required
+                                    value={form.enrollmentId}
                                     onChange={(event) => {
-                                        setForm({...form, student: event.target.value });
+                                        setForm({...form, enrollmentId: event.target.value });
                                     }}
                                 >
-                                    <MenuItem  value={"1"}>
-                                        Student # 1
+                                  {selectedStudent?.enrollments?.map((course) => ( 
+                                    <MenuItem  value={course.enrollmentId} key={course.enrollmentId}>
+                                        {course.courseId}
                                     </MenuItem>
-                                    <MenuItem  value={"2"}>
-                                        Student # 2
-                                    </MenuItem>
+                                  ))}
                                 </TextField>
                             </Grid>
                             <Grid item xs={12}>
@@ -133,17 +200,16 @@ function Appointments() {
                                     select
                                     label="instructor"
                                     required
-                                    value={form.instructor}
+                                    value={form.instructorId}
                                     onChange={(event) => {
-                                        setForm({...form, instructor: event.target.value });
+                                        setForm({...form, instructorId: event.target.value });
                                     }}
                                 >
-                                    <MenuItem  value={"1"}>
-                                        instructor # 1
+                                   {instructors?.map((instructor) => ( 
+                                    <MenuItem  value={instructor.instructorId} key={instructor.instructorId}>
+                                        {instructor.name.first} {instructor.name.middle} {instructor.name.last}
                                     </MenuItem>
-                                    <MenuItem  value={"2"}>
-                                        instructor # 2
-                                    </MenuItem>
+                                  ))}
                                 </TextField>
                             </Grid>
                             <Grid item xs={12}>
@@ -159,13 +225,20 @@ function Appointments() {
                             <Grid item xs={12}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DemoContainer components={['DateTimePicker']}>
-                                        <DateTimePicker label="Date and Time" 
+                                        {/* <DateTimePicker label="Date and Time" 
                                             slotProps={{ textField: { fullWidth: true } }}
                                             value={form.dateTime}
                                             onChange={(newValue) => {
                                                 setForm({...form, dateTime: dayjs(newValue)});
                                             }}
-                                        />
+                                        /> */}
+
+                                      <DateTimePicker
+                                        slotProps={{ textField: { fullWidth: true } }}
+                                        label="Date and Time"
+                                        value={dayjs(form.schedule)}
+                                        onChange={handleChangeDateTime}
+                                      />
                                     </DemoContainer>
                                 </LocalizationProvider>
                             </Grid>
@@ -179,7 +252,7 @@ function Appointments() {
                                 </Button>
                             </Grid>
                             <Grid item sm={8} xs={12}>
-                                <Button variant="contained" fullWidth color="primary">
+                                <Button variant="contained" fullWidth color="primary" type="submit">
                                     Add
                                 </Button>
                             </Grid>
@@ -198,7 +271,7 @@ function Appointments() {
                         <Grid container spacing={2}>
                             
                             <Grid item xs={12}>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <DemoContainer components={['DateTimePicker']}>
                                         <DateTimePicker label="Date and Time" 
                                             slotProps={{ textField: { fullWidth: true } }}
@@ -208,7 +281,7 @@ function Appointments() {
                                             }}
                                         />
                                     </DemoContainer>
-                                </LocalizationProvider>
+                                </LocalizationProvider> */}
                             </Grid>
                             <Grid item xs={12}>
                                 <TextField

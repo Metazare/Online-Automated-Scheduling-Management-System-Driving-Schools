@@ -2,7 +2,7 @@ import {useState} from 'react'
 import axios from './useAxios'
 
 interface Data {
-  data: any;
+  appointments: any;
   loading: boolean;
   error: Error | null;
   createAppointment: (data: CreateAppointmentData) => void;
@@ -11,17 +11,17 @@ interface Data {
 }
 
 interface CreateAppointmentData {
-  studentId: string;
+  enrollmentId: string;
   instructorId: string;
   vehicle: string;
-  schedule: string;
+  schedule: Date;
 }
 
 interface GetAppointmentData {
-  appointmentId?: string;
-  studentId?: string;
-  instructorId?: string;
-  status?: string;
+  appointmentId?: string | null;
+  studentId?: string | null;
+  instructorId?: string | null;
+  status?: string | null;
 }
 
 interface UpdateAppointmentData {
@@ -31,7 +31,7 @@ interface UpdateAppointmentData {
 }
 
 function useReqAppointment(): Data {
-  const [data, setData] = useState<any>(null);
+  const [appointments, setAppointments] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
@@ -41,15 +41,14 @@ function useReqAppointment(): Data {
     try {
       await axios
       .post('/appointments', {
-        studentId: data.studentId,
+        enrollmentId: data.enrollmentId,
         instructorId: data.instructorId,
         vehicle: data.vehicle,
-        schedule: data.schedule
+        schedule: data.schedule.getTime()
       })
       .then((response:any)=>{
-        setData(response.data);
         console.log(response.data);
-        alert(response.data);
+        alert("Appointment set!");
       });
     } catch (error: any) {
       setError(error);
@@ -73,9 +72,8 @@ function useReqAppointment(): Data {
         params: params
       })
       .then((response:any)=>{
-        setData(response.data);
+        setAppointments(response.data);
         console.log(response.data);
-        alert(response.data);
       });
     } catch (error: any) {
       setError(error);
@@ -106,7 +104,7 @@ function useReqAppointment(): Data {
   }
     
   return {
-    data,
+    appointments,
     loading,
     error,
     createAppointment,
