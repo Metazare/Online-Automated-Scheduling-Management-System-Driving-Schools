@@ -1,3 +1,4 @@
+import { sendMessageToAdmin, sendMessageToStudent, sendMessageToInstructor } from './chat.controller';
 import { Server } from 'socket.io';
 import { instrument } from '@socket.io/admin-ui';
 import express from 'express';
@@ -23,24 +24,18 @@ io.on('connection', (socket) => {
 
     // Chat System
     // sending chat to admin
-    socket.on('send_chat_to_admin', (message, adminId, cb) => {
-        console.log(message, adminId, cb);
-
-        socket.to(adminId).emit('recieve_chat_from_admin', message);
+    socket.on('send_chat_to_admin', (message) => {
+        sendMessageToAdmin(message, socket);
     });
 
     // sending chat to student
-    socket.on('send_chat_to_admin', (message, studentId, cb) => {
-        console.log(message, studentId, cb);
-
-        socket.to(studentId).emit('recieve_chat_from_admin', message);
+    socket.on('send_chat_to_student', (message) => {
+        sendMessageToStudent(message, socket);
     });
 
     // sending chat to instructor
-    socket.on('send_chat_to_admin', (message, instructorId, cb) => {
-        console.log(message, instructorId, cb);
-
-        socket.to(instructorId).emit('recieve_chat_from_admin', message);
+    socket.on('send_chat_to_instructor', (message) => {
+        sendMessageToInstructor(message, socket);
     });
 
     socket.on('disconnect', () => {

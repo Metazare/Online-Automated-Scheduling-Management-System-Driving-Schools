@@ -1,5 +1,3 @@
-import e from "express";
-
 export enum NotificationStatus {
     VIEWED = 'viewed',
     IGNORED = 'ignored'
