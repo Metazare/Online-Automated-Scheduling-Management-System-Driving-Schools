@@ -28,7 +28,7 @@ import { useParams } from 'react-router-dom';
 function School() {
   const {data, loading, getSchool} = useReqSchool();
   const {data:lessons, loading:lessonLoading, getLessons} = useReqLesson();
-  const {enroll} = useReqEnroll();
+  const {data: enrolls, loading: enrollLoading, error: enrollError, getEnrollments, enroll} = useReqEnroll();
   const {id} = useParams();
 
   const [enrolled,setEnrolled] = useState(false)
@@ -45,15 +45,37 @@ function School() {
         endTime: new Date()
     });
 
+    const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
 
     useEffect(()=>{
       getSchool({
         schoolId: id
       });
-      // getLessons({
-      //   courseId: id
-      // })
+      getEnrollments({
+        enrollmentId: null,
+        courseId: null,
+        status: 'accepted',
+        courseType: null
+      })
     }, [])
+
+    function getSchoolDataById(value) {
+      console.log(value.filter(item => item.school.schoolId === id))
+      return value.filter(item => item.school.schoolId === id);
+    }
+
+    function populateObject2(object1, object2) {
+      // Create a mapping of courseIds to their corresponding types
+      const courseMapping = Object.fromEntries(object1.map(course => [course.courseId, course.type]));
+    
+      // Map over Object 2 and add the 'type' property based on the courseId
+      const populatedObject2 = object2.map(item => ({
+        ...item,
+        type: courseMapping[item.courseId],
+      }));
+    
+      return populatedObject2;
+    }
 
     const appendSelectedDays = (form): number[] => {
       const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
@@ -163,8 +185,8 @@ function School() {
         <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
             <Grid container spacing={2}>
                 <Grid item md={8} sm={8} xs={12} sx={{padding:"40px"}}>
-                  <Typography variant="h6" color="primary" mb={1}>About</Typography>
-                  <Typography variant="body2" align='justify'>{data?.about}</Typography>
+                  {/* <Typography variant="h6" color="primary" mb={1}>About</Typography>
+                  <Typography variant="body2" align='justify'>{data?.about}</Typography> */}
                   <Typography variant="h6" color="primary" mt={2} mb={1}>Courses</Typography>
                   <Box sx={{display:'flex', gap:"25px",flexWrap:"wrap"}}>
                     {data?.courses?.map((course)=>(
@@ -309,14 +331,19 @@ function School() {
                         </form>
                     </Paper>
                     :
-                    <Paper sx={{padding:"1em"}} elevation={3}>
-                        <Typography variant="h6" color="primary">Your Request is Pending..</Typography>
-                        <Typography variant="subtitle2" mt={2} mb={1} color="initial">Selected Course</Typography>
-                        <Typography variant="body2" color="initial">Practical Driving Course</Typography>
-                        <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
-                        <Typography variant="body2" color="initial">Mon, Tues and Friday from 1 to 5 pm</Typography>
-                    </Paper>
+                    ''
                 }
+                {data && enrolls && populateObject2(data.courses, getSchoolDataById(enrolls))?.map((request)=>(
+                  <Paper sx={{padding:"1em"}} elevation={3}>
+                    <Typography variant="h6" color="primary">Your request is {request.status}</Typography>
+                    <Typography variant="subtitle2" mt={2} mb={1} color="initial">Selected Course</Typography>
+                    <Typography variant="body2" color="initial">{request.type}</Typography>
+                    <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
+                    <Typography variant="body2" color="initial">
+                      {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
+                    </Typography>
+                  </Paper>
+                ))}
                 </Grid>
             </Grid>
         </Container>

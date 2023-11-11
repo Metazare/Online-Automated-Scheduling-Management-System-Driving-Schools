@@ -67,6 +67,17 @@ function Courses({}: Props)  {
                   title= {findCourse(course).type}
                   courseId= {findCourse(course).courseId}
                 />
+              ) : '' }
+            </>
+          ))}
+        </>
+        : ''}
+
+        {data ? <>
+          {courseTypes.map((course)=>(
+            <>
+              {findCourse(course) ? (
+                ''
               ) : <Button onClick={() => createCourse(course)}> Create {course} Course </Button> }
             </>
           ))}

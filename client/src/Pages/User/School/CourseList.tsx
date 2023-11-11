@@ -67,12 +67,12 @@ function CourseList() {
                         }}
                     >
                         <Avatar
-                        alt="Remy Sharp"
+                        alt={data?.name}
                         src="/static/images/avatar/1.jpg"
                         sx={{ width: 80, height: 80 }}
                         />
                         <div style={{flexGrow:"1"}}>
-                        <Typography variant="h4" fontWeight={500} color="initial">SMART Driving</Typography>
+                        <Typography variant="h4" fontWeight={500} color="initial">{data?.name}</Typography>
                         <Box
                             sx={{
                             display: 'flex',
@@ -86,7 +86,7 @@ function CourseList() {
                             }}
                             >
                             <CallIcon/> 
-                            <Typography variant="body1" fontWeight={500}>0915-666-147</Typography>
+                            <Typography variant="body1" fontWeight={500}>{data?.contact}</Typography>
                             </Box>
                             <Box
                             sx={{
@@ -95,7 +95,7 @@ function CourseList() {
                             }}
                             >
                             <EmailIcon/> 
-                            <Typography variant="body1" fontWeight={500}>0915-666-147</Typography>
+                            <Typography variant="body1" fontWeight={500}>{data?.email}</Typography>
                             </Box>
                         </Box>
                         </div>
