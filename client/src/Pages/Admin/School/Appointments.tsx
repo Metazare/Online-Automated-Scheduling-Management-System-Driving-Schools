@@ -64,24 +64,24 @@ function Appointments() {
     })
 
     // Notification for sending the appointment (new and resched)
-    function sendAppointment() {
-        socket.emit('send_new_appointment', 
-                    form.student, 
-                    form.instructor, 
-                    form.vehicle, 
-                    form.dateNtime, 
-                    reason)
-    }
+    // function sendAppointment() {
+    //     socket.emit('send_new_appointment', 
+    //                 form.student, 
+    //                 form.instructor, 
+    //                 form.vehicle, 
+    //                 form.dateNtime, 
+    //                 reason)
+    // }
 
     const requestAbortController = React.useRef<AbortController | null>(null);
     const [isLoading, setIsLoading] = React.useState(false);
     const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
 
-    const fetchHighlightedDays = (date: Dayjs) => {
-    const controller = new AbortController();
-    fakeFetch(date, {
-        signal: controller.signal,
-    })
+    // const fetchHighlightedDays = (date: Dayjs) => {
+    // const controller = new AbortController();
+    // fakeFetch(date, {
+    //     signal: controller.signal,
+    // })
     // * Open Modal 
     const [open, setOpen] = useState("");
 
@@ -365,6 +365,6 @@ function Appointments() {
         </Modal>
     </>
     
-}}
+}
 
 export default Appointments;

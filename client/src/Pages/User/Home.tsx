@@ -1,15 +1,12 @@
 import React, {useEffect} from 'react'
-import { Button } from '@mui/material'
 import { io } from 'socket.io-client'
-
-import TextField from '@mui/material/TextField';
-
 
 // * MUI Imports
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import { Box, Grid, Paper, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import TextField from '@mui/material/TextField';
 
 import SchoolCard from '../../Components/SchoolCard';
 
