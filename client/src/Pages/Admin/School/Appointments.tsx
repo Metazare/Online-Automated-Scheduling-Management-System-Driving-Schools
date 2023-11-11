@@ -68,6 +68,20 @@ function Appointments() {
       });
     };
 
+    function findValue(array, key, valueToFind) {
+      console.log(array)
+      for (let i = 0; i < array.length; i++) {
+        const element = array[i];
+        console.log(element)
+        if (element.hasOwnProperty(key) && element[key] === valueToFind) {
+          console.log(element)
+          return element;
+        }
+      }
+      return false;
+    }
+    
+
     async function create(e: React.FormEvent<HTMLFormElement>){
       e.preventDefault();
       createAppointment(form);
@@ -93,6 +107,8 @@ function Appointments() {
       });
       console.log(data)
     }, []);
+
+    const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
 
     if (loading && appointmentLoading && instructorLoading) {
       return <div>Loading...</div>
@@ -191,6 +207,17 @@ function Appointments() {
                                   ))}
                                 </TextField>
                             </Grid>
+                            {form.enrollmentId ? <>
+                              <p>Availability</p>
+                              <>
+                                <div>
+                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at 
+                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.start}:00 to 
+                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.end}:00
+                                </div>
+                              </>
+                            </>
+                            : <></>}
                             <Grid item xs={12}>
                                 <TextField
                                     fullWidth

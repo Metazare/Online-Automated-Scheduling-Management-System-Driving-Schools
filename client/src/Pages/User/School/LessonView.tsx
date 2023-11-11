@@ -96,7 +96,7 @@ function LessonView() {
                         </Button>
                     </div>
                     <div style={{width:"100%",borderRadius:"8px",minHeight:"400px",marginTop:"25px", background:"#D0D0D0"}}>
-                        
+                      {datum?.file}
                     </div>
                 </Grid>
                 {feedback?
