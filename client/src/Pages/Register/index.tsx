@@ -61,7 +61,7 @@ function Index() {
   const handleChangeBirthday = (date: any) => {
     setForm({
       ...form,
-      birthday: date,
+      birthday: date.toDate(),
     });
   };
 
