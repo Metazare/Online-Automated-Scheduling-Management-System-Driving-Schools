@@ -123,8 +123,6 @@ function CourseAccordion({variant,title, courseId}:Props) {
       });
     };
 
-    
-
     return <>
         <div style={{display:"flex",flexDirection:"column",gap:"25px"}}>
             <Paper variant="elevation" elevation={3} sx={{padding:"1em",gap:"5px",background:"#2F2E5A",display:"flex",alignItems:"center",cursor:"pointer"}}>
@@ -134,8 +132,8 @@ function CourseAccordion({variant,title, courseId}:Props) {
                         {variant === "manage"?<>
                                 <Typography variant="body2" color="#F0F0F0">{lessons?.length} Total Lessons</Typography>
                             </>:<>
-                                <Typography variant="body2" color="#F0F0F0"> 4 Done</Typography>
-                                <Typography variant="body2" color="#F0F0F0"> 3 Remaining</Typography>
+                                {/* <Typography variant="body2" color="#F0F0F0"> 4 Done</Typography>
+                                <Typography variant="body2" color="#F0F0F0"> 3 Remaining</Typography> */}
                             </>
                         }
                     </div>
@@ -145,7 +143,7 @@ function CourseAccordion({variant,title, courseId}:Props) {
                         <AddIcon sx={{fill:"#F0F0F0"}}/>
                     </IconButton>
                 :
-                    <CircularProgressWithLabel defaultValue={0} value={60} />
+                    <CircularProgressWithLabel defaultValue={0} value={0} />
                 }
                 <IconButton aria-label="add" onClick={()=>{setOpenAccordion(!openAccordion)}}>
                     {openAccordion?<KeyboardArrowDownIcon sx={{fill:"#F0F0F0"}}/>:<NavigateNextIcon sx={{fill:"#F0F0F0"}}/>}
@@ -153,7 +151,7 @@ function CourseAccordion({variant,title, courseId}:Props) {
             </Paper>
             {openAccordion?
               <>
-                {lessons.map((lesson)=>(
+                {lessons?.map((lesson)=>(
                   <Paper variant="elevation" elevation={2} sx={{background:"white",display:"flex",gap:"5px",alignItems:"center",cursor:"pointer",paddingRight:"1em"}}>
                       <div style={{flexGrow:"1"}}>
                           <a href={`/course/${courseId}/${lesson.lessonId}`} >

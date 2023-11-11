@@ -10,13 +10,14 @@ import useReqLesson from '../Hooks/useReqLesson';
 type Props = {
   variant:String,
   title:String,
+  type?: String,
   courseId?: string,
 
   // for Landing page
   display?:false|true,
   description?:String,
 }
-function CourseCard({variant,title,display,description,courseId}:Props) {
+function CourseCard({variant,title,type,display,description,courseId}:Props) {
   const {data, loading, getLessons} = useReqLesson();
 
   useEffect(()=>{
@@ -55,9 +56,13 @@ function CourseCard({variant,title,display,description,courseId}:Props) {
             {description}
           </Typography>
           </>:<>
+
+            {type=='student'?<></>:
             <Typography variant="body2" fontWeight={600} color="initial" width={"100%"}>
               Lessons Covered:  
             </Typography>
+            }
+            
             <ul style={{width:"100%", padding:".5em 1em",display:"flex",flexDirection:'column', gap:"5px"}}>
               {data?.map((lesson:any)=>(
                 <li>

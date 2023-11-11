@@ -35,6 +35,20 @@ function Home({}: Props)  {
     })
   }, [])
 
+  function removeDuplicatesBySchoolId(arr) {
+    const seen = new Set();
+    return arr.filter(obj => {
+      const schoolId = obj.school.schoolId;
+      if (!seen.has(schoolId)) {
+        seen.add(schoolId);
+        return true;
+      }
+      return false;
+    });
+  }
+
+  // console.log(removeDuplicatesBySchoolId(enrollments))
+
   if (loading) {
     return <div>Loading...</div>
   }
@@ -66,14 +80,15 @@ function Home({}: Props)  {
       </Container>
     </div>
     <Container maxWidth="lg" sx={{padding:"4em 1em"}}>
-      <Typography variant="h6" color="initial" mb={2}>Enrolled Courses</Typography>
+      <Typography variant="h6" color="initial" mb={2}>Enrolled Schools</Typography>
       <Grid container spacing={2}>
 
-        {enrollments?.map((enrollment) => (
-          <Grid item md={3} sm={4} xs={12}>
-            <SchoolCard schoolName={enrollment.courseId} about={enrollment.school.name} schoolId={enrollment.school.schoolId} variant="enrolled"/>
-          </Grid>
-        ))}
+      {enrollments && removeDuplicatesBySchoolId(enrollments)?.map((enrollment) => (
+        <Grid item md={3} sm={4} xs={12} key={enrollment.enrollmentId}>
+          <SchoolCard schoolName={enrollment.school.name} about={enrollment.school.address} courseId={enrollment.school.schoolId} variant="enrolled" courses={enrollment.school.courses}/>
+        </Grid>
+      ))}
+
         {/* <Grid item md={3} sm={4} xs={12}>
           <SchoolCard schoolName={"Smart Driving"} about={"test"} schoolId={"123"} variant="enrolled"/>
         </Grid> */}

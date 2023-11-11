@@ -92,6 +92,7 @@ function useReqLesson(): Data {
       });
     } catch (error: any) {
       setError(error);
+      console.log(error)
     } finally {
       setLoading(false);
     }
