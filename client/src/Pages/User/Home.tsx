@@ -16,7 +16,9 @@ function Home({}: Props)  {
   const {data, loading, getSchool} = useReqSchool();
 
   useEffect(()=>{
-    getSchool(null);
+    getSchool({
+      schoolId: null
+    });
   }, [])
 
   if (loading) {

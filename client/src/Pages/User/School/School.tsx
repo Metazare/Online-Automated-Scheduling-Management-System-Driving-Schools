@@ -45,7 +45,9 @@ function School() {
 
 
     useEffect(()=>{
-      getSchool(id);
+      getSchool({
+        schoolId: id
+      });
     }, [])
 
     const appendSelectedDays = (form): number[] => {

@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import Paper from '@mui/material/Paper'
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -9,12 +9,15 @@ import Box from '@mui/material/Box';
 import {  Grid, IconButton, Typography,Modal , TextField, Button } from '@mui/material';
 import CircularProgress, {CircularProgressProps,} from '@mui/material/CircularProgress';
 import VerifiedIcon from '@mui/icons-material/Verified';
+import useReqLesson from '../Hooks/useReqLesson';
+import useReqCourse from '../Hooks/useReqCourse';
 
 type Props ={
     variant: "manage"|"use",
-    title: String,
-
+    title: string,
+    courseId: string
 }
+
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -55,7 +58,11 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 }
 
 
-function CourseAccordion({variant,title}:Props) {
+function CourseAccordion({variant,title, courseId}:Props) {
+
+    const {data:lessons,loading,error,createLesson, deleteLesson, updateLesson, getLessons} = useReqLesson();
+    const {postCourse:createCourse} = useReqCourse();
+
     // * Modal Open
     const [open, setOpen] = useState("");
     const [form,setForm] = useState({
@@ -63,7 +70,33 @@ function CourseAccordion({variant,title}:Props) {
         description:"",
         file:""
     })
+    const [selectedLesson, setSelectedLesson] = useState('')
+
     const[openAccordion,setOpenAccordion] = useState(false);
+
+    async function create(e: React.FormEvent<HTMLFormElement>){
+      e.preventDefault();
+      createLesson({
+        courseId: courseId,
+        title: form.title,
+        description: form.description,
+        file: form.file
+      });
+    };
+
+    async function delLesson(e: React.FormEvent<HTMLFormElement>){
+      e.preventDefault();
+      deleteLesson({
+        lessonId: selectedLesson
+      });
+    };
+
+    useEffect(()=>{
+      getLessons({
+        courseId: courseId
+      })
+    },[])
+
     return <>
         <div style={{display:"flex",flexDirection:"column",gap:"25px"}}>
             <Paper variant="elevation" elevation={3} sx={{padding:"1em",gap:"5px",background:"#2F2E5A",display:"flex",alignItems:"center",cursor:"pointer"}}>
@@ -71,7 +104,7 @@ function CourseAccordion({variant,title}:Props) {
                     <Typography variant="h6" color="primary">{title}</Typography>
                     <div style={{display:"flex",gap:"15px"}}>
                         {variant === "manage"?<>
-                                <Typography variant="body2" color="#F0F0F0">2 Total Lessons</Typography>
+                                <Typography variant="body2" color="#F0F0F0">{lessons?.length} Total Lessons</Typography>
                             </>:<>
                                 <Typography variant="body2" color="#F0F0F0"> 4 Done</Typography>
                                 <Typography variant="body2" color="#F0F0F0"> 3 Remaining</Typography>
@@ -91,28 +124,30 @@ function CourseAccordion({variant,title}:Props) {
                 </IconButton>
             </Paper>
             {openAccordion?
-                <Paper variant="elevation" elevation={2} sx={{background:"white",display:"flex",gap:"5px",alignItems:"center",cursor:"pointer",paddingRight:"1em"}}>
-                    <div style={{flexGrow:"1"}}>
-                        <a href="courses/lesson" >
-                            <div style={{padding:"1em"}}>
-                                <Typography variant="body1" color="initial">Lesson #1</Typography>
-                            </div>
-                        </a>
-                    </div>
-                    {variant === "manage"?<>
-                        <IconButton aria-label="add" onClick={()=>{setOpen('edit')}}>
-                            <EditIcon />
-                        </IconButton>
-                        <IconButton aria-label="add" onClick={()=>{setOpen('delete')}}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </>:<>
-                        <VerifiedIcon sx={{fill:"#E24B5B"}}/>
-                    </>}
-                    
-                </Paper>
-            :""}
-
+              <>
+                {lessons.map((lesson)=>(
+                  <Paper variant="elevation" elevation={2} sx={{background:"white",display:"flex",gap:"5px",alignItems:"center",cursor:"pointer",paddingRight:"1em"}}>
+                      <div style={{flexGrow:"1"}}>
+                          <a href="courses/lesson" >
+                              <div style={{padding:"1em"}}>
+                                  <Typography variant="body1" color="initial">{lesson.title}</Typography>
+                              </div>
+                          </a>
+                      </div>
+                      {variant === "manage"?<>
+                          <IconButton aria-label="add" onClick={()=>{setOpen('edit')}}>
+                              <EditIcon />
+                          </IconButton>
+                          <IconButton aria-label="add" onClick={()=>{setOpen('delete');setSelectedLesson(lesson.lessonId)}}>
+                              <DeleteIcon />
+                          </IconButton>
+                      </>:<>
+                          <VerifiedIcon sx={{fill:"#E24B5B"}}/>
+                      </>}
+                  </Paper>
+                ))}
+              </>
+          :""}
         </div>
         <div>
             <Modal
@@ -174,7 +209,7 @@ function CourseAccordion({variant,title}:Props) {
                     </form>
                 </>:""}
                     {open === "add"?<>
-                        <form action="">
+                        <form onSubmit={create}>
                             <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
                                 Add Lesson
                             </Typography>
@@ -217,7 +252,7 @@ function CourseAccordion({variant,title}:Props) {
                                     </Button>
                                 </Grid>
                                 <Grid item sm={8} xs={12}>
-                                    <Button variant="contained" fullWidth color="primary">
+                                    <Button variant="contained" fullWidth color="primary" type="submit">
                                         Add
                                     </Button>
                                 </Grid>
@@ -225,7 +260,7 @@ function CourseAccordion({variant,title}:Props) {
                         </form>
                     </>:""}
                     {open === "delete"?<>
-                        <form action="">
+                        <form onSubmit={delLesson}>
                             <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
                                 Delete Lesson
                             </Typography>
@@ -233,24 +268,24 @@ function CourseAccordion({variant,title}:Props) {
                                 Are you sure you want to remove this lesson? 
                             </Typography>
 
-                            <TextField
+                            {/* <TextField
                                 fullWidth
                                 required
                                 id="reason"
                                 label="Reason"
                                 value={form.title}
                                 onChange={(event)=>{setForm({...form, title : event.target.value })}}
-                            />
+                            /> */}
 
                             <Grid container spacing={1} mt={3}>
                                 <Grid item sm={4} xs={12}>
                                     <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
-                                        cancel
+                                      Cancel
                                     </Button>
                                 </Grid>
                                 <Grid item sm={8} xs={12}>
-                                    <Button variant="contained" fullWidth color="primary">
-                                        Decline
+                                    <Button variant="contained" fullWidth color="primary" type="submit">
+                                      Delete
                                     </Button>
                                 </Grid>
                             </Grid>

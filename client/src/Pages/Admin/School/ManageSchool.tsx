@@ -1,5 +1,5 @@
 
-import React from 'react'
+import React, {useEffect} from 'react'
 // * MUI Imports
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
@@ -23,13 +23,12 @@ import Courses from './Courses';
 import Students from './Students';
 import Instructors from './Instructors';
 
-
 function ManageSchool() {
-    
     const [value, setValue] = React.useState(0);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
+
     return <>
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em 1em 0"}}>
             <Container maxWidth="lg">

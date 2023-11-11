@@ -46,6 +46,7 @@ function useReqLesson(): Data {
   const [error, setError] = useState<Error | null>(null);
 
   const createLesson = async (data:CreateLessonData) => {
+    console.log(data)
     setLoading(true);
     try {
       await axios
@@ -109,12 +110,12 @@ function useReqLesson(): Data {
     }
   }
 
-  const deleteLesson = async (data: DeleteLessonData) => {
+  const deleteLesson = async (value: DeleteLessonData) => {
     setLoading(true);
     try {
       await axios
-      .patch('/lessons', {
-        lessonId: data.lessonId
+      .delete('/lessons',  {
+        data: { lessonId: value.lessonId } // Place the data within the 'data' key
       })
       .then((response:any)=>{
         console.log(response.data);

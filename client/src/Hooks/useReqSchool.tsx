@@ -5,7 +5,7 @@ interface Data {
   data: any;
   loading: boolean;
   error: Error | null;
-  getSchool: (string) => void;
+  getSchool: (data: GetSchoolData) => void;
 }
 
 interface GetSchoolData {
@@ -17,26 +17,25 @@ function useReqSchool(): Data {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const getSchool = async (data) => {
+  const getSchool = async (data: GetSchoolData) => {
     setLoading(true);
     try {
       const params = {
-        schoolId: data
+        schoolId: data.schoolId
       };
       await axios
       .get('/schools', {
         params: params
       })
       .then((response:any)=>{
-        if (data){
-          setData(response.data[0]);
+        if (data.schoolId){
           console.log(response.data[0]);
+          setData(response.data[0]);
         }
         else{
-          setData(response.data);
           console.log(response.data);
+          setData(response.data);
         }
-        
       });
     } catch (error: any) {
       setError(error);

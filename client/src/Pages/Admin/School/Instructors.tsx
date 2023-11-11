@@ -187,7 +187,6 @@ function Instructors() {
                                     <Grid item md={6} xs={12}>
                                         <TextField
                                             fullWidth
-                                            required
                                             id="middle"
                                             label="Middle Name"
                                             value={form.middleName}
@@ -197,7 +196,6 @@ function Instructors() {
                                     <Grid item md={6} xs={12}>
                                         <TextField
                                             fullWidth
-                                            required
                                             id="suffix"
                                             label="Suffix"
                                             value={form.suffix}

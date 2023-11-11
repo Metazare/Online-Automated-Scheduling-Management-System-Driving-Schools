@@ -13,6 +13,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import useReqStudent from '../../../Hooks/useReqStudent';
 import useReqInstructor from '../../../Hooks/useReqInstructor';
 import useReqAppointment from '../../../Hooks/useReqAppointment';
+import useReqSchool from '../../../Hooks/useReqSchool';
 
 // TODO Calendar and resched Modal
 
@@ -40,7 +41,7 @@ function Appointments() {
   const { students, loading, error, getStudent } = useReqStudent();
   const { instructors, loading: instructorLoading, error: instructorError, credentials, getInstructor, createInstructor, updateInstructor} = useReqInstructor();
   const { appointments, loading: appointmentLoading, error: appointmentError, createAppointment, getAppointments, updateAppointment } = useReqAppointment();
-
+  const { data, loading: schoolLoading, error: schoolError, getSchool } = useReqSchool();
 
     // * Reason Value 
     const [reason,setReason] = useState("")
@@ -86,7 +87,11 @@ function Appointments() {
         studentId: null,
         instructorId: null,
         status: null,
-      })
+      });
+      getSchool({
+        schoolId: null
+      });
+      console.log(data)
     }, []);
 
     if (loading && appointmentLoading && instructorLoading) {

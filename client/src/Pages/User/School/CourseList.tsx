@@ -67,7 +67,7 @@ function CourseList() {
             
         </div>
         <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
-            <CourseAccordion variant='use' title='Theoretical Driving'/>
+            <CourseAccordion variant='use' title='Theoretical Driving' courseId='test'/>
         </Container>
     </>
 }
