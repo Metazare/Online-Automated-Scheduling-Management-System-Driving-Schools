@@ -161,10 +161,10 @@ function School() {
                     <Typography variant="h6" color="primary" mb={1}>About Us</Typography>
                     <Typography variant="body2" align='justify'>{data?.about}</Typography>
                     <Typography variant="h6" color="primary" mt={2} mb={1}>Courses</Typography>
-                    <Box sx={{display:'flex', gap:"25px",flexWrap:"wrap"}}>
+                    {/* <Box sx={{display:'flex', gap:"25px",flexWrap:"wrap"}}>
                         <CourseCard variant={"theoretical"} title={"Theoretical Driving"} /> 
                         <CourseCard variant={"practical"} title={"Practical Driving"} /> 
-                    </Box>
+                    </Box> */}
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
                 {!enrolled?

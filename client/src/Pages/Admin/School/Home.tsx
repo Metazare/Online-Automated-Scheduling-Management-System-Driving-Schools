@@ -9,6 +9,8 @@ import useReqSchool from '../../../Hooks/useReqSchool';
 import useReqStudent from '../../../Hooks/useReqStudent';
 import useReqAppointment from '../../../Hooks/useReqAppointment';
 import useReqInstructor from '../../../Hooks/useReqInstructor';
+
+
 import dayjs, { Dayjs } from 'dayjs';
 
 // Style for Modal
@@ -32,7 +34,7 @@ function Home() {
   const { students, loading, error, getStudent } = useReqStudent();
   const { instructors, loading: instructorLoading, error: instructorError, credentials, getInstructor, createInstructor, updateInstructor} = useReqInstructor();
   const { appointments, loading: appointmentLoading, error: appointmentError, createAppointment, getAppointments, updateAppointment } = useReqAppointment();
-  const { data, loading: schoolLoading, error: schoolError, getSchool } = useReqSchool();
+  const { data: school, loading: schoolLoading, error: schoolError, getSchool } = useReqSchool();
 
     // * Reason Value 
     const [reason,setReason] = useState("")
@@ -82,9 +84,6 @@ function Home() {
       getSchool({
         schoolId: null
       });
-      console.log(students)
-      console.log(instructors)
-      console.log(data)
     }, []);
 
     if (loading && appointmentLoading && instructorLoading) {
@@ -94,34 +93,35 @@ function Home() {
     return <>
         <Grid item xs={8} sx={{padding:"40px"}}>
             <Typography variant="h6" color="primary" mb={1}>About Us</Typography>
-            <Typography variant="body2" align='justify'>SMART Driving is the best choice for your quality driving lessons. The company is already trusted by reputable companies to provide road safety education and assessment to their employees, SMART is also conferred by various award-giving bodies in training and services. For more than 20 years in the industry, we have honed our curriculum to make it suitable for all kinds of learners that we will encounter. Together with all the members of SMART Driving School, we will make your driving training a truly worthwhile experience.</Typography>
+            <Typography variant="body2" align='justify'>{school?.about}</Typography>
             <Typography variant="h6" color="primary" mt={2} mb={1}>Courses</Typography>
             <Box sx={{display:'flex', gap:"25px",flexWrap:"wrap"}}>
-                <CourseCard variant={"theoretical"} title={"Theoretical Driving"} /> 
-                <CourseCard variant={"practical"} title={"Practical Driving"} /> 
+              {school?.courses?.map((course)=>(
+                <CourseCard variant={"theoretical"} title={course.type} courseId={course.courseId}/> 
+              ))}
             </Box>
         </Grid>
         <Grid item xs={4}>
             <Paper variant="elevation" elevation={3} sx={{padding:"1em",marginBottom:"25px",opacity:".7"}}>
                 <div style={{display:"flex"}}>
-                    <Typography sx={{flexGrow:"1"}} variant="subtitle1" color="primary" mb={"15px"}>Total Revenue</Typography>
+                    <Typography sx={{flexGrow:"1"}} variant="subtitle1" color="primary" mb={"15px"}>Total Appointments</Typography>
                     <AttachMoneyIcon sx={{fill:"#E24B5B"}}/> 
                 </div>
-                <Typography  variant="h4" color="initial">6,000</Typography>
+                <Typography  variant="h4" color="initial">{appointments?.length}</Typography>
             </Paper>
             <Paper variant="elevation" elevation={3} sx={{padding:"1em",marginBottom:"25px",opacity:".7"}}>
                 <div style={{display:"flex"}}>
-                    <Typography sx={{flexGrow:"1"}} variant="subtitle1" color="primary" mb={"15px"}>Total  System Usage</Typography>
+                    <Typography sx={{flexGrow:"1"}} variant="subtitle1" color="primary" mb={"15px"}>Total Instructors</Typography>
                     <AttachMoneyIcon sx={{fill:"#E24B5B"}}/> 
                 </div>
-                <Typography  variant="h4" color="initial">N/A</Typography>
+                <Typography  variant="h4" color="initial">{instructors?.length}</Typography>
             </Paper>
             <Paper variant="elevation" elevation={3} sx={{padding:"1em",marginBottom:"25px",opacity:".7"}}>
                 <div style={{display:"flex"}}>
-                    <Typography sx={{flexGrow:"1"}} variant="subtitle1" color="primary" mb={"15px"}>Total Students and Progress</Typography>
+                    <Typography sx={{flexGrow:"1"}} variant="subtitle1" color="primary" mb={"15px"}>Total Students</Typography>
                     <AttachMoneyIcon sx={{fill:"#E24B5B"}}/> 
                 </div>
-                <Typography  variant="h4" color="initial">99% completion</Typography>
+                <Typography  variant="h4" color="initial">{students?.length}</Typography>
             </Paper>
         </Grid>
     </>

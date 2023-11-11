@@ -1,24 +1,40 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import TheoreticalIllus from '../Images/Resources/theoreticalDrivingIllustrator.png';
 import PracticalIllus from '../Images/Resources/practicalDrivingIllustrator.png';
 import Typography from '@mui/material/Typography';
 
+import useReqLesson from '../Hooks/useReqLesson';
+
 type Props = {
   variant:String,
   title:String,
-
+  courseId?: string,
 
   // for Landing page
   display?:false|true,
   description?:String,
 }
-function CourseCard({variant,title,display,description}:Props) {
+function CourseCard({variant,title,display,description,courseId}:Props) {
+  const {data, loading, getLessons} = useReqLesson();
+
+  useEffect(()=>{
+    if (courseId) {
+      getLessons({courseId:courseId})
+      console.log(data)
+    }
+  }, [])
+
+  if (loading) {
+    return <div>Loading...</div>
+  }
+
   return (
     <Paper elevation={3} sx={{width:"100%",minWidth:"250px", maxWidth:"300px"}}>
       <Box sx={{display:'flex', flexDirection:"column", alignItems:"center", padding:"4em 1em 1em"}}>
-
+        
+        
         {(variant === "theoretical")? <>
           <img style={{width:"60%",height:"100px",marginBottom:"2em"}} src={TheoreticalIllus} alt="" />
 
@@ -43,26 +59,13 @@ function CourseCard({variant,title,display,description}:Props) {
               Lessons Covered:  
             </Typography>
             <ul style={{width:"100%", padding:".5em 1em",display:"flex",flexDirection:'column', gap:"5px"}}>
-              <li>
-                <Typography variant="subtitle2" color="initial" width={"100%"}>
-                  Lessons #  1
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="subtitle2" color="initial" width={"100%"}>
-                  Lessons #  2
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="subtitle2" color="initial" width={"100%"}>
-                  Lessons #  3
-                </Typography>
-              </li>
-              <li>
-                <Typography variant="subtitle2" color="initial" width={"100%"}>
-                  Lessons #  4
-                </Typography>
-              </li>
+              {data?.map((lesson:any)=>(
+                <li>
+                  <Typography variant="subtitle2" color="initial" width={"100%"}>
+                    {lesson.title}
+                  </Typography>
+                </li>
+              ))}
             </ul>
         </>}
       </Box>

@@ -13,8 +13,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
-
-
 // * Tabs
 import Home from './Home'
 import Requests from './Requests';
@@ -23,20 +21,33 @@ import Courses from './Courses';
 import Students from './Students';
 import Instructors from './Instructors';
 
+import useReqSchool from '../../../Hooks/useReqSchool';
+
 function ManageSchool() {
+    const {data, loading, getSchool} = useReqSchool();
     const [value, setValue] = React.useState(0);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
 
+    useEffect (()=> {
+      getSchool({
+          schoolId: null
+      })
+    },[])
+
+    if (loading) {
+        return <div>Loading...</div>
+    }
+
     return <>
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em 1em 0"}}>
             <Container maxWidth="lg">
                 <div style={{padding:"3.8rem 0",}}>
-                    <a href="/" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
+                    {/* <a href="/" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
                         <ArrowBackIcon/>
                         <Typography variant="subtitle1" color="initial"> Go Back</Typography>
-                    </a>
+                    </a> */}
                     <Box
                         sx={{
                         display: 'flex',
@@ -50,7 +61,7 @@ function ManageSchool() {
                         sx={{ width: 80, height: 80 }}
                         />
                         <div style={{flexGrow:"1"}}>
-                        <Typography variant="h4" fontWeight={500} color="initial">SMART Driving</Typography>
+                        <Typography variant="h4" fontWeight={500} color="initial">{data?.name}</Typography>
                         <Box
                             sx={{
                             display: 'flex',
@@ -64,7 +75,7 @@ function ManageSchool() {
                             }}
                             >
                             <CallIcon/> 
-                            <Typography variant="body1" fontWeight={500}>0915-666-147</Typography>
+                            <Typography variant="body1" fontWeight={500}>{data?.contact}</Typography>
                             </Box>
                             <Box
                             sx={{
@@ -73,7 +84,7 @@ function ManageSchool() {
                             }}
                             >
                             <EmailIcon/> 
-                            <Typography variant="body1" fontWeight={500}>0915-666-147</Typography>
+                            <Typography variant="body1" fontWeight={500}>{data?.email}</Typography>
                             </Box>
                         </Box>
                         </div>
