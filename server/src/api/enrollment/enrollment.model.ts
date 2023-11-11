@@ -1,6 +1,6 @@
 import { Enrollment, EnrollmentDocument, EnrollmentStatus } from './enrollment.types';
 import { id } from '../../utilities/ids';
-import { ProgressStatus } from '../lesson/lessont.types';
+import { ProgressStatus } from '../lesson/lesson.types';
 import { Schema, Types, model } from 'mongoose';
 
 const enrollmentSchema = new Schema(
