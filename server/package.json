@@ -6,7 +6,8 @@
     "scripts": {
         "build": "rimraf dist && tsc",
         "start": "NODE_ENV=production&& node dist/index.js",
-        "dev": "SET NODE_ENV=development&& nodemon src/index.ts"
+        "dev": "SET NODE_ENV=development&& nodemon src/index.ts",
+        "clean": "node rimraf-standalone.js node_modules"
     },
     "keywords": [],
     "author": "Meeep",
