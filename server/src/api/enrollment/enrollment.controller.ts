@@ -32,7 +32,8 @@ export const getEnrollments: RequestHandler = async (req: QueryRequest<GetEnroll
     if (role === Role.ADMIN) enrollmentQuery.school = user._id;
 
     let enrollments: EnrollmentPopulatedDocument[] = await EnrollmentModel.find(enrollmentQuery)
-        .populate('school student')
+        .populate('school')
+        .populate('student')
         .exec();
 
     if (typeof courseType === 'string') {
