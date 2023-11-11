@@ -15,7 +15,22 @@ import ExpandMore from '@mui/icons-material/ExpandMore'
 
 import Footer from '../Layouts/Footer/Footer'
 
+import {useAuth} from '../Hooks/useAuth'
+import { useNavigate } from 'react-router-dom'
+
 function LandingPage() {
+    const {getUser} = useAuth()
+    const navigate = useNavigate()
+
+    if (getUser() == 'student') {
+      navigate('/home')
+      return <div>Loading...</div>
+    }
+    else if (getUser() == 'admin' || getUser() == 'instructor') {
+      navigate('/dashboard')
+      return <div>Loading...</div>
+    }
+
     return <>
         <div style={{ background: '#DEDEDE',width:"100%",margin:'auto',padding:"1em 1em 0"}}>
             <Container maxWidth="lg" sx={{minHeight:"500px",display:"flex",justifyContent:"center",alignItems:"center"}}>

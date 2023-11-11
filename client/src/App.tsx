@@ -21,7 +21,12 @@ import EnrollStudent from './Test/EnrollStudent';
 import EnrollGet from './Test/EnrollGet';
 // import AppointmentCreate from './Test/AppointmentCreate';
 
+
 import ManageSchool from './Pages/Admin/School/ManageSchool';
+
+// import ProtectedRoute from './Hooks/ProtectedRoute';
+
+import { ProtectedRoute } from './Hooks/useAuth';
 
 const theme = createTheme({
   palette:{
@@ -45,25 +50,31 @@ function App() {
         <Route path="/register" element={<Register/>} />
         <Route element={<BaseLayout />} >
           <Route path="/" element={<LandingPage/>} />
+          <Route path="*" element={<LandingPage/>} />
         </Route>
-
+  
         {/* admin */}
-        <Route element={<BaseLayout />} >
-          <Route path="" element={<Home/>} />
-          <Route path="dashboard" element={<ManageSchool/>} />
-        </Route>
-
-        {/* users */}
-        <Route element={<BaseLayout />} >
-          <Route path="/courses/lesson" element={<LessonView/>} />
-          <Route path="/course/:cid/:lid" element={<LessonView/>} />
+        <Route element={<ProtectedRoute allowedRoles={["admin", "instructor"]}/>}>
+          <Route element={<BaseLayout />} >
+            <Route path="" element={<Home/>} />
+            <Route path="dashboard" element={<ManageSchool/>} />
+          </Route>
         </Route>
 
         {/* student */}
-        <Route element={<BaseLayout />} >
-          <Route path="/home" element={<Home/>} />
-          <Route path="/school/:id" element={<School/>} />
-          <Route path="/courses" element={<CoursesList/>} />
+        <Route element={<ProtectedRoute allowedRoles={["student"]}/>}>
+          <Route element={<BaseLayout />} >
+            <Route path="/home" element={<Home/>} />
+            <Route path="/school/:id" element={<School/>} />
+            <Route path="/courses" element={<CoursesList/>} />
+          </Route>
+        </Route>
+
+        {/* users */}
+        <Route element={<ProtectedRoute allowedRoles={["admin", "student", "instructor"]}/>}>
+          <Route element={<BaseLayout />} >
+            <Route path="/course/:cid/:lid" element={<LessonView/>} />
+          </Route>
         </Route>
 
         {/* test */}

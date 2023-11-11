@@ -46,10 +46,10 @@ function CourseCard({variant,title,display,description,courseId}:Props) {
           <img style={{width:"55%",height:"100px",marginBottom:"2em"}} src={PracticalIllus} alt="" />
 
           <Typography variant="h6" color="primary" width={"100%"}>
-            {title}
+            {title} 
           </Typography>
         </>:""}
-
+        {/* <div>{JSON.stringify(data)}</div> */}
         {display?<>
           <Typography variant="body2" color="initial"  textAlign={"justify"}>
             {description}
@@ -62,7 +62,7 @@ function CourseCard({variant,title,display,description,courseId}:Props) {
               {data?.map((lesson:any)=>(
                 <li>
                   <Typography variant="subtitle2" color="initial" width={"100%"}>
-                    {lesson.title}
+                    {lesson?.title}
                   </Typography>
                 </li>
               ))}

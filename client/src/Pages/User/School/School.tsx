@@ -21,11 +21,13 @@ import MenuItem from '@mui/material/MenuItem';
 
 import useReqSchool from '../../../Hooks/useReqSchool';
 import useReqEnroll from '../../../Hooks/useReqEnroll';
+import useReqLesson from '../../../Hooks/useReqLesson';
 
 import { useParams } from 'react-router-dom';
 
 function School() {
   const {data, loading, getSchool} = useReqSchool();
+  const {data:lessons, loading:lessonLoading, getLessons} = useReqLesson();
   const {enroll} = useReqEnroll();
   const {id} = useParams();
 
@@ -48,6 +50,9 @@ function School() {
       getSchool({
         schoolId: id
       });
+      // getLessons({
+      //   courseId: id
+      // })
     }, [])
 
     const appendSelectedDays = (form): number[] => {
@@ -101,10 +106,10 @@ function School() {
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em"}}>
             <Container maxWidth="lg">
                 <div style={{padding:"3.8rem 0",}}>
-                    <a href="/" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
+                    {/* <a href="/" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
                         <ArrowBackIcon/>
                         <Typography variant="subtitle1" color="initial"> Go Back</Typography>
-                    </a>
+                    </a> */}
                     <Box
                         sx={{
                         display: 'flex',
@@ -158,13 +163,19 @@ function School() {
         <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
             <Grid container spacing={2}>
                 <Grid item md={8} sm={8} xs={12} sx={{padding:"40px"}}>
-                    <Typography variant="h6" color="primary" mb={1}>About Us</Typography>
-                    <Typography variant="body2" align='justify'>{data?.about}</Typography>
-                    <Typography variant="h6" color="primary" mt={2} mb={1}>Courses</Typography>
-                    {/* <Box sx={{display:'flex', gap:"25px",flexWrap:"wrap"}}>
-                        <CourseCard variant={"theoretical"} title={"Theoretical Driving"} /> 
-                        <CourseCard variant={"practical"} title={"Practical Driving"} /> 
-                    </Box> */}
+                  <Typography variant="h6" color="primary" mb={1}>About</Typography>
+                  <Typography variant="body2" align='justify'>{data?.about}</Typography>
+                  <Typography variant="h6" color="primary" mt={2} mb={1}>Courses</Typography>
+                  {/* <Box sx={{display:'flex', gap:"25px",flexWrap:"wrap"}}>
+                      <CourseCard variant={"theoretical"} title={"Theoretical Driving"} /> 
+                      <CourseCard variant={"practical"} title={"Practical Driving"} /> 
+                  </Box> */}
+                  {data?.courses?.map((course)=>(
+                    <>
+                      <CourseCard variant={"theoretical"} title={course.type} courseId={course.courseId}/> 
+                    </>
+                    
+                  ))}
                 </Grid>
                 <Grid item md={4} sm={4} xs={12}>
                 {!enrolled?

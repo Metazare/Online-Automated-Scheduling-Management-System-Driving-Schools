@@ -9,16 +9,30 @@ import SearchIcon from '@mui/icons-material/Search';
 import SchoolCard from '../../Components/SchoolCard';
 
 import useReqSchool from '../../Hooks/useReqSchool';
+import useReqStudent from '../../Hooks/useReqStudent';
+import useReqEnroll from '../../Hooks/useReqEnroll';
+
 type Props = {}
 
 function Home({}: Props)  {
 
   const {data, loading, getSchool} = useReqSchool();
+  const { students, loading: studentLoading, error: studentError, getStudent } = useReqStudent();
+  const { data: enrollments, loading: enrollLoading, error: enrollError, getEnrollments } = useReqEnroll();
 
   useEffect(()=>{
     getSchool({
       schoolId: null
     });
+    getStudent({
+      studentId: null
+    })
+    getEnrollments({
+      enrollmentId: null,
+      courseId: null,
+      status: 'accepted',
+      courseType: null
+    })
   }, [])
 
   if (loading) {
@@ -52,14 +66,17 @@ function Home({}: Props)  {
       </Container>
     </div>
     <Container maxWidth="lg" sx={{padding:"4em 1em"}}>
-      <Typography variant="h6" color="initial" mb={2}>Enrolled Schools</Typography>
+      <Typography variant="h6" color="initial" mb={2}>Enrolled Courses</Typography>
       <Grid container spacing={2}>
-        <Grid item md={3} sm={4} xs={12}>
+
+        {enrollments?.map((enrollment) => (
+          <Grid item md={3} sm={4} xs={12}>
+            <SchoolCard schoolName={enrollment.courseId} about={enrollment.school.name} schoolId={enrollment.school.schoolId} variant="enrolled"/>
+          </Grid>
+        ))}
+        {/* <Grid item md={3} sm={4} xs={12}>
           <SchoolCard schoolName={"Smart Driving"} about={"test"} schoolId={"123"} variant="enrolled"/>
-        </Grid>
-        <Grid item md={3} sm={4} xs={12}>
-          <SchoolCard schoolName={"Prestige Driving School"} about={"test"} schoolId={"123"} variant="enrolled"/>
-        </Grid>
+        </Grid> */}
         
       </Grid>
       <Typography variant="h6" mt={4} color="initial" mb={2}>Available Schools</Typography>

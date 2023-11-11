@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate, Outlet, Navigate} from 'react-router-dom';
 import axios from './useAxios';
 
 interface AuthContextState {
@@ -8,6 +8,7 @@ interface AuthContextState {
     logout: () => void;
     register: (data: RegisterData) => void;
     isAuth: (id: any) => boolean;
+    getUser: () => any;
 }
 
 interface RegisterData {
@@ -37,6 +38,7 @@ export const AuthContext = createContext<AuthContextState>({
     logout: () => {},
     register: () => {},
     isAuth: () => false,
+    getUser: () => {}
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -122,6 +124,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return true;
     };
 
+    const getUser = () => {
+      const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '') : '';
+
+      if (user.studentId) {
+        return 'student';
+      } else if (user.schoolId) {
+        return 'admin';
+      } else if (user.instructorId) {
+        return 'instructor';
+      }
+    }
+
     useEffect(() => {
         // Check if user is already logged in on first mount
         const loggedInUser = localStorage.getItem("user");
@@ -131,7 +145,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, register, isAuth }}>
+        <AuthContext.Provider value={{ user, login, logout, register, isAuth, getUser }}>
             {children}
         </AuthContext.Provider>
     );
@@ -140,3 +154,35 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useAuth = () => {
     return useContext(AuthContext);
 }
+
+interface ProtectedRouteProps {
+  allowedRoles?: string[];
+}
+
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
+  // Gets locally stored user
+  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '') : '';
+  
+  function role(): "student" | "admin" | "instructor" {
+    if (user.studentId) {
+      return 'student';
+    } else if (user.schoolId) {
+      return 'admin';
+    } else if (user.instructorId) {
+      return 'instructor';
+    }
+    // handle the case when user has no roles
+    return 'student'; // or 'admin' or 'instructor', depending on your logic
+  }
+
+  return (
+    // Checks if user exists, if yes proceeds to page, if not proceeds to login
+    user
+    ? allowedRoles 
+        ? allowedRoles?.includes(role())
+            ? <Outlet/>
+            : <Navigate to="/"/>
+        : <Outlet/>   
+    : <Navigate to="/"/>
+  );
+};
