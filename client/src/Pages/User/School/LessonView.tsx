@@ -96,7 +96,14 @@ function LessonView() {
                         </Button>
                     </div>
                     <div style={{width:"100%",borderRadius:"8px",minHeight:"400px",marginTop:"25px", background:"#D0D0D0"}}>
-                      {datum?.file}
+                      {/* {datum?.file} */}
+                      <iframe
+                        title="PDF Viewer"
+                        src={datum?.file}
+                        width="100%"
+                        height="500px" // You can adjust the height based on your preference
+                        frameBorder="0"
+                      />
                     </div>
                 </Grid>
                 {feedback?

@@ -1,4 +1,8 @@
 import React,{useEffect, useState} from 'react'
+import {storage} from "./../firebase";
+import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
+import {v4} from 'uuid'
+
 import Paper from '@mui/material/Paper'
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -11,6 +15,8 @@ import CircularProgress, {CircularProgressProps,} from '@mui/material/CircularPr
 import VerifiedIcon from '@mui/icons-material/Verified';
 import useReqLesson from '../Hooks/useReqLesson';
 import useReqCourse from '../Hooks/useReqCourse';
+
+
 
 type Props ={
     variant: "manage"|"use",
@@ -123,6 +129,24 @@ function CourseAccordion({variant,title, courseId}:Props) {
       });
     };
 
+    const uploadImage = (image) => {
+      if (image == null) return;
+      const imageRef = ref(storage, `oasms/${image.name + v4()}`);
+      uploadBytes(imageRef, image).then(async () => {
+        const downloadURL = await getDownloadURL(imageRef);
+        console.log('Download URL:', downloadURL);
+        alert("Image Uploaded!")
+        setForm({
+          ...form,
+          file: downloadURL
+        })
+        setEditForm({
+          ...editForm,
+          file: downloadURL
+        })
+      })
+    }
+
     return <>
         <div style={{display:"flex",flexDirection:"column",gap:"25px"}}>
             <Paper variant="elevation" elevation={3} sx={{padding:"1em",gap:"5px",background:"#2F2E5A",display:"flex",alignItems:"center",cursor:"pointer"}}>
@@ -230,7 +254,15 @@ function CourseAccordion({variant,title, courseId}:Props) {
                                     fullWidth
                                     id="description"
                                     type='file'
+                                    // accept=".pdf"
+                                    // onChange={(e:any)=>{console.log(e.target.files[0])}}
                                 />
+                                <input
+                                    type="file"
+                                    accept=".pdf"
+                                    onChange={(e:any)=>{uploadImage(e.target.files[0])}}
+                                    id="file-upload-input"
+                                  />
                             </Grid>
                             
                             <Grid item sm={4} xs={12}>
@@ -277,11 +309,19 @@ function CourseAccordion({variant,title, courseId}:Props) {
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <TextField
-                                        fullWidth
-                                        id="description"
-                                        type='file'
-                                    />
+                                  {/* <TextField
+                                    fullWidth
+                                    id="description"
+                                    type='file'
+                                    accept=".pdf"
+                                    onChange={(e:any)=>{console.log(e.target.files[0])}}
+                                  /> */}
+                                  <input
+                                    type="file"
+                                    accept=".pdf"
+                                    onChange={(e:any)=>{uploadImage(e.target.files[0])}}
+                                    id="file-upload-input"
+                                  />
                                 </Grid>
                                 
                                 <Grid item sm={4} xs={12}>

@@ -21,6 +21,8 @@ import EnrollStudent from './Test/EnrollStudent';
 import EnrollGet from './Test/EnrollGet';
 // import AppointmentCreate from './Test/AppointmentCreate';
 
+import UploadImage from './Test/UploadImage';
+
 
 import ManageSchool from './Pages/Admin/School/ManageSchool';
 
@@ -70,6 +72,10 @@ function App() {
             <Route path="/course/:cid/:lid" element={<LessonView/>} />
           </Route>
 
+        </Route>
+
+        <Route>
+          <Route path="/testupload" element={<UploadImage/>} />
         </Route>
       </Routes>
     </ThemeProvider>
