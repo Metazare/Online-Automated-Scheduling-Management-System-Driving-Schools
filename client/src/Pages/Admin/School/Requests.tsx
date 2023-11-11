@@ -74,7 +74,7 @@ function Requests() {
 
     return (
         <Grid item xs={12} sx={{padding:"40px"}}>
-          <FormControl fullWidth sx={{minWidth:"200px",maxWidth:"30%",marginBottom:"25px"}}>
+          {/* <FormControl fullWidth sx={{minWidth:"200px",maxWidth:"30%",marginBottom:"25px"}}>
                 <Select
                     sx={{background:"#363636",color:"white",fill:"white", 
                         '& .MuiSelect-icon': {color: 'white'},
@@ -87,7 +87,7 @@ function Requests() {
                     <MenuItem value={"Enrollment"}>Enrollment Requests</MenuItem>
                     <MenuItem value={"Reschedule"}>Reschedule Requests</MenuItem>
                 </Select>
-            </FormControl>
+            </FormControl> */}
 
             {(requestType === "Enrollment")? <>
             <TableContainer>

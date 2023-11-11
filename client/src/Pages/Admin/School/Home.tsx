@@ -92,7 +92,7 @@ function Home() {
 
     return <>
         <Grid item xs={8} sx={{padding:"40px"}}>
-            <Typography variant="h6" color="primary" mb={1}>About Us</Typography>
+            <Typography variant="h6" color="primary" mb={1}>About</Typography>
             <Typography variant="body2" align='justify'>{school?.about}</Typography>
             <Typography variant="h6" color="primary" mt={2} mb={1}>Courses</Typography>
             <Box sx={{display:'flex', gap:"25px",flexWrap:"wrap"}}>
