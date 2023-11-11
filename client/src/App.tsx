@@ -44,51 +44,33 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Routes>
-
-        {/* public */}
-        <Route path="/login" element={<Login/>} />
-        <Route path="/register" element={<Register/>} />
         <Route element={<BaseLayout />} >
+
+          {/* public */}
+          <Route path="/login" element={<Login/>} />
+          <Route path="/register" element={<Register/>} />
           <Route path="/" element={<LandingPage/>} />
           <Route path="*" element={<LandingPage/>} />
-        </Route>
-  
-        {/* admin */}
-        <Route element={<ProtectedRoute allowedRoles={["admin", "instructor"]}/>}>
-          <Route element={<BaseLayout />} >
+          
+          {/* admin */}
+          <Route element={<ProtectedRoute allowedRoles={["admin", "instructor"]}/>}>
             <Route path="" element={<Home/>} />
             <Route path="dashboard" element={<ManageSchool/>} />
           </Route>
-        </Route>
 
-        {/* student */}
-        <Route element={<ProtectedRoute allowedRoles={["student"]}/>}>
-          <Route element={<BaseLayout />} >
+          {/* student */}
+          <Route element={<ProtectedRoute allowedRoles={["student"]}/>}>
             <Route path="/home" element={<Home/>} />
             <Route path="/school/:id" element={<School/>} />
-            <Route path="/courses" element={<CoursesList/>} />
+            <Route path="/course/:id" element={<CoursesList/>} />
           </Route>
-        </Route>
 
-        {/* users */}
-        <Route element={<ProtectedRoute allowedRoles={["admin", "student", "instructor"]}/>}>
-          <Route element={<BaseLayout />} >
+          {/* users */}
+          <Route element={<ProtectedRoute allowedRoles={["admin", "student", "instructor"]}/>}>
             <Route path="/course/:cid/:lid" element={<LessonView/>} />
           </Route>
-        </Route>
 
-        {/* test */}
-        <Route path="/test">
-          <Route path="registeradmin" element={<RegisterAdmin/>}/>
-          <Route path="registerstudent" element={<RegisterStudent/>}/>
-          <Route path="registerinstructor" element={<RegisterInstructor/>}/>
-          <Route path="logout" element={<Logout/>} />
-          <Route path="addcourse" element={<AddCourse/>} />
-          <Route path="enrollstudent" element={<EnrollStudent/>} />
-          <Route path="enrollget" element={<EnrollGet/>} />
-          {/* <Route path="appointmentcreate" element={<AppointmentCreate/>} /> */}
         </Route>
-
       </Routes>
     </ThemeProvider>
   );

@@ -77,7 +77,7 @@ function Home({}: Props)  {
         {/* <Grid item md={3} sm={4} xs={12}>
           <SchoolCard schoolName={"Smart Driving"} about={"test"} schoolId={"123"} variant="enrolled"/>
         </Grid> */}
-        
+
       </Grid>
       <Typography variant="h6" mt={4} color="initial" mb={2}>Available Schools</Typography>
       <Grid container spacing={2}>
