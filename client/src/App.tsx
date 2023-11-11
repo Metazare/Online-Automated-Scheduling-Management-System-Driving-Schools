@@ -56,6 +56,7 @@ function App() {
         {/* users */}
         <Route element={<BaseLayout />} >
           <Route path="/courses/lesson" element={<LessonView/>} />
+          <Route path="/course/:cid/:lid" element={<LessonView/>} />
         </Route>
 
         {/* student */}

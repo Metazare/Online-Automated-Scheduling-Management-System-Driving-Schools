@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar';
@@ -8,9 +8,26 @@ import EmailIcon from '@mui/icons-material/Email';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CourseAccordion from '../../../Components/CourseAccordion';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import { useParams } from 'react-router-dom';
+import useReqLesson from '../../../Hooks/useReqLesson';
+
 
 function LessonView() {
     const [feedback,setFeedback] = useState(false);
+    const {cid, lid} = useParams();
+    const {datum, loading, getLesson} = useReqLesson();
+
+    useEffect(()=>{
+      getLesson({
+        courseId: cid,
+        lessonId: lid
+      })
+    }, [])
+
+    if(loading){
+      return <div>Loading...</div>
+    }
+
     return <>
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em"}}>
             <Container maxWidth="lg">
@@ -71,8 +88,8 @@ function LessonView() {
                 <Grid item md={feedback ? 8 : 12} xs={12}>
                     <div style={{display:"flex", alignItems:"start"}}>
                         <div style={{flexGrow:"1"}}>
-                            <Typography variant="h6" color="primary">Lesson #1</Typography>
-                            <Typography variant="body2" mt={"-5px"} color="initial">Info Chuchu </Typography>
+                            <Typography variant="h6" color="primary">{datum?.title}</Typography>
+                            <Typography variant="body2" mt={"-5px"} color="initial">{datum?.description}</Typography>
                         </div>
                         <Button variant="contained" color="primary" sx={{marginTop:"5px"}}>
                             next

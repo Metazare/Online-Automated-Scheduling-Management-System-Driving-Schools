@@ -26,8 +26,8 @@ interface GetLessonsData {
 }
 
 interface GetLessonData {
-  courseId: string;
-  lessonId: string;
+  courseId: string | undefined;
+  lessonId: string | undefined;
 }
 
 interface UpdateLessonData {
@@ -99,7 +99,7 @@ function useReqLesson(): Data {
 
   const getLesson = async (value: GetLessonData) => {
     setLoading(true);
-
+    console.log(value)
     try {
       const params = {
         courseId: value.courseId
@@ -109,9 +109,11 @@ function useReqLesson(): Data {
         params: params
       })
       .then((response:any)=>{
+        console.log(response.data)
         for (let i = 0; i < response.data.length; i++) {
           const lesson = response.data[i];
-          if (lesson.hasOwnProperty('type') && lesson.lessonId === value.lessonId) {
+          console.log(lesson)
+          if (lesson.hasOwnProperty('lessonId') && lesson.lessonId === value.lessonId) {
             setDatum(lesson)
             console.log(lesson)
           }

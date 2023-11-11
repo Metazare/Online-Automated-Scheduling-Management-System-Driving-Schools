@@ -92,7 +92,7 @@ function CourseAccordion({variant,title, courseId}:Props) {
       title:"",
       description:"",
       file:""
-  })
+    })
 
     const[openAccordion,setOpenAccordion] = useState(false);
 
@@ -156,7 +156,7 @@ function CourseAccordion({variant,title, courseId}:Props) {
                 {lessons.map((lesson)=>(
                   <Paper variant="elevation" elevation={2} sx={{background:"white",display:"flex",gap:"5px",alignItems:"center",cursor:"pointer",paddingRight:"1em"}}>
                       <div style={{flexGrow:"1"}}>
-                          <a href="courses/lesson" >
+                          <a href={`/course/${courseId}/${lesson.lessonId}`} >
                               <div style={{padding:"1em"}}>
                                   <Typography variant="body1" color="initial">{lesson.title}</Typography>
                               </div>
@@ -205,7 +205,7 @@ function CourseAccordion({variant,title, courseId}:Props) {
                         <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
                             Please fill up lesson form 
                         </Typography>
-
+                        
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <TextField
