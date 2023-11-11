@@ -3,13 +3,15 @@ import axios from './useAxios'
 
 interface Data {
   data: any;
+  datum: any;
   loading: boolean;
   error: Error | null;
-  createLesson: (data: CreateLessonData) => void;
-  getLessons: (data: GetLessonData ) => void,
-  updateLesson: (data: UpdateLessonData ) => void;
-  deleteLesson: (data: DeleteLessonData ) => void;
-  updateProgress: (data: UpdateProgressData ) => void
+  createLesson: (value: CreateLessonData) => void;
+  getLessons: (value: GetLessonsData ) => void,
+  getLesson: (value: GetLessonData ) => void,
+  updateLesson: (value: UpdateLessonData ) => void;
+  deleteLesson: (value: DeleteLessonData ) => void;
+  updateProgress: (value: UpdateProgressData ) => void
 }
 
 interface CreateLessonData {
@@ -19,8 +21,13 @@ interface CreateLessonData {
   file?: string | null;
 }
 
+interface GetLessonsData {
+  courseId: string;
+}
+
 interface GetLessonData {
   courseId: string;
+  lessonId: string;
 }
 
 interface UpdateLessonData {
@@ -42,19 +49,20 @@ interface UpdateProgressData {
 
 function useReqLesson(): Data {
   const [data, setData] = useState<any>(null);
+  const [datum, setDatum] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
-  const createLesson = async (data:CreateLessonData) => {
+  const createLesson = async (value:CreateLessonData) => {
     console.log(data)
     setLoading(true);
     try {
       await axios
       .post('/lessons', {
-        courseId: data.courseId,
-        title: data.title,
-        description: data.description,
-        file: data.file,
+        courseId: value.courseId,
+        title: value.title,
+        description: value.description,
+        file: value.file,
       })
       .then((response:any)=>{
         console.log(response.data);
@@ -68,11 +76,11 @@ function useReqLesson(): Data {
     }
   };
 
-  const getLessons = async (data: GetLessonData) => {
+  const getLessons = async (value: GetLessonsData) => {
     setLoading(true);
     try {
       const params = {
-        courseId: data.courseId
+        courseId: value.courseId
       };
       await axios
       .get('/lessons', {
@@ -89,15 +97,42 @@ function useReqLesson(): Data {
     }
   }
 
-  const updateLesson = async (data: UpdateLessonData) => {
+  const getLesson = async (value: GetLessonData) => {
+    setLoading(true);
+
+    try {
+      const params = {
+        courseId: value.courseId
+      };
+      await axios
+      .get('/lessons', {
+        params: params
+      })
+      .then((response:any)=>{
+        for (let i = 0; i < response.data.length; i++) {
+          const lesson = response.data[i];
+          if (lesson.hasOwnProperty('type') && lesson.lessonId === value.lessonId) {
+            setDatum(lesson)
+            console.log(lesson)
+          }
+        }
+      });
+    } catch (error: any) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const updateLesson = async (value: UpdateLessonData) => {
     setLoading(true);
     try {
       await axios
       .patch('/lessons', {
-        lessonId: data.lessonId,
-        title: data.title,
-        description: data.description,
-        file: data.file
+        lessonId: value.lessonId,
+        title: value.title,
+        description: value.description,
+        file: value.file
       })
       .then((response:any)=>{
         console.log(response.data);
@@ -128,14 +163,14 @@ function useReqLesson(): Data {
     }
   }
 
-  const updateProgress = async (data: UpdateProgressData) => {
+  const updateProgress = async (value: UpdateProgressData) => {
     setLoading(true);
     try {
       await axios
       .patch('/lessons', {
-        enrollmentId: data.enrollmentId,
-        lessonId: data.lessonId,
-        status: data.status,
+        enrollmentId: value.enrollmentId,
+        lessonId: value.lessonId,
+        status: value.status,
       })
       .then((response:any)=>{
         console.log(response.data);
@@ -147,13 +182,15 @@ function useReqLesson(): Data {
       setLoading(false);
     }
   }
-    
+
   return {
     data,
+    datum,
     loading,
     error,
     createLesson,
     getLessons,
+    getLesson,
     updateLesson,
     deleteLesson,
     updateProgress

@@ -60,8 +60,24 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 
 function CourseAccordion({variant,title, courseId}:Props) {
 
-    const {data:lessons,loading,error,createLesson, deleteLesson, updateLesson, getLessons} = useReqLesson();
+    const {
+      data:lessons, 
+      datum: lesson,
+      loading,
+      error,
+      createLesson, 
+      deleteLesson, 
+      updateLesson, 
+      getLessons,
+      getLesson
+    } = useReqLesson();
     const {postCourse:createCourse} = useReqCourse();
+    
+    useEffect(()=>{
+      getLessons({
+        courseId: courseId
+      })
+    },[])
 
     // * Modal Open
     const [open, setOpen] = useState("");
@@ -71,6 +87,12 @@ function CourseAccordion({variant,title, courseId}:Props) {
         file:""
     })
     const [selectedLesson, setSelectedLesson] = useState('')
+
+    const [editForm, setEditForm] = useState({
+      title:"",
+      description:"",
+      file:""
+  })
 
     const[openAccordion,setOpenAccordion] = useState(false);
 
@@ -91,11 +113,17 @@ function CourseAccordion({variant,title, courseId}:Props) {
       });
     };
 
-    useEffect(()=>{
-      getLessons({
-        courseId: courseId
-      })
-    },[])
+    async function editLesson(e: React.FormEvent<HTMLFormElement>){
+      e.preventDefault();
+      updateLesson({
+        lessonId: selectedLesson,
+        title: editForm.title,
+        description: editForm.description,
+        file: editForm.file
+      });
+    };
+
+    
 
     return <>
         <div style={{display:"flex",flexDirection:"column",gap:"25px"}}>
@@ -135,8 +163,20 @@ function CourseAccordion({variant,title, courseId}:Props) {
                           </a>
                       </div>
                       {variant === "manage"?<>
-                          <IconButton aria-label="add" onClick={()=>{setOpen('edit')}}>
-                              <EditIcon />
+                          <IconButton 
+                            aria-label="add" 
+                            onClick={()=>{
+                              setOpen('edit'); 
+                              setSelectedLesson(lesson.lessonId); 
+                              getLesson({courseId: courseId, lessonId: lesson.lessonId});
+                              setEditForm({
+                                title: lesson.title, 
+                                description: lesson.description, 
+                                file: lesson.file
+                              })
+                            }}
+                          >
+                            <EditIcon />
                           </IconButton>
                           <IconButton aria-label="add" onClick={()=>{setOpen('delete');setSelectedLesson(lesson.lessonId)}}>
                               <DeleteIcon />
@@ -158,7 +198,7 @@ function CourseAccordion({variant,title, courseId}:Props) {
             >
                 <Box sx={style}>
                 {open === "edit"?<>
-                    <form action="">
+                    <form onSubmit={editLesson}>
                         <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
                             Edit Lesson
                         </Typography>
@@ -173,8 +213,8 @@ function CourseAccordion({variant,title, courseId}:Props) {
                                     required
                                     id="title"
                                     label="Title"
-                                    value={form.title}
-                                    onChange={(event)=>{setForm({...form, title : event.target.value })}}
+                                    value={editForm.title}
+                                    onChange={(event)=>{setEditForm({...editForm, title : event.target.value })}}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -183,8 +223,8 @@ function CourseAccordion({variant,title, courseId}:Props) {
                                     required
                                     id="description"
                                     label="Description"
-                                    value={form.description}
-                                    onChange={(event)=>{setForm({...form, description : event.target.value })}}
+                                    value={editForm.description}
+                                    onChange={(event)=>{setEditForm({...editForm, description : event.target.value })}}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -201,8 +241,8 @@ function CourseAccordion({variant,title, courseId}:Props) {
                                 </Button>
                             </Grid>
                             <Grid item sm={8} xs={12}>
-                                <Button variant="contained" fullWidth color="primary">
-                                    Add
+                                <Button variant="contained" fullWidth color="primary" type='submit'>
+                                    Confirm
                                 </Button>
                             </Grid>
                         </Grid>
