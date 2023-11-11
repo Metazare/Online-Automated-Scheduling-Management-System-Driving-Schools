@@ -1,5 +1,5 @@
 import { id } from '../../utilities/ids';
-import { LessonDocument } from './lessont.types';
+import { LessonDocument } from './lesson.types';
 import { Schema, model } from 'mongoose';
 
 const lessonSchema = new Schema(

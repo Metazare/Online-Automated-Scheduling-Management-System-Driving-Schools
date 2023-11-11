@@ -1,6 +1,6 @@
 import { CourseType } from "../course/course.types";
 import { Document, Types } from "mongoose";
-import { ProgressLesson } from "../lesson/lessont.types";
+import { ProgressLesson } from "../lesson/lesson.types";
 import { SchoolDocument } from "../school/school.types";
 import { Student, StudentDocument } from "../student/student.types";
 

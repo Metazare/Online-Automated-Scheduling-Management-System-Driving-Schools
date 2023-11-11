@@ -8,7 +8,7 @@ import {
     GetEnrollment,
     UpdateEnrollmentStatus
 } from './enrollment.types';
-import { LessonDocument, ProgressLesson } from '../lesson/lessont.types';
+import { LessonDocument, ProgressLesson } from '../lesson/lesson.types';
 import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import { Role } from '../auth/auth.types';
 import { SchoolDocument } from '../school/school.types';

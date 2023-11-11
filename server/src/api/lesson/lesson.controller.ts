@@ -1,6 +1,6 @@
 import { BodyRequest, QueryRequest, RequestHandler } from 'express';
 import { CheckData } from '../../utilities/checkData';
-import { CreateLesson, DeleteLesson, GetLessons, LessonDocument, UpdateLesson, UpdateProgress } from './lessont.types';
+import { CreateLesson, DeleteLesson, GetLessons, LessonDocument, UpdateLesson, UpdateProgress } from './lesson.types';
 import { InstructorDocument } from '../instructor/instructor.types';
 import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import { Role } from '../auth/auth.types';
@@ -39,6 +39,8 @@ export const createLesson: RequestHandler = async (req: BodyRequest<CreateLesson
 
     const { courseId, title, description } = req.body;
     let { file } = req.body;
+
+    console.log(req.body)
 
     const checker = new CheckData();
 

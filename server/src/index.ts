@@ -17,6 +17,7 @@ import enrollmentRoute from './api/enrollment/enrollment.route';
 import instructorRoute from './api/instructor/instructor.route';
 import schoolRoute from './api/school/school.route';
 import studentRoute from './api/student/student.route';
+import lessonRoute from './api/lesson/lesson.route';
 
 import { NotFound } from './utilities/errors';
 import envs from './utilities/envs';
@@ -38,6 +39,7 @@ app.use('/enrollments', enrollmentRoute);
 app.use('/instructors', instructorRoute);
 app.use('/schools', schoolRoute);
 app.use('/students', studentRoute);
+app.use('/lessons', lessonRoute);
 
 app.use((_req, _res, next) => next(new NotFound()));
 app.use(errorHandler);
