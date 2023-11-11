@@ -16,6 +16,7 @@ import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { io } from 'socket.io-client'
 
 import useReqEnroll from '../../../Hooks/useReqEnroll';
 
@@ -29,7 +30,10 @@ const style = {
     borderRadius:'8px',
     boxShadow: 24,
     p: 4,
-};  
+};
+
+// Connection to the server with port 5000
+const socket = io('http://localhost:5000');
 
 function Requests() {
     // * Modal Open
@@ -71,6 +75,15 @@ function Requests() {
       return <p>Loading...</p>
     }
 
+    // Notification for sending the approval to student
+    function sendApproval(){
+        
+        // message contains that the student has been approved, and the date of schedule
+        // appointment status contains the status of approval (approved or declined)
+        // studentId contains the id of the student to send the approval
+        
+        // socket.emit('send_approval', message, appointment_status, studentId);
+    }
 
     return (
         <Grid item xs={12} sx={{padding:"40px"}}>

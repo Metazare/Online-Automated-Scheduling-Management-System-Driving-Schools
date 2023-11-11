@@ -14,11 +14,15 @@ import useReqStudent from '../../../Hooks/useReqStudent';
 import useReqInstructor from '../../../Hooks/useReqInstructor';
 import useReqAppointment from '../../../Hooks/useReqAppointment';
 import useReqSchool from '../../../Hooks/useReqSchool';
+import { io } from 'socket.io-client';
 
 // TODO Calendar and resched Modal
 
 // Components
 import AppointmentCard from '../../../Components/AppointmentCard';
+
+// Connection to the server with port 5000
+const socket = io('http://localhost:5000');
 
 // Style for Modal
 const style = {
@@ -57,6 +61,26 @@ function Appointments() {
     const [formResched,setFormResched] = useState({
         reschedDateTime:dayjs('2022-04-17T15:30'),
         reason:"",
+    })
+
+    // Notification for sending the appointment (new and resched)
+    function sendAppointment() {
+        socket.emit('send_new_appointment', 
+                    form.student, 
+                    form.instructor, 
+                    form.vehicle, 
+                    form.dateNtime, 
+                    reason)
+    }
+
+    const requestAbortController = React.useRef<AbortController | null>(null);
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
+
+    const fetchHighlightedDays = (date: Dayjs) => {
+    const controller = new AbortController();
+    fakeFetch(date, {
+        signal: controller.signal,
     })
     // * Open Modal 
     const [open, setOpen] = useState("");
@@ -341,6 +365,6 @@ function Appointments() {
         </Modal>
     </>
     
-}
+}}
 
-export default Appointments
+export default Appointments;

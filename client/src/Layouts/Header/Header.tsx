@@ -1,12 +1,27 @@
-import React, {useEffect} from 'react'
+import React,{useState, useEffect} from 'react'
+import Badge from '@mui/material/Badge';
+import MailIcon from '@mui/icons-material/Mail';
+import { io } from 'socket.io-client'
+
+import Button from '@mui/material/Button';
+import Avatar from '@mui/material/Avatar';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog';
+import PersonIcon from '@mui/icons-material/Person';
+import AddIcon from '@mui/icons-material/Add';
+import Typography from '@mui/material/Typography';
+import { blue } from '@mui/material/colors';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
 import Menu from '@mui/material/Menu';
 import Container from '@mui/material/Container';
-import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import ChatIcon from '@mui/icons-material/Chat';
@@ -20,12 +35,59 @@ type Props = {}
 
 const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-// eslint-disable-next-line 
+
+// Connection to the server with port 5000
+const socket = io('http://localhost:5000')
+
+// Setting up the badge content number
+// but based the number of content if the data is viewed or not (enrollment(approved/declined), appointment, reschedule)
+let badgeContentNumber = 0
+
 export default function Header({}: Props) {
   const navigate = useNavigate();
   const {logout, getUser} = useAuth();
   const user = localStorage.getItem('user')
   
+
+  // Check who is login (Student, Admin, Instructor)
+  // if student, show the notification for student
+  const fetchStudentNotif = () => {
+    socket.on('recieve_approval', (message, appointment_status) => {
+      console.log(message, appointment_status)
+        
+    })
+
+    socket.on('send_new_appointment', (message, appointment_date, appointment_status, studentId, instructorID) => {
+      console.log(message, appointment_date, appointment_status, studentId, instructorID)
+    })
+  }
+
+  // if Admin, show the notification for Admin
+  const fetchAdminNotif = () => {
+    socket.on('recieve_enrollment', (studentId, date, courseId) => {
+      console.log(studentId, date, courseId)
+        
+    })
+
+    socket.on('recieve_resched', (studentId, date, courseId) => {
+      console.log(studentId, date, courseId)
+    })
+  }
+
+  // if Instructor, show the notification for Instructor
+  const fetchInstructorNotif = () => {
+    socket.on('recieve_new_appointment', (message, studentId, appointment_date) => {
+      console.log(message, studentId, appointment_date)
+        
+    })
+  }
+
+  useEffect(() => {
+    fetchStudentNotif()
+    fetchAdminNotif()
+    fetchInstructorNotif()
+  }, [])
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
@@ -56,13 +118,26 @@ export default function Header({}: Props) {
           </Box>
           <Box sx={{ flexGrow: 0, display:"flex", gap:'15px'}}>
             {user?<>
-              <IconButton  sx={{ p: "0" , display: { md:'flex', xs:'none', sm:'flex'} }}>
-                <ChatIcon style={{fill:"#E8E8E8"}}/>
-              </IconButton>
-              <IconButton  sx={{ p: "0", display: { md:'flex', xs:'none', sm:'flex'} }}>
+            <IconButton  sx={{ p: "0" , display: { md:'flex', xs:'none', sm:'flex'} }}>
+              <ChatIcon style={{fill:"#E8E8E8"}}/>
+            </IconButton>
+            
+            <IconButton  sx={{ p: "0", display: { md:'flex', xs:'none', sm:'flex'} }}>
+              <Badge badgeContent={badgeContentNumber} color="error">
                 <NotificationsIcon style={{fill:"#E8E8E8"}}/>
-              </IconButton>
-              
+              </Badge>
+            </IconButton>
+            
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Open settings">
+                <IconButton  sx={{ p: "0", display: { md:'flex', xs:'none', sm:'flex'} }}>
+                  <NotificationsIcon style={{fill:"#E8E8E8"}}/>
+                </IconButton>
+              </Tooltip>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
