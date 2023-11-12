@@ -117,6 +117,7 @@ export default function Header({}: Props) {
           </Box>
           <Box sx={{ flexGrow: 0, display:"flex", gap:'15px'}}>
             {user?<>
+            
             <IconButton  sx={{ p: "0" , display: { md:'flex', xs:'none', sm:'flex'} }}>
               <ChatIcon style={{fill:"#E8E8E8"}}/>
             </IconButton>
@@ -132,16 +133,7 @@ export default function Header({}: Props) {
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Open settings">
-                <IconButton  sx={{ p: "0", display: { md:'flex', xs:'none', sm:'flex'} }}>
-                  <NotificationsIcon style={{fill:"#E8E8E8"}}/>
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                </IconButton>
-              </Tooltip>
+        
               <Menu
                 sx={{ mt: '45px' }}
                 id="menu-appbar"
