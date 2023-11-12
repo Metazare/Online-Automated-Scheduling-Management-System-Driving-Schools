@@ -100,7 +100,7 @@ function Students() {
       return foundCourse?.type;
     }
 
-    if (loading) {
+    if (loading || schoolLoading) {
       return <div>Loading...</div>
     }
 
