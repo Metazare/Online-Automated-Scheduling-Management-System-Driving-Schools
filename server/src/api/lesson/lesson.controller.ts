@@ -13,15 +13,14 @@ export const getLessons: RequestHandler = async (req: QueryRequest<GetLessons>, 
     const user = <SchoolDocument>req.user.document;
 
     const { courseId } = req.query;
-    const isCourseIdGiven = typeof courseId === 'string';
-
     const courseIds = user.courses.map(({ courseId }) => <string>courseId);
 
-    const lessonQuery: Record<string, unknown> = {};
-    if (isCourseIdGiven) lessonQuery.courseId = { $in: courseIds };
+    let lessons: Record<string, LessonDocument[]> | LessonDocument[] = await LessonModel.find({
+        courseId: { $in: courseIds }
+    }).exec();
 
-    let lessons: Record<string, LessonDocument[]> | LessonDocument[] = await LessonModel.find(lessonQuery).exec();
-    if (!isCourseIdGiven)
+    if (typeof courseId === 'string') lessons = lessons.filter((lesson) => lesson.courseId === courseId);
+    else {
         lessons = courseIds.reduce(
             (acc, courseId) => ({
                 ...acc,
@@ -29,6 +28,7 @@ export const getLessons: RequestHandler = async (req: QueryRequest<GetLessons>, 
             }),
             <Record<string, LessonDocument[]>>{}
         );
+    }
 
     res.json(lessons);
 };

@@ -1,8 +1,8 @@
-import { CourseType } from "../course/course.types";
-import { Document, Types } from "mongoose";
-import { ProgressLesson } from "../lesson/lesson.types";
-import { SchoolDocument } from "../school/school.types";
-import { Student, StudentDocument } from "../student/student.types";
+import { CourseType } from '../course/course.types';
+import { Document, Types } from 'mongoose';
+import { ProgressLesson } from '../lesson/lesson.types';
+import { SchoolDocument } from '../school/school.types';
+import { Student, StudentDocument } from '../student/student.types';
 
 export enum EnrollmentStatus {
     PENDING = 'pending',
@@ -49,17 +49,17 @@ export type GetEnrollment = {
     courseId?: string;
     courseType?: CourseType;
     status?: EnrollmentStatus;
-}
+};
 
 export type CreateEnrollment = {
     courseId: string;
     days: number[];
     startTime: number;
     endTime: number;
-}
+};
 
 export type UpdateEnrollmentStatus = {
     enrollmentId: string;
     status: EnrollmentStatus;
     reason?: string;
-}
+};
