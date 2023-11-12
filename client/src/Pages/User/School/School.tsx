@@ -1,4 +1,5 @@
 import React,{useState, useEffect} from 'react'
+import io from 'socket.io-client';
 
 // * MUI Imports
 import Container from '@mui/material/Container'
@@ -24,6 +25,8 @@ import useReqEnroll from '../../../Hooks/useReqEnroll';
 import useReqLesson from '../../../Hooks/useReqLesson';
 
 import { useParams } from 'react-router-dom';
+
+const socket = io('http://localhost:5000');
 
 function School() {
   const {data, loading, getSchool} = useReqSchool();
@@ -112,6 +115,18 @@ function School() {
         startTime: form.startTime,
         endTime: form.endTime
       });
+
+      /*
+      * sending the enrollment to school
+      * 'send_enrollment' is the event name
+      * the following data inside the bracket will be sent to the server
+      */
+      // socket.emit('send_enrollment', {
+      //   adminId: id,
+      //   studentId: form.studentId,
+      //   date: form.startTime & form.endTime,
+      //   courseId: form.courseId
+      // })
       
     }
     

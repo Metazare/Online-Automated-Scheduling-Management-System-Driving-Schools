@@ -12,7 +12,7 @@ const app = express();
 app.use('/schools', schoolRoute);
 app.use('/students', studentRoute);
 
-const io = new Server(3001, {
+const io = new Server(5000, {
     cors: {
         origin: ['http://localhost:3000', 'https://admin.socket.io']
     }

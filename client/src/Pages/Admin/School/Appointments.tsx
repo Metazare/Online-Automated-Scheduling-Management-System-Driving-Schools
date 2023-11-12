@@ -66,11 +66,10 @@ function Appointments() {
     // Notification for sending the appointment (new and resched)
     // function sendAppointment() {
     //     socket.emit('send_new_appointment', 
-    //                 form.student, 
-    //                 form.instructor, 
-    //                 form.vehicle, 
-    //                 form.dateNtime, 
-    //                 reason)
+    //                 studentId,
+    //                 instructorId,
+    //                 content,
+    //                 date)
     // }
 
     const requestAbortController = React.useRef<AbortController | null>(null);

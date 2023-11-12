@@ -4,7 +4,7 @@ import { sendSchedule, sendApproval, sendNewAppointment } from './notification.c
 import { send } from 'process';
 
 // General Namespace
-const io = new Server(3001, {
+const io = new Server(5000, {
     cors: {
         origin: ['http://localhost:3000', 'https://admin.socket.io']
     }
@@ -17,7 +17,7 @@ io.on('connection', (socket) => {
     socket.on('send_enrollment', (request) => {
 
         // Sending to a specific user using school id 
-        sendSchedule(request, socket);
+        sendSchedule(request);
     });
 
 
@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
     socket.on('send_resched', (request) => {
 
         // Sending to a specific user using school schoolId
-        sendSchedule(request, socket);
+        sendSchedule(request);
     });
 
 
@@ -33,7 +33,7 @@ io.on('connection', (socket) => {
     socket.on('send_approval', (request) => {
 
         // sending to the specific student using student id
-        sendApproval(request, socket);
+        sendApproval(request);
     })
 
 
@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
     socket.on('send_new_appointment', (request) => {
 
         // sending to the specific student using student id and instructor id
-        sendNewAppointment(request, socket);
+        sendNewAppointment(request);
     })
 
 

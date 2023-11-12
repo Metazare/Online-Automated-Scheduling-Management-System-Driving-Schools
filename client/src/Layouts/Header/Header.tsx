@@ -2,6 +2,7 @@ import React,{useState, useEffect} from 'react'
 import Badge from '@mui/material/Badge';
 import MailIcon from '@mui/icons-material/Mail';
 import { io } from 'socket.io-client'
+import { Grid, Paper , Modal, TextField } from '@mui/material'
 
 import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
@@ -53,11 +54,10 @@ export default function Header({}: Props) {
   const fetchStudentNotif = () => {
     socket.on('recieve_approval', (message, appointment_status) => {
       console.log(message, appointment_status)
-        
     })
 
-    socket.on('send_new_appointment', (message, appointment_date, appointment_status, studentId, instructorID) => {
-      console.log(message, appointment_date, appointment_status, studentId, instructorID)
+    socket.on('send_new_appointment', (message, appointment_date) => {
+      console.log(message, appointment_date)
     })
   }
 
