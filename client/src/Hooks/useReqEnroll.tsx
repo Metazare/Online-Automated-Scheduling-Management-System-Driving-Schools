@@ -19,10 +19,11 @@ interface CreateEnrollmentData {
 }
 
 interface GetEnrollmentData {
-  enrollmentId: string | null;
-  courseId: string | null;
+  enrollmentId?: string | null;
+  courseId?: string | null;
   status?: string | null;
   courseType?: string | null;
+  lessonView?: boolean;
 }
 
 interface UpdateEnrollmentData {
@@ -76,8 +77,15 @@ function useReqEnroll(): Data {
         params: params
       })
       .then((response:any)=>{
-        setData(response.data);
-        console.log(response.data);
+        if (data.lessonView) {
+          setData(response.data[0]);
+          console.log(response.data[0]);
+        }
+        else{
+          setData(response.data);
+          console.log(response.data);
+        }
+        
       });
     } catch (error: any) {
       setError(error);

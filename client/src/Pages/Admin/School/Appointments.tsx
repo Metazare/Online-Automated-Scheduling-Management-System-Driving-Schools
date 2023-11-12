@@ -22,7 +22,7 @@ import { io } from 'socket.io-client';
 import AppointmentCard from '../../../Components/AppointmentCard';
 
 // Connection to the server with port 5000
-const socket = io('http://localhost:5000');
+// const socket = io('http://localhost:5000');
 
 // Style for Modal
 const style = {
@@ -133,6 +133,12 @@ function Appointments() {
 
     const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
 
+    function getCourseType(data) {
+      const { school, courseId } = data;
+      const foundCourse = school.courses.find((course) => course.courseId === courseId);
+      return foundCourse?.type;
+    }
+
     if (loading && appointmentLoading && instructorLoading) {
       return <div>Loading...</div>
     }
@@ -155,9 +161,9 @@ function Appointments() {
                 <Grid item md={6} xs={12}>
                     <AppointmentCard 
                       modalOpen={setOpen}
-                      studentName={`${appointment.enrollment.student}`}
+                      studentName={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.last}`}
                       instructorName={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}
-                      courseName={appointment.enrollment.courseId}
+                      courseName={getCourseType(appointment.enrollment)}
                       schedule={appointment.schedule}
                     />
                 </Grid>

@@ -13,9 +13,11 @@ import Box from '@mui/material/Box';
 import {  Grid, IconButton, Typography,Modal , TextField, Button } from '@mui/material';
 import CircularProgress, {CircularProgressProps,} from '@mui/material/CircularProgress';
 import VerifiedIcon from '@mui/icons-material/Verified';
+
 import useReqLesson from '../Hooks/useReqLesson';
 import useReqCourse from '../Hooks/useReqCourse';
-
+import useReqEnroll from '../Hooks/useReqEnroll';
+import { useAuth } from '../Hooks/useAuth';
 
 
 type Props ={
@@ -78,11 +80,22 @@ function CourseAccordion({variant,title, courseId}:Props) {
       getLesson
     } = useReqLesson();
     const {postCourse:createCourse} = useReqCourse();
+
+    const {data:enrolls, getEnrollments} = useReqEnroll();
+    const {getUser} = useAuth();
+    
     
     useEffect(()=>{
-      getLessons({
-        courseId: courseId
-      })
+      if(getUser()!=='student'){
+        getLessons({
+          courseId: courseId
+        })
+      }
+      else{
+        getEnrollments({
+          courseId: courseId
+        })
+      }
     },[])
 
     // * Modal Open
@@ -175,6 +188,8 @@ function CourseAccordion({variant,title, courseId}:Props) {
             </Paper>
             {openAccordion?
               <>
+              {getUser()!=='student' ? <>
+              
                 {lessons?.map((lesson)=>(
                   <Paper variant="elevation" elevation={2} sx={{background:"white",display:"flex",gap:"5px",alignItems:"center",cursor:"pointer",paddingRight:"1em"}}>
                       <div style={{flexGrow:"1"}}>
@@ -208,6 +223,29 @@ function CourseAccordion({variant,title, courseId}:Props) {
                       </>}
                   </Paper>
                 ))}
+              </> : <>
+                {enrolls?.map((enroll)=>(
+                  <>
+                    {console.log(enroll)}
+                    {enroll.progress.map((lesson)=>(
+                      <Paper variant="elevation" elevation={2} sx={{background:"white",display:"flex",gap:"5px",alignItems:"center",cursor:"pointer",paddingRight:"1em"}}>
+                          {/* {console.log(lesson)} */}
+                          <div style={{flexGrow:"1"}}>
+                              <a href={`/course/${courseId}/${lesson.lessonId}`} >
+                                  <div style={{padding:"1em"}}>
+                                      <Typography variant="body1" color="initial">{lesson.title}</Typography>
+                                  </div>
+                              </a>
+                          </div>
+                          {lesson.status==='complete' ? 
+                            <VerifiedIcon sx={{fill:"#E24B5B"}}/>
+                          :<></>}
+                      </Paper>
+                    ))}
+                  </>
+                ))}
+              </>}
+                
               </>
           :""}
         </div>

@@ -26,7 +26,7 @@ import useReqLesson from '../../../Hooks/useReqLesson';
 
 import { useParams } from 'react-router-dom';
 
-const socket = io('http://localhost:5000');
+// const socket = io('http://localhost:5000');
 
 function School() {
   const {data, loading, getSchool} = useReqSchool();

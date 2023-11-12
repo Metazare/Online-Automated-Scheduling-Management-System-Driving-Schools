@@ -10,19 +10,41 @@ import CourseAccordion from '../../../Components/CourseAccordion';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { useParams } from 'react-router-dom';
 import useReqLesson from '../../../Hooks/useReqLesson';
+import useReqEnroll from '../../../Hooks/useReqEnroll';
+import { useAuth } from '../../../Hooks/useAuth';
 
 
 function LessonView() {
     const [feedback,setFeedback] = useState(false);
     const {cid, lid} = useParams();
     const {datum, loading, getLesson} = useReqLesson();
+    const {data: enrolls, getEnrollments} = useReqEnroll();
+    const {getUser} = useAuth();
+    const [lesson, setLesson] = useState<any>()
 
     useEffect(()=>{
-      getLesson({
-        courseId: cid,
-        lessonId: lid
-      })
+      if (getUser()!=='student') {
+        getLesson({
+          courseId: cid,
+          lessonId: lid
+        })
+      }
+      else {
+        getEnrollments({
+          courseId: cid,
+          lessonView: true,
+          // enrollmentId: lid
+        })
+        // setLesson(enrolls?.progress.find((lesson) => lesson.lessonId === lid))
+        // console.log(enrolls?.progress.find((lesson) => lesson.lessonId === lid))
+      }
     }, [])
+
+    function getData(array){
+      if (array) {
+        return array.filter(lesson => lesson.lessonId === lid)[0]
+      }
+    }
 
     if(loading){
       return <div>Loading...</div>
@@ -49,7 +71,7 @@ function LessonView() {
                         sx={{ width: 80, height: 80 }}
                         />
                         <div style={{flexGrow:"1"}}>
-                        <Typography variant="h4" fontWeight={500} color="initial">SMART Driving</Typography>
+                        <Typography variant="h4" fontWeight={500} color="initial">School</Typography>
                         <Box
                             sx={{
                             display: 'flex',
@@ -88,18 +110,17 @@ function LessonView() {
                 <Grid item md={feedback ? 8 : 12} xs={12}>
                     <div style={{display:"flex", alignItems:"start"}}>
                         <div style={{flexGrow:"1"}}>
-                            <Typography variant="h6" color="primary">{datum?.title}</Typography>
-                            <Typography variant="body2" mt={"-5px"} color="initial">{datum?.description}</Typography>
+                            <Typography variant="h6" color="primary">{getUser()!=='student' ? datum?.title : getData(enrolls?.progress)?.title}</Typography>
+                            <Typography variant="body2" mt={"-5px"} color="initial">{getUser()!=='student' ? datum?.description : getData(enrolls?.progress)?.title}</Typography>
                         </div>
                         <Button variant="contained" color="primary" sx={{marginTop:"5px"}}>
                             next
                         </Button>
                     </div>
                     <div style={{width:"100%",borderRadius:"8px",minHeight:"400px",marginTop:"25px", background:"#D0D0D0"}}>
-                      {/* {datum?.file} */}
                       <iframe
-                        title="PDF Viewer"
-                        src={datum?.file}
+                        title="PDF Viewer" 
+                        src={getUser()!=='student' ? datum?.file : getData(enrolls?.progress)?.file}
                         width="100%"
                         height="500px" // You can adjust the height based on your preference
                         frameBorder="0"

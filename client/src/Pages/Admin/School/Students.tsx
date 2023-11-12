@@ -19,6 +19,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 
 import useReqStudent from '../../../Hooks/useReqStudent';
+import useReqSchool from '../../../Hooks/useReqSchool';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -60,6 +61,7 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 function Students() {
 
     const { students, loading, error, getStudent } = useReqStudent();
+    const { data: school, loading: schoolLoading, error: errorSchool, getSchool } = useReqSchool();
 
     // * Modal Open
     const [open, setOpen] = useState("");
@@ -87,7 +89,16 @@ function Students() {
         studentId:null,
         courseType:null
       })
+      getSchool({
+        schoolId: null
+      })
     }, []);
+
+    function getCourseType(data) {
+      const { courseId } = data;
+      const foundCourse = school.courses.find((course) => course.courseId === courseId);
+      return foundCourse?.type;
+    }
 
     if (loading) {
       return <div>Loading...</div>
@@ -124,7 +135,7 @@ function Students() {
                         </TableCell>
                         <TableCell >
                           {student.enrollments?.map((enrollment) => ( 
-                            <div>{enrollment.courseId}</div>
+                            <div>{getCourseType(enrollment)}</div>
                           ))}
                         </TableCell>
                         <TableCell >

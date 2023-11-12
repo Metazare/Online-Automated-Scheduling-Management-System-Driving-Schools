@@ -6,6 +6,7 @@ import PracticalIllus from '../Images/Resources/practicalDrivingIllustrator.png'
 import Typography from '@mui/material/Typography';
 
 import useReqLesson from '../Hooks/useReqLesson';
+import { useAuth } from '../Hooks/useAuth';
 
 type Props = {
   variant:String,
@@ -19,9 +20,10 @@ type Props = {
 }
 function CourseCard({variant,title,type,display,description,courseId}:Props) {
   const {data, loading, getLessons} = useReqLesson();
+  const {getUser} = useAuth();
 
   useEffect(()=>{
-    if (courseId) {
+    if (courseId && getUser()!=='student') {
       getLessons({courseId:courseId})
       console.log(data)
     }

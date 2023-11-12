@@ -33,7 +33,7 @@ const style = {
 };
 
 // Connection to the server with port 5000
-const socket = io('http://localhost:5000');
+// const socket = io('http://localhost:5000');
 
 function Requests() {
     // * Modal Open
@@ -85,6 +85,13 @@ function Requests() {
         // socket.emit('send_approval', message, appointment_status, studentId);
     }
 
+    // Function to get the course type based on course ID
+    function getCourseType(data) {
+      const { school, courseId } = data;
+      const foundCourse = school.courses.find((course) => course.courseId === courseId);
+      return foundCourse?.type;
+    }
+
     return (
         <Grid item xs={12} sx={{padding:"40px"}}>
           {/* <FormControl fullWidth sx={{minWidth:"200px",maxWidth:"30%",marginBottom:"25px"}}>
@@ -130,7 +137,7 @@ function Requests() {
                                 <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>{request?.createdAt}</Typography>
                             </div>
                         </TableCell>
-                        <TableCell >Theoretical Driving</TableCell>
+                        <TableCell >{getCourseType(request)}</TableCell>
                         <TableCell >
                           {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
                         </TableCell>

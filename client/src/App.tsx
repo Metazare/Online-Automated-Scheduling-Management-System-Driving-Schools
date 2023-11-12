@@ -73,10 +73,6 @@ function App() {
           </Route>
 
         </Route>
-
-        <Route>
-          <Route path="/testupload" element={<UploadImage/>} />
-        </Route>
       </Routes>
     </ThemeProvider>
   );

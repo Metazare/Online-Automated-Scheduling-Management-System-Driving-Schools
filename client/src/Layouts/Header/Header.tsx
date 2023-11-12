@@ -37,7 +37,7 @@ const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 // Connection to the server with port 5000
-const socket = io('http://localhost:5000')
+// const socket = io('http://localhost:5000')
 
 // Setting up the badge content number
 // but based the number of content if the data is viewed or not (enrollment(approved/declined), appointment, reschedule)
@@ -51,41 +51,41 @@ export default function Header({}: Props) {
 
   // Check who is login (Student, Admin, Instructor)
   // if student, show the notification for student
-  const fetchStudentNotif = () => {
-    socket.on('recieve_approval', (message, appointment_status) => {
-      console.log(message, appointment_status)
-    })
+  // const fetchStudentNotif = () => {
+  //   socket.on('recieve_approval', (message, appointment_status) => {
+  //     console.log(message, appointment_status)
+  //   })
 
-    socket.on('send_new_appointment', (message, appointment_date) => {
-      console.log(message, appointment_date)
-    })
-  }
+  //   socket.on('send_new_appointment', (message, appointment_date) => {
+  //     console.log(message, appointment_date)
+  //   })
+  // }
 
-  // if Admin, show the notification for Admin
-  const fetchAdminNotif = () => {
-    socket.on('recieve_enrollment', (studentId, date, courseId) => {
-      console.log(studentId, date, courseId)
+  // // if Admin, show the notification for Admin
+  // const fetchAdminNotif = () => {
+  //   socket.on('recieve_enrollment', (studentId, date, courseId) => {
+  //     console.log(studentId, date, courseId)
         
-    })
+  //   })
 
-    socket.on('recieve_resched', (studentId, date, courseId) => {
-      console.log(studentId, date, courseId)
-    })
-  }
+  //   socket.on('recieve_resched', (studentId, date, courseId) => {
+  //     console.log(studentId, date, courseId)
+  //   })
+  // }
 
-  // if Instructor, show the notification for Instructor
-  const fetchInstructorNotif = () => {
-    socket.on('recieve_new_appointment', (message, studentId, appointment_date) => {
-      console.log(message, studentId, appointment_date)
+  // // if Instructor, show the notification for Instructor
+  // const fetchInstructorNotif = () => {
+  //   socket.on('recieve_new_appointment', (message, studentId, appointment_date) => {
+  //     console.log(message, studentId, appointment_date)
         
-    })
-  }
+  //   })
+  // }
 
-  useEffect(() => {
-    fetchStudentNotif()
-    fetchAdminNotif()
-    fetchInstructorNotif()
-  }, [])
+  // useEffect(() => {
+  //   fetchStudentNotif()
+  //   fetchAdminNotif()
+  //   fetchInstructorNotif()
+  // }, [])
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
