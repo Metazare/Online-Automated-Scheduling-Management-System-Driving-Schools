@@ -6,7 +6,7 @@ import { send } from 'process';
 // General Namespace
 const io = new Server(5000, {
     cors: {
-        origin: ['http://localhost:3000', 'https://admin.socket.io']
+        origin: 'http://localhost:3000'
     }
 });
 
@@ -49,7 +49,3 @@ io.on('connection', (socket) => {
         console.log('user disconnected');
     });
 });
-
-// admin panel of the websocket
-// the auth is false since idk how to authenticate the user yet
-instrument(io, { auth: false });
