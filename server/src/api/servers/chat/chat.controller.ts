@@ -1,8 +1,11 @@
 import { Chat } from "./chat.types";
 import { Role } from "../../auth/auth.types";
 import { Socket, Server } from 'socket.io';
+import envs from "../../../utilities/envs";
 
-const io = new Server(3001, {
+const { PORT } = envs;
+
+const io = new Server(PORT, {
     cors: {
         origin: ['http://localhost:3000', 'https://admin.socket.io']
     }

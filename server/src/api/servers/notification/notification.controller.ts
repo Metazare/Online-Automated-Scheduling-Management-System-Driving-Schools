@@ -1,8 +1,11 @@
 import { Role } from '../../auth/auth.types';
 import { Notification, SendSchedule, NotificationTitle } from './notification.types';
 import { Server } from 'socket.io';
+import envs from '../../../utilities/envs';
 
-const io = new Server(5000, {
+const { PORT } = envs;
+
+const io = new Server(PORT, {
     cors: {
         origin: ['http://localhost:3000', 'https://admin.socket.io']
     }
@@ -15,7 +18,7 @@ export const sendSchedule = (req: SendSchedule) => {
         if (schoolID && Role.ADMIN) schoolID.emit('recieve_enrollment', req.studentId, req.date, req.courseId);
 
     if (NotificationTitle.RESCHEDULE)
-    if (schoolID && Role.ADMIN) schoolID.emit('recieve_resched', req.studentId, req.date, req.courseId);
+        if (schoolID && Role.ADMIN) schoolID.emit('recieve_resched', req.studentId, req.date, req.courseId);
 }
 
 export const sendApproval = (req: Notification) => {
