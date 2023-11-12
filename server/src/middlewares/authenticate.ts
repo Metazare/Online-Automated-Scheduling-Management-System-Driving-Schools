@@ -1,4 +1,4 @@
-import { AllUserDocument, Payload, Role } from '../api/auth/auth.types';
+import { UserDocument, Payload, Role } from '../api/auth/auth.types';
 import { cookieOptions, signAccess, signRefresh } from '../utilities/cookies';
 import { Forbidden, Unauthorized } from '../utilities/errors';
 import { JwtPayload, verify } from 'jsonwebtoken';
@@ -37,7 +37,7 @@ const authenticate: RequestHandler = async (req, res, next) => {
     }
 
     if (payload) {
-        let user: AllUserDocument | null;
+        let user: UserDocument | null;
         const { userId, role } = payload;
 
         switch (payload.role) {

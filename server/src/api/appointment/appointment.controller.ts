@@ -49,9 +49,11 @@ export const getAppointments: RequestHandler = async (req: QueryRequest<GetAppoi
     }
 
     let appointments: AppointmentPopulatedDocument[] = await AppointmentModel.find(appointmentQuery)
-        .populate('instructor')
-        .populate('enrollment')
-        .populate('school')
+        .populate('instructor school')
+        .populate({
+            path: 'enrollment',
+            populate: 'school student'
+        })
         .exec();
 
     if (typeof enrollmentId === 'string')
