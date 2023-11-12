@@ -15,6 +15,7 @@ import { Role } from '../auth/auth.types';
 import { SchoolDocument } from '../school/school.types';
 import EnrollmentModel from '../enrollment/enrollment.model';
 import LessonModel from './lesson.model';
+import { EnrollmentPopulatedDocument } from '../enrollment/enrollment.types';
 
 export const getLessons: RequestHandler = async (req: QueryRequest<GetLessons>, res) => {
     if (!req.user) throw new Unauthorized();
@@ -131,16 +132,14 @@ export const updateProgress: RequestHandler = async (req: BodyRequest<UpdateProg
     checker.checkType(status, 'string', 'status');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
-    const enrollment = await EnrollmentModel.findOneAndUpdate(
-        {
-            enrollmentId,
-            school,
-            'progress.lessonId': lessonId
-        },
-        { $set: { 'progress.$.status': status } }
-    ).exec();
-
+    const enrollment: EnrollmentPopulatedDocument | null = await EnrollmentModel.findOne({ enrollmentId, school }).populate('progress.lesson').exec();
     if (!enrollment) throw new NotFound('Enrollment');
+
+    const lesson = enrollment.progress.find((lesson) => lesson.lesson.lessonId === lessonId);
+    if (!lesson) throw new NotFound('Lesson');
+
+    lesson.status = status;
+    await enrollment.save();
 
     res.sendStatus(204);
 };
