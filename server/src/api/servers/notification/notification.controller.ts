@@ -7,7 +7,7 @@ const { PORT } = envs;
 
 const io = new Server(PORT, {
     cors: {
-        origin: ['http://localhost:3000', 'https://admin.socket.io']
+        origin: 'http://localhost:3000'
     }
 });
 
