@@ -51,6 +51,7 @@ function Appointments() {
     const [reason,setReason] = useState("")
     const [selectedStudent, setSelectedStudent] = useState<YourStateType<any>>(undefined);
 
+
     // * Declaration for adding new appointments form
     const [form, setForm] = useState({
         enrollmentId:"",

@@ -20,6 +20,7 @@ import Select from '@mui/material/Select';
 
 import useReqStudent from '../../../Hooks/useReqStudent';
 import useReqSchool from '../../../Hooks/useReqSchool';
+import useReqLesson from '../../../Hooks/useReqLesson';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -58,11 +59,17 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
         </Box>
     );
 }
+
+type YourStateType<T> = T | undefined;
+
 function Students() {
 
+    const { updateProgress } = useReqLesson();
     const { students, loading, error, getStudent } = useReqStudent();
     const { data: school, loading: schoolLoading, error: errorSchool, getSchool } = useReqSchool();
-
+    const [selectedStudent, setSelectedStudent] = useState<YourStateType<any>>(undefined);
+    const [selectedCourse, setSelectedCourse] = useState<YourStateType<any>>(undefined);
+    
     // * Modal Open
     const [open, setOpen] = useState("");
     // TODO Pagination
@@ -78,6 +85,9 @@ function Students() {
     // TODO End Pagination
 
     const [form, setForm] = useState({
+        courseId: "",
+        studentId: "",
+        lessonId:"",
         lesson:"",
         feedback:""
     })
@@ -99,6 +109,34 @@ function Students() {
       const foundCourse = school.courses.find((course) => course.courseId === courseId);
       return foundCourse?.type;
     }
+
+    // function getLesson(data) {
+    //   const { lessonId } = data;
+    //   const foundCourse = school.courses.find((course) => course.courseId === courseId);
+    //   return foundCourse?.type;
+    // }
+
+    async function submit(e: any){
+      e.preventDefault();
+
+      console.log({
+        enrollmentId: selectedCourse?.enrollmentId,
+        lessonId: form.lessonId,
+        status: 'complete'
+      })
+
+      if (selectedCourse && form.lessonId) {
+        updateProgress({
+          enrollmentId: selectedCourse?.enrollmentId,
+          lessonId: form.lessonId,
+          status: 'complete'
+        })
+      }
+      else {
+        alert("Please Select Course and Lesson");
+      }
+      
+    };
 
     if (loading || schoolLoading) {
       return <div>Loading...</div>
@@ -147,7 +185,7 @@ function Students() {
                             <CircularProgressWithLabel defaultValue={0} value={60} />
                         </TableCell>
                         <TableCell >
-                            <IconButton aria-label="" onClick={()=>{setOpen("update")}}>
+                            <IconButton aria-label="" onClick={()=>{setOpen("update");setSelectedStudent(student)}}>
                                 <TaskIcon/>
                             </IconButton>
                         </TableCell>
@@ -172,30 +210,62 @@ function Students() {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    
                     <Box sx={style}>
                         {open === "update"?<>
-                            <form action="">
+                          
                                 <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
-                                    Add New Instructor
+                                    Progress Update
+                                    
                                 </Typography>
                                 <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
-                                    Fill up the details of the instructor
+                                    Select the course and lesson to mark as complete.
                                 </Typography>
                                 <Grid container spacing={2} mt={3}>
                                     <Grid item  xs={12}>
                                         <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Select Course</InputLabel>
+                                            <Select
+                                              required
+                                              labelId="demo-simple-select-label"
+                                              id="demo-simple-select"
+                                              label="Select Lesson"
+                                              value={form.courseId}
+                                              onChange={(event)=>{ 
+                                                
+                                                const selectedCourseId = event.target.value; // Assuming the value is the courseId
+                                                const selectedCourse = selectedStudent?.enrollments.find(course => course.courseId === selectedCourseId);
+            
+                                                setSelectedCourse(selectedCourse);
+                                                setForm({ ...form, courseId: selectedCourseId });
+                                              }}
+                                            >
+                                              {selectedStudent && selectedStudent?.enrollments.map((course) => (
+                                                <MenuItem key={course.courseId} value={course.courseId}>
+                                                  {getCourseType(course)}
+                                                </MenuItem>
+                                              ))}
+
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item  xs={12}>
+                                        <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">Select Lesson</InputLabel>
                                             <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            label="Select Lesson"
-                                            value={form.lesson}
-                                            onChange={(event)=>{ setForm({...form, lesson: event.target.value });}}
+                                              required
+                                              labelId="demo-simple-select-label"
+                                              id="demo-simple-select"
+                                              label="Select Lesson"
+                                              value={form.lessonId}
+                                              onChange={(event)=>{ setForm({...form, lessonId: event.target.value });}}
                                             >
-                                            <MenuItem value={"Lesson#1"}>Lesson #1</MenuItem>
-                                            <MenuItem value={"Lesson#2"}>Lesson #2</MenuItem>
-                                            <MenuItem value={"Lesson#3"}>Lesson #3</MenuItem>
+
+                                              {selectedCourse?.progress.map((lesson) => (
+                                                <MenuItem key={lesson.lessonId} value={lesson.lessonId}>
+                                                  {lesson.title}
+                                                </MenuItem>
+                                              ))}
+
                                             </Select>
                                         </FormControl>
                                     </Grid>
@@ -217,12 +287,12 @@ function Students() {
                                         </Button>
                                     </Grid>
                                     <Grid item sm={8} xs={12}>
-                                        <Button variant="contained" fullWidth color="primary" onClick={()=>{setOpen("Credential")}}>
-                                            Create
+                                        <Button variant="contained" type='submit' fullWidth color="primary" onClick={(e)=>{setOpen("");submit(e)}} >
+                                            Mark as Complete
                                         </Button>
                                     </Grid>
                                 </Grid>
-                            </form>
+                          
                         </>:""}
                     </Box>
                 </Modal>
