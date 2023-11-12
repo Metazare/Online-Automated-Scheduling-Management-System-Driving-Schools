@@ -1,21 +1,16 @@
-import { Schema, Types, model } from 'mongoose';
-import { id } from '../../utilities/ids';
+import { Schema, model } from 'mongoose';
 
 const emailOTPSchema = new Schema(
     {
-        emailID: {
-            type: String,
-            required: true,
-            default: id
-        },
         reciever: {
             type: String,
             unique: true,
             match: /^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$/,
             required: true
         },
-        subject: {
+        otp: {
             type: String,
+            unique: true,
             required: true
         },
         message: {
@@ -24,3 +19,5 @@ const emailOTPSchema = new Schema(
         }
     }
 );
+
+export default model('EmailOTP', emailOTPSchema)

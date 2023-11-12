@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "jsx": "react",
         "alwaysStrict": true,
         "esModuleInterop": true,
         "forceConsistentCasingInFileNames": true,
@@ -19,5 +20,5 @@
         "target": "ES2016",
         "typeRoots": ["./src/@types", "./node_modules/@types"]
     },
-    "include": ["./src/**/*.ts"]
+    "include": ["./src/**/*.ts", "src/api/email/email.OTP.ts"]
 }
