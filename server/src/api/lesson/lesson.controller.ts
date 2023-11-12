@@ -1,6 +1,14 @@
 import { BodyRequest, QueryRequest, RequestHandler } from 'express';
 import { CheckData } from '../../utilities/checkData';
-import { CreateLesson, DeleteLesson, GetLessons, LessonDocument, UpdateLesson, UpdateProgress } from './lesson.types';
+import {
+    CreateLesson,
+    DeleteLesson,
+    GetLessons,
+    LessonDocument,
+    LessonStatus,
+    UpdateLesson,
+    UpdateProgress
+} from './lesson.types';
 import { InstructorDocument } from '../instructor/instructor.types';
 import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import { Role } from '../auth/auth.types';
@@ -99,7 +107,10 @@ export const deleteLesson: RequestHandler = async (req: BodyRequest<DeleteLesson
 
     const courseIds = user.courses.map(({ courseId }) => courseId);
 
-    const lesson = await LessonModel.findOneAndDelete({ lessonId, courseId: { $in: courseIds } }).exec();
+    const lesson = await LessonModel.findOneAndUpdate(
+        { lessonId, courseId: { $in: courseIds } },
+        { $set: { status: LessonStatus.INACTIVE } }
+    ).exec();
     if (!lesson) throw new NotFound('Lesson');
 
     res.sendStatus(204);

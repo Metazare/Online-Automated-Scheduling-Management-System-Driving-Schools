@@ -1,5 +1,5 @@
 import { id } from '../../utilities/ids';
-import { LessonDocument } from './lesson.types';
+import { LessonDocument, LessonStatus } from './lesson.types';
 import { Schema, model } from 'mongoose';
 
 const lessonSchema = new Schema(
@@ -22,6 +22,13 @@ const lessonSchema = new Schema(
             type: String,
             minLength: 1,
             required: true
+        },
+        status: {
+            type: String,
+            enum: {
+                values: Object.values(LessonStatus),
+                message: '"{VALUE}" is not supported'
+            }
         },
         file: String
     },
