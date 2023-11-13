@@ -32,13 +32,13 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(helmet());
 
+app.use('/otp', otpRoute);
 app.use('/auth', authRoute);
 app.use(authenticate);
 app.use('/appointments', appointmentRoute);
 app.use('/courses', courseRoute);
 app.use('/enrollments', enrollmentRoute);
 app.use('/instructors', instructorRoute);
-app.use('/otp', otpRoute);
 app.use('/schools', schoolRoute);
 app.use('/students', studentRoute);
 app.use('/lessons', lessonRoute);
