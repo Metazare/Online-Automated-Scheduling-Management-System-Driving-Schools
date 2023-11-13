@@ -13,6 +13,7 @@ export default cleanEnv(process.env, {
     PORT: port({ default: 4000 }),
     JWT_ACCESS: str(),
     JWT_REFRESH: str(),
+    RESEND_KEY: str(),
     CORS_ORIGIN: devDefault('CORS_ORIGIN', 'http://localhost:3000'),
     MONGO_URI: devDefault(
         'MONGO_URI',

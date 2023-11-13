@@ -1,23 +1,19 @@
 import { Schema, model } from 'mongoose';
 
-const emailOTPSchema = new Schema(
+const otpSchema = new Schema(
     {
-        reciever: {
+        email: {
             type: String,
             unique: true,
             match: /^[\w\.-]+@([\w-]+\.)+[\w-]{2,4}$/,
             required: true
         },
-        otp: {
+        code: {
             type: String,
             unique: true,
-            required: true
-        },
-        message: {
-            type: String,
             required: true
         }
     }
 );
 
-export default model('EmailOTP', emailOTPSchema)
+export default model('OTP', otpSchema)
