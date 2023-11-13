@@ -170,7 +170,7 @@ function useReqLesson(): Data {
     setLoading(true);
     try {
       await axios
-      .patch('/lessons', {
+      .patch('/lessons/progress', {
         enrollmentId: value.enrollmentId,
         lessonId: value.lessonId,
         status: value.status,
@@ -181,6 +181,7 @@ function useReqLesson(): Data {
       });
     } catch (error: any) {
       setError(error);
+      console.log(error);
     } finally {
       setLoading(false);
     }
