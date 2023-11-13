@@ -9,8 +9,11 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CourseAccordion from '../../../Components/CourseAccordion';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { useParams } from 'react-router-dom';
+
+
 import useReqLesson from '../../../Hooks/useReqLesson';
 import useReqEnroll from '../../../Hooks/useReqEnroll';
+import useReqSchool from '../../../Hooks/useReqSchool';
 import { useAuth } from '../../../Hooks/useAuth';
 
 
@@ -21,12 +24,16 @@ function LessonView() {
     const {data: enrolls, getEnrollments} = useReqEnroll();
     const {getUser} = useAuth();
     const [lesson, setLesson] = useState<any>()
+    const {data: school, loading: schoolLoading, error: errorSchool, getSchool} = useReqSchool();
 
     useEffect(()=>{
       if (getUser()!=='student') {
         getLesson({
           courseId: cid,
           lessonId: lid
+        })
+        getSchool({
+          schoolId: null
         })
       }
       else {
@@ -71,7 +78,7 @@ function LessonView() {
                         sx={{ width: 80, height: 80 }}
                         />
                         <div style={{flexGrow:"1"}}>
-                        <Typography variant="h4" fontWeight={500} color="initial">School</Typography>
+                        <Typography variant="h4" fontWeight={500} color="initial">{getUser()!=='student' ? school?.name : enrolls?.school?.name}</Typography>
                         <Box
                             sx={{
                             display: 'flex',
@@ -85,7 +92,7 @@ function LessonView() {
                             }}
                             >
                             <CallIcon/> 
-                            <Typography variant="body1" fontWeight={500}>0915-666-147</Typography>
+                            <Typography variant="body1" fontWeight={500}>{getUser()!=='student' ? school?.contact :  enrolls?.school?.contact}</Typography>
                             </Box>
                             <Box
                             sx={{
@@ -94,7 +101,7 @@ function LessonView() {
                             }}
                             >
                             <EmailIcon/> 
-                            <Typography variant="body1" fontWeight={500}>0915-666-147</Typography>
+                            <Typography variant="body1" fontWeight={500}>{getUser()!=='student' ?  school?.email :  enrolls?.school?.email}</Typography>
                             </Box>
                         </Box>
                         </div>
