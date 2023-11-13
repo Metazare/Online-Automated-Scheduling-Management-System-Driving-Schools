@@ -132,13 +132,15 @@ export const updateProgress: RequestHandler = async (req: BodyRequest<UpdateProg
     checker.checkType(status, 'string', 'status');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
-    const enrollment: EnrollmentPopulatedDocument | null = await EnrollmentModel.findOne({ enrollmentId, school }).populate('progress.lesson').exec();
+    const enrollment: EnrollmentPopulatedDocument | null = await EnrollmentModel.findOne({ enrollmentId, school })
+        .populate('progress.lesson')
+        .exec();
     if (!enrollment) throw new NotFound('Enrollment');
 
-    const lesson = enrollment.progress.find((lesson) => lesson.lesson.lessonId === lessonId);
-    if (!lesson) throw new NotFound('Lesson');
+    const lessonIndex = enrollment.progress.findIndex((lesson) => lesson.lesson.lessonId === lessonId);
+    if (lessonIndex === -1) throw new NotFound('Lesson');
 
-    lesson.status = status;
+    enrollment.progress[lessonIndex].status = status;
     await enrollment.save();
 
     res.sendStatus(204);
