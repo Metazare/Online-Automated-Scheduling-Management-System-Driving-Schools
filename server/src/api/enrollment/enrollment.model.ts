@@ -64,19 +64,11 @@ const enrollmentSchema = new Schema(
         },
         progress: [
             {
-                lessonId: {
-                    type: String,
+                lesson: {
+                    type: Types.ObjectId,
+                    ref: 'Lesson',
                     required: true
                 },
-                title: {
-                    type: String,
-                    required: true
-                },
-                description: {
-                    type: String,
-                    required: true
-                },
-                file: String,
                 status: {
                     type: String,
                     enum: {

@@ -13,10 +13,10 @@ export interface Payload {
     role: Role;
 }
 
-export type AllUserDocument = SchoolDocument | InstructorPopulatedDocument | StudentDocument;
+export type UserDocument = SchoolDocument | InstructorPopulatedDocument | StudentDocument;
 
 export interface User {
-    document: AllUserDocument;
+    document: UserDocument;
     role: Role;
 }
 

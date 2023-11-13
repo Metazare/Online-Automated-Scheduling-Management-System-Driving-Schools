@@ -5,6 +5,11 @@ export enum ProgressStatus {
     INCOMPLETE = 'incomplete'
 }
 
+export enum LessonStatus {
+    ACTIVE = 'active',
+    INACTIVE = 'inactive'
+}
+
 /* MODEL */
 
 export interface Lesson {
