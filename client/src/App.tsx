@@ -2,6 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
+// Pages
 import LandingPage from './Pages/LandingPage';
 import Login from './Pages/Login'
 import Register from './Pages/Register'
@@ -10,24 +11,9 @@ import BaseLayout from './Layouts/BaseLayout/BaseLayout';
 import School from './Pages/User/School/School'
 import LessonView from './Pages/User/School/LessonView';
 import CoursesList from './Pages/User/School/CourseList'
-
-//Test Routes
-import RegisterAdmin from './Test/RegisterAdmin';
-import RegisterInstructor from './Test/RegisterInstructor';
-import RegisterStudent from './Test/RegisterStudent';
-import Logout from './Test/Logout';
-import AddCourse from './Test/AddCourse';
-import EnrollStudent from './Test/EnrollStudent';
-import EnrollGet from './Test/EnrollGet';
-// import AppointmentCreate from './Test/AppointmentCreate';
-
-import UploadImage from './Test/UploadImage';
-
-
 import ManageSchool from './Pages/Admin/School/ManageSchool';
 
-// import ProtectedRoute from './Hooks/ProtectedRoute';
-
+// Hooks
 import { ProtectedRoute } from './Hooks/useAuth';
 
 const theme = createTheme({
