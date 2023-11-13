@@ -1,8 +1,9 @@
 import { Resend } from 'resend';
+// import { OTPEmail } from './email.OTP';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const generateOTP = () => {
+export const generateOTP = () => {
     const numbers = '0123456789'; // Define the numbers to be used in the OTP
     let otp = '';
 

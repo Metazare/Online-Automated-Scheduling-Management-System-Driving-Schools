@@ -20,5 +20,5 @@
         "target": "ES2016",
         "typeRoots": ["./src/@types", "./node_modules/@types"]
     },
-    "include": ["./src/**/*.ts", "src/api/email/email.OTP.ts"]
+    "include": ["./src/**/*.ts", "src/api/email/email.OTP.tsx"]
 }
