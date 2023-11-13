@@ -1,15 +1,15 @@
-import { Document, Types } from "mongoose";
-import { Role, UserDocument } from "../auth/auth.types";
+import { Role, User } from '../auth/auth.types';
+import { Document } from 'mongoose';
 
 export enum NotificationStatus {
-    VIEWED = 'viewed',
-    IGNORED = 'ignored'
+    READ = 'read',
+    UNREAD = 'unread',
 }
 
 export interface Notification {
     notificationId: string;
     targets: {
-        user: Types.ObjectId | Record<string, unknown>;
+        user: string;
         role: Role;
     }[];
     content: string;
@@ -17,17 +17,17 @@ export interface Notification {
 }
 
 export interface NotificationDocument extends Notification, Document {
-    targets: {
-        user: UserDocument['_id'];
-        role: Role;
-    }[];
     createdAt: Date;
     updatedAt: Date;
 }
 
-export interface NotificationPopulatedDocument extends NotificationDocument {
-    targets: {
-        user: UserDocument;
-        role: Role;
-    }[];
+export interface NotificationUser {
+    userId: string;
+    role: Role;
+}
+
+export interface CreateNotification {
+    sender: User;
+    targets: User[];
+    content: string;
 }
