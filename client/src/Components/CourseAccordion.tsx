@@ -117,6 +117,7 @@ function CourseAccordion({variant,title, courseId}:Props) {
 
     async function create(e: React.FormEvent<HTMLFormElement>){
       e.preventDefault();
+      setOpen("");
       createLesson({
         courseId: courseId,
         title: form.title,
@@ -134,6 +135,7 @@ function CourseAccordion({variant,title, courseId}:Props) {
 
     async function editLesson(e: React.FormEvent<HTMLFormElement>){
       e.preventDefault();
+      setOpen("");
       updateLesson({
         lessonId: selectedLesson,
         title: editForm.title,
@@ -144,6 +146,7 @@ function CourseAccordion({variant,title, courseId}:Props) {
 
     const uploadImage = (image) => {
       if (image == null) return;
+      alert("Uploading image...")
       const imageRef = ref(storage, `oasms/${image.name + v4()}`);
       uploadBytes(imageRef, image).then(async () => {
         const downloadURL = await getDownloadURL(imageRef);
