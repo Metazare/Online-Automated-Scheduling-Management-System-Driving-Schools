@@ -20,11 +20,11 @@ function SchoolCard({schoolName,about, schoolId, courses, variant, courseId}:Pro
   const navigate = useNavigate();
     return (
         <div >
-            {variant === "enrolled"?
-              <Paper variant="elevation" elevation={3} style={{padding:"1em 1em 3em",marginBottom:"-2.5em",background:"#2F2E5A"}}>
-                  <Typography variant="subtitle2" color="#ffffff">{courses?.length} Courses</Typography>
-              </Paper>
-            :""}
+              {/* {variant === "enrolled"?
+                <Paper variant="elevation" elevation={3} style={{padding:"1em 1em 3em",marginBottom:"-2.5em",background:"#2F2E5A"}}>
+                    <Typography variant="subtitle2" color="#ffffff">{courses?.length} Courses</Typography>
+                </Paper>
+              :""} */}
             <Paper variant="elevation" elevation={3} sx={{padding:"3em 1em 1em"}}>
                 <Avatar
                     alt={schoolName}
