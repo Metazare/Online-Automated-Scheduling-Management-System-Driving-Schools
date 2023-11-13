@@ -31,3 +31,7 @@ export interface CreateNotification {
     targets: User[];
     content: string;
 }
+
+export interface ReadNotification {
+    notificationId: string;
+}
