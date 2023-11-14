@@ -167,7 +167,7 @@ function Students() {
                         <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
                             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                             <div>
-                                <Typography variant="subtitle1"color="initial" fontWeight={500}>{student.name.first} {student.name.middle} {student.name.last} </Typography>
+                                <Typography variant="subtitle1"color="initial" fontWeight={500}>{student.name.first.charAt(0).toUpperCase()  + student.name.first.slice(1)} {student.name.middle.charAt(0).toUpperCase()  + student.name.middle.slice(1)} {student.name.last.charAt(0).toUpperCase()  + student.name.last.slice(1)} </Typography>
                                 <Typography variant="body2" color="initial" sx={{marginTop:"-4px"}}>{moment(student.createdAt).format('LLL')}</Typography>
                             </div>
                         </TableCell>

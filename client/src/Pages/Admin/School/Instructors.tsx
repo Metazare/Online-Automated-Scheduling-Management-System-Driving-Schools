@@ -113,7 +113,7 @@ function Instructors() {
                             <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
                                 <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                                 <div>
-                                    <Typography variant="subtitle1" color="initial" fontWeight={500}>{instructor.name.first} {instructor.name.middle} {instructor.name.last}</Typography>
+                                    <Typography variant="subtitle1" color="initial" fontWeight={500}>{instructor.name.first.charAt(0).toUpperCase()  + instructor.name.first.slice(1)} {instructor.name.middle.charAt(0).toUpperCase()  + instructor.name.middle.slice(1)} {instructor.name.last.charAt(0).toUpperCase()  + instructor.name.last.slice(1)}</Typography>
                                     <Typography variant="body2" color="#424242" sx={{marginTop:"-4px"}}>{moment(instructor.createdAt).format('LLL')}</Typography>
                                 </div>
                             </TableCell>
@@ -215,6 +215,7 @@ function Instructors() {
                                             fullWidth
                                             required
                                             id="contact"
+                                            type='number'
                                             label="Contact Number"
                                             value={form.contact}
                                             onChange={(event)=>{ setForm({...form, contact: event.target.value });}}
