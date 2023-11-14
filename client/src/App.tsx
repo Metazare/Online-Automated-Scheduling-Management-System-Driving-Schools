@@ -19,6 +19,7 @@ import { ProtectedRoute } from './Hooks/useAuth';
 
 // Test
 import TestNotification from './Test/TestNotification';
+import TestChat from './Test/TestChat';
 
 const theme = createTheme({
   palette:{
@@ -68,6 +69,7 @@ function App() {
         </Route>
 
         <Route path="/testnotification" element={<TestNotification socket={socket}/>} />
+        <Route path="/testchat" element={<TestChat socket={socket}/>} />
       </Routes>
     </ThemeProvider>
   );
