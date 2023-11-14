@@ -35,7 +35,7 @@ const schoolSchema = new Schema(
             {
                 courseId: {
                     type: String,
-                    unique: true,
+                    index: { unique: true, sparse: true },
                     default: id
                 },
                 type: {
