@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import io from 'socket.io-client';
 
 // Pages
 import LandingPage from './Pages/LandingPage';
@@ -16,6 +17,9 @@ import ManageSchool from './Pages/Admin/School/ManageSchool';
 // Hooks
 import { ProtectedRoute } from './Hooks/useAuth';
 
+// Test
+import TestNotification from './Test/TestNotification';
+
 const theme = createTheme({
   palette:{
     primary: {
@@ -27,6 +31,9 @@ const theme = createTheme({
     }
   }
 })
+
+
+  const socket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000');
 
 function App() {
   return (
@@ -59,6 +66,8 @@ function App() {
           </Route>
 
         </Route>
+
+        <Route path="/testnotification" element={<TestNotification socket={socket}/>} />
       </Routes>
     </ThemeProvider>
   );
