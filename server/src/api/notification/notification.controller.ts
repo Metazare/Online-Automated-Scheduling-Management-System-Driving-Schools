@@ -10,13 +10,13 @@ import StudentModel from '../student/student.model';
 export const getNotifications: RequestHandler = async (req, res) => {
     if (!req.user) throw new Unauthorized();
     const { document: user } = req.user;
-
+    
     let userId = '';
     if (user instanceof SchoolModel) userId = user.schoolId;
     if (user instanceof InstructorModel) userId = user.instructorId;
     if (user instanceof StudentModel) userId = user.studentId;
 
-    const notifications = await NotificationModel.find({ 'targets.userId': userId }).exec();
+    const notifications = await NotificationModel.find({ 'targets.user': userId }).exec();
 
     res.json(notifications);
 };
