@@ -188,7 +188,7 @@ function School() {
                         </Box>
                         </div>
                         {/* <IconButton aria-label="" onClick={()=>alert}>
-                          <MoreVertIcon/>
+                        <MoreVertIcon/>
                         </IconButton> */}
                     </Box>
                 </div>
@@ -362,7 +362,7 @@ function School() {
                     <Typography variant="h6" color="primary">List of Enrolled Courses</Typography>
                     <hr style={{flexGrow:'1',borderColor:"#E24B5B"}} />
                   </Box>
-                  <Paper sx={{padding:"1em",background:"red"}} elevation={3}>
+                  <Paper sx={{padding:"1em",background:"#D9D9D9"}} elevation={3}>
                     <Typography variant="subtitle2"  mb={1} color="initial">Selected Course</Typography>
                     <Typography variant="body2" color="initial">TDC Face to Face</Typography>
                     <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
@@ -370,7 +370,7 @@ function School() {
                       Mo, Tu, We, Th, Fr, at (8:00 AM to 8:00 AM)
                     </Typography>
                   </Paper>
-                  <Paper sx={{padding:"1em",background:"red"}} elevation={3}>
+                  <Paper sx={{padding:"1em",background:"#D9D9D9"}} elevation={3}>
                     <Typography variant="subtitle2"  mb={1} color="initial">Selected Course</Typography>
                     <Typography variant="body2" color="initial">TDC Face to Face</Typography>
                     <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
