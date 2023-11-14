@@ -12,7 +12,7 @@ import School from './Pages/User/School/School'
 import LessonView from './Pages/User/School/LessonView';
 import CoursesList from './Pages/User/School/CourseList'
 import ManageSchool from './Pages/Admin/School/ManageSchool';
-
+import Error from './Pages/Error';
 // Hooks
 import { ProtectedRoute } from './Hooks/useAuth';
 
@@ -32,13 +32,12 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Routes>
+        <Route path="*" element={<Error/>} />
         <Route element={<BaseLayout />} >
-
           {/* public */}
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register/>} />
           <Route path="/" element={<LandingPage/>} />
-          <Route path="*" element={<LandingPage/>} />
           
           {/* admin */}
           <Route element={<ProtectedRoute allowedRoles={["admin", "instructor"]}/>}>

@@ -138,7 +138,7 @@ function Requests() {
                             </TableCell>
                             <TableCell >{getCourseType(request)}</TableCell>
                             <TableCell >
-                                {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
+                                {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({moment(request?.availability?.time?.start).format('LT')} to {moment(request?.availability?.time?.end).format('LT')})
                             </TableCell>
                             <TableCell align="right">
                             <IconButton aria-label=""  onClick={()=>{setOpen("DeclineEnrollment"); setSelected(request.enrollmentId)}}>

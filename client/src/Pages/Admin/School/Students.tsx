@@ -179,8 +179,8 @@ function Students() {
                         <TableCell >
                           {student.enrollments?.map((enrollment) => ( 
                             <div>
-                                {enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({moment(enrollment?.availability?.time?.start).format('LT')} to {moment(enrollment?.availability?.time?.end).format('LT')})
-                              </div>
+                              {enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({moment(enrollment?.availability?.time?.start).format('LT')} to {moment(enrollment?.availability?.time?.end).format('LT')})
+                            </div>
                           ))}   
                         </TableCell>
                         <TableCell >
