@@ -8,19 +8,23 @@ import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 
-function AppointmentDay(props: PickersDayProps<Dayjs> & { highlightedDays?: number[], currentMonth: number, currentYear: number }) {
-  const { highlightedDays = [], day, currentMonth, currentYear, ...other } = props;
+interface HighlightedDaysMap {
+  [key: string]: number[]; // Key is a combination of month and year, e.g., "January-2022"
+}
 
-  const isCurrentMonth = day.month() === currentMonth && day.year() === currentYear;
-  const isSelected = isCurrentMonth && highlightedDays.indexOf(day.date()) >= 0;
+function AppointmentDay(props: PickersDayProps<Dayjs> & { highlightedDaysMap?: HighlightedDaysMap }) {
+  const { highlightedDaysMap = {}, day, ...other } = props;
+  const monthYearKey = day.format('MMMM-YYYY'); // Create a unique key for each month and year combination
+
+  const highlightedDays = highlightedDaysMap[monthYearKey] || [];
+  const isSelected = highlightedDays.includes(day.date());
 
   return (
     <Badge
-      key={props.day.toString()}
       overlap="circular"
       badgeContent={isSelected ? <TurnedInIcon sx={{ fill: "#E24B5B" }} /> : undefined}
     >
-      <PickersDay {...other} outsideCurrentMonth={!isCurrentMonth} day={day} />
+      <PickersDay key={day.toString()} {...other} day={day} />
     </Badge>
   );
 }
@@ -31,36 +35,28 @@ function TESTCalendar() {
 
   const initialValue = dayjs();
 
-  const [highlightedMonth, setHighlightedMonth] = useState(initialValue.month());
-  const [highlightedYear, setHighlightedYear] = useState(initialValue.year());
-  const [highlightedDays, setHighlightedDays] = useState([1, 23, 2, 15]); // Define your highlighted days
-
-  // Set here all the scheduled days including year
-  const [scheduledDate, setScheduledDate] = useState({
-    [highlightedYear]: {
-      "January": [1, 2, 3],
-      "February": [4, 5, 6],
-      "March": [7, 8, 9],
-      "April": [],
-      "May": [],
-      "June": [],
-      "July": [],
-      "August": [],
-      "September": [],
-      "October": [],
-      "November": [],
-      "December": [],
-    },
+  const [highlightedDaysMap, setHighlightedDaysMap] = useState<HighlightedDaysMap>({
+    // Set initial highlighted days here, e.g., "January-2022": [1, 2, 3]
+    // this initial value is todays calendar 
+    [initialValue.format('MMMM-YYYY')]: [1, 2, 3,4],
+    "January-2021": [4, 5, 6],
+    "February-2023": [7, 8, 9],
+    "February-2022": [7, 8, 9],
+    // Add more months as needed
   });
 
   const handleMonthChange = (date: Dayjs) => {
-    const setActiveMonth = date.month();
-    const setActiveYear = date.year();
-    setHighlightedMonth(setActiveMonth);
-    setHighlightedYear(setActiveYear);
+    const monthYearKey = date.format('MMMM-YYYY'); // Create a unique key for each month and year combination
 
-    const monthsArray = Object.values(scheduledDate[setActiveYear]);
-    setHighlightedDays(monthsArray[setActiveMonth]);
+    // Check if highlighted days are already stored for the selected month and year
+    if (!highlightedDaysMap[monthYearKey]) {
+      // If not, you can fetch or set the highlighted days for the given month and year
+      // For now, let's simulate it by setting some random highlighted days
+      setHighlightedDaysMap((prevMap) => ({
+        ...prevMap,
+        [monthYearKey]: [],
+      }));
+    }
   };
 
   return (
@@ -71,19 +67,12 @@ function TESTCalendar() {
           handleMonthChange(value);
         }}
         slots={{
-          day: (dayProps) => (
-            <AppointmentDay
-              {...dayProps}
-              currentMonth={highlightedMonth}
-              currentYear={highlightedYear}
-              highlightedDays={highlightedDays}
-            />
-          ),
+          day: (dayProps) => <AppointmentDay {...dayProps} highlightedDaysMap={highlightedDaysMap} />,
         }}
         value={value}
         onChange={(newValue) => {
           setValue(newValue);
-          alert(newValue);
+          alert(newValue?.format('YYYY-MM-DD')); // Format the date before alerting
         }}
       />
     </LocalizationProvider>
