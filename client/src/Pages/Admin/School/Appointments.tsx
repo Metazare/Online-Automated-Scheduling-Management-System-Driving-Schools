@@ -15,6 +15,7 @@ import useReqInstructor from '../../../Hooks/useReqInstructor';
 import useReqAppointment from '../../../Hooks/useReqAppointment';
 import useReqSchool from '../../../Hooks/useReqSchool';
 import { io } from 'socket.io-client';
+import moment from 'moment';
 
 // TODO Calendar and resched Modal
 
@@ -206,10 +207,10 @@ function Appointments() {
                                     // value={form.studentId}
                                     onChange={(event) => 
                                     {
-                                      setSelectedStudent(event.target.value);
-                                      console.log(event.target.value)
+                                        setSelectedStudent(event.target.value);
+                                        console.log(event.target.value)
                                     }
-                                  }
+                                }
                                 >
                                   {students?.map((student) => ( 
                                     <MenuItem value={student} key={student.studentId}>
@@ -218,36 +219,41 @@ function Appointments() {
                                   ))}
                                 </TextField>
                             </Grid>
+                            {!selectedStudent?"":<>
+                              <Grid item xs={12}>
+                                  <TextField
+                                      fullWidth
+                                      id="outlined-select-currency"
+                                      select
+                                      label="Course"
+                                      required
+                                      value={form.enrollmentId}
+                                      onChange={(event) => {
+                                          setForm({...form, enrollmentId: event.target.value });
+                                      }}
+                                  >
+                                      {selectedStudent?.enrollments?.map((course) => ( 
+                                          <MenuItem  value={course.enrollmentId} key={course.enrollmentId}>
+                                              {course.courseId}
+                                          </MenuItem>
+                                      ))}
+                                  </TextField>
+                              </Grid>
+                            </>}
+                            {form.enrollmentId ? 
                             <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    id="outlined-select-currency"
-                                    select
-                                    label="Course"
-                                    required
-                                    value={form.enrollmentId}
-                                    onChange={(event) => {
-                                        setForm({...form, enrollmentId: event.target.value });
-                                    }}
-                                >
-                                  {selectedStudent?.enrollments?.map((course) => ( 
-                                    <MenuItem  value={course.enrollmentId} key={course.enrollmentId}>
-                                        {course.courseId}
-                                    </MenuItem>
-                                  ))}
-                                </TextField>
+                              <Paper variant="elevation" elevation={3} sx={{padding:"1em",background:"#D9D9D9"}}>
+                                <Typography variant="subtitle1" fontWeight={500} color="initial">Availability</Typography>
+                                <Typography variant="body2" color="initial">
+                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.days.map(dayNumber =>  daysOfWeek[dayNumber].substring(0, 2)+", ")} at (  
+                                  {moment(findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.start).format('LT')}
+                                  - 
+                                  {moment(findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.end).format('LT')}
+                                  )
+                                </Typography>
+                              </Paper>
                             </Grid>
-                            {form.enrollmentId ? <>
-                              <p>Availability</p>
-                              <>
-                                <div>
-                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at 
-                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.start}:00 to 
-                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.end}:00
-                                </div>
-                              </>
-                            </>
-                            : <></>}
+                            : ""}
                             <Grid item xs={12}>
                                 <TextField
                                     fullWidth
@@ -260,11 +266,11 @@ function Appointments() {
                                         setForm({...form, instructorId: event.target.value });
                                     }}
                                 >
-                                   {instructors?.map((instructor) => ( 
-                                    <MenuItem  value={instructor.instructorId} key={instructor.instructorId}>
-                                        {instructor.name.first} {instructor.name.middle} {instructor.name.last}
-                                    </MenuItem>
-                                  ))}
+                                    {instructors?.map((instructor) => ( 
+                                        <MenuItem  value={instructor.instructorId} key={instructor.instructorId}>
+                                            {instructor.name.first} {instructor.name.middle} {instructor.name.last}
+                                        </MenuItem>
+                                    ))}
                                 </TextField>
                             </Grid>
                             <Grid item xs={12}>
@@ -287,13 +293,12 @@ function Appointments() {
                                                 setForm({...form, dateTime: dayjs(newValue)});
                                             }}
                                         /> */}
-
-                                      <DateTimePicker
-                                        slotProps={{ textField: { fullWidth: true } }}
-                                        label="Date and Time"
-                                        value={dayjs(form.schedule)}
-                                        onChange={handleChangeDateTime}
-                                      />
+                                        <DateTimePicker
+                                            slotProps={{ textField: { fullWidth: true } }}
+                                            label="Date and Time"
+                                            value={dayjs(form.schedule)}
+                                            onChange={handleChangeDateTime}
+                                        />
                                     </DemoContainer>
                                 </LocalizationProvider>
                             </Grid>
