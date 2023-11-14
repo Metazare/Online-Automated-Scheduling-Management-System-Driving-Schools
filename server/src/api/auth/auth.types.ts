@@ -16,9 +16,15 @@ export interface Payload {
 export type UserDocument = SchoolDocument | InstructorPopulatedDocument | StudentDocument;
 
 export interface User {
+    userId?: string;
     document: UserDocument;
     role: Role;
 }
+
+// export interface User {
+//     userId: string;
+//     role: Role;
+// }
 
 export type UserLogin = {
     email: string;
