@@ -20,6 +20,11 @@ export interface User {
     role: Role;
 }
 
+export interface User {
+    userId: string;
+    role: Role;
+}
+
 export type UserLogin = {
     email: string;
     password: string;
