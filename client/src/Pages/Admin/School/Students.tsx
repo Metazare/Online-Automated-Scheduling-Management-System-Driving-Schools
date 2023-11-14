@@ -21,7 +21,7 @@ import Select from '@mui/material/Select';
 import useReqStudent from '../../../Hooks/useReqStudent';
 import useReqSchool from '../../../Hooks/useReqSchool';
 import useReqLesson from '../../../Hooks/useReqLesson';
-
+import moment from 'moment';
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -167,8 +167,8 @@ function Students() {
                         <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
                             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                             <div>
-                                <Typography variant="subtitle1" color="initial">{student.name.first} {student.name.middle} {student.name.last} </Typography>
-                                <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>{student.createdAt}</Typography>
+                                <Typography variant="subtitle1"color="initial" fontWeight={500}>{student.name.first} {student.name.middle} {student.name.last} </Typography>
+                                <Typography variant="body2" color="initial" sx={{marginTop:"-4px"}}>{moment(student.createdAt).format('LLL')}</Typography>
                             </div>
                         </TableCell>
                         <TableCell >
@@ -178,7 +178,9 @@ function Students() {
                         </TableCell>
                         <TableCell >
                           {student.enrollments?.map((enrollment) => ( 
-                            <div>{enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {enrollment?.availability?.time?.start}:00 to {enrollment?.availability?.time?.end}:00</div>
+                            <div>
+                                {enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({moment(enrollment?.availability?.time?.start).format('LT')} to {moment(enrollment?.availability?.time?.end).format('LT')})
+                              </div>
                           ))}   
                         </TableCell>
                         <TableCell >
