@@ -15,6 +15,7 @@ import ManageSchool from './Pages/Admin/School/ManageSchool';
 import Error from './Pages/Error';
 // Hooks
 import { ProtectedRoute } from './Hooks/useAuth';
+import { type } from 'os';
 
 const theme = createTheme({
   palette:{
@@ -28,15 +29,28 @@ const theme = createTheme({
   }
 })
 
-function App() {
+type Props={
+  openSnackbar: {
+    severity: string ;
+    note: string;
+  } 
+  setOpenSnackbar:React.Dispatch<React.SetStateAction<{
+      severity: string;
+      note: string;
+  }>>
+}
+
+
+function App({openSnackbar,setOpenSnackbar}:Props) {
   return (
     <ThemeProvider theme={theme}>
       <Routes>
         <Route path="*" element={<Error/>} />
         <Route element={<BaseLayout />} >
+
           {/* public */}
           <Route path="/login" element={<Login/>} />
-          <Route path="/register" element={<Register/>} />
+          <Route path="/register" element={<Register openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar}/>} />
           <Route path="/" element={<LandingPage/>} />
           
           {/* admin */}

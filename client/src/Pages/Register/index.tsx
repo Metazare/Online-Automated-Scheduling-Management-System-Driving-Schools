@@ -22,7 +22,18 @@ import schoolImg from '../../Images/Resources/school.png';
 // Hooks
 import { useAuth } from '../../Hooks/useAuth';
 
-function Index() {
+type Props={
+  openSnackbar: {
+    severity: string ;
+    note: string;
+  } 
+  setOpenSnackbar:React.Dispatch<React.SetStateAction<{
+      severity: string;
+      note: string;
+  }>>
+}
+
+function Index({openSnackbar,setOpenSnackbar}:Props) {
   const { register } = useAuth();
 
   const styleContainer = {
@@ -31,6 +42,10 @@ function Index() {
     gridTemplateColumns:".4fr .6fr"
 
   };
+
+
+  
+
 
   const [role, setRole] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -88,7 +103,15 @@ function Index() {
             <Typography variant="h4" textAlign={"center"} gutterBottom color="primary.main">
               Select a Role
             </Typography>
-
+            <Button variant="text" color="primary" onClick={()=>{
+              setOpenSnackbar(openSnackBar => ({
+                ...openSnackBar,
+                severity:'info',
+                note:"sample snackbar",
+              }));
+            }}>
+              sampleSnackbar
+            </Button>
             <Grid container spacing={2} width={"100%"}  mt={"40px"}>
               <Grid item md={6} xs={12}>
                 <Paper elevation={3} style={{padding:"1em"}}  sx={{boxShadow: 3,"&:hover": {boxShadow: 8,cursor:"pointer"},}} onClick={()=> {
@@ -378,6 +401,7 @@ function Index() {
               <Button href='login' fullWidth variant="text" color="primary" style={{marginTop:"10px"}}>
                 Login
               </Button>
+            
             </form>
           :""}
           

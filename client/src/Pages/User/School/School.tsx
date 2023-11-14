@@ -188,7 +188,7 @@ function School() {
                         </Box>
                         </div>
                         {/* <IconButton aria-label="" onClick={()=>alert}>
-                        <MoreVertIcon/>
+                          <MoreVertIcon/>
                         </IconButton> */}
                     </Box>
                 </div>
