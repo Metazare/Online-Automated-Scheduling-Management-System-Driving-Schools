@@ -49,7 +49,6 @@ function Appointments() {
   const { data, loading: schoolLoading, error: schoolError, getSchool } = useReqSchool();
 
     // * Reason Value 
-    const [reason,setReason] = useState("")
     const [selectedStudent, setSelectedStudent] = useState<YourStateType<any>>(undefined);
 
 
@@ -64,26 +63,8 @@ function Appointments() {
         reschedDateTime:dayjs('2022-04-17T15:30'),
         reason:"",
     })
-
-    // Notification for sending the appointment (new and resched)
-    // function sendAppointment() {
-    //     socket.emit('send_new_appointment', 
-    //                 studentId,
-    //                 instructorId,
-    //                 content,
-    //                 date)
-    // }
-
-    const requestAbortController = React.useRef<AbortController | null>(null);
-    const [isLoading, setIsLoading] = React.useState(false);
-    const [highlightedDays, setHighlightedDays] = React.useState([1, 2, 15]);
-
-    // const fetchHighlightedDays = (date: Dayjs) => {
-    // const controller = new AbortController();
-    // fakeFetch(date, {
-    //     signal: controller.signal,
-    // })
-    // * Open Modal 
+   
+  
     const [open, setOpen] = useState("");
 
     const handleChangeDateTime = (date: any) => {
@@ -147,7 +128,7 @@ function Appointments() {
 
     return <>
         {/* // * Appointment body Container  */}
-        <Grid item xs={8} sx={{padding:"40px"}}>
+        <Grid item md={8} sm={6} xs={12} sx={{padding:"40px"}}>
             <div style={{display:"flex", alignItems:"center"}}>
                 <div style={{flexGrow:"1"}}>
                     <Typography variant="h6" color="primary" >My Appointments</Typography>
@@ -173,9 +154,9 @@ function Appointments() {
             </Grid>
         </Grid>
         {/* //* Calendar  Container */}
-        <Grid item xs={4} sx={{padding:"40px"}}>
-            <Paper variant="elevation" elevation={3} sx={{padding:"1em"}}>
-                <TESTCalendar/>
+        <Grid item md={4} sm={6} xs={12} sx={{padding:"40px"}}>
+            <Paper variant="elevation" elevation={3} sx={{padding:"1em",minWidth:"350px"}} >
+              <TESTCalendar/>
             </Paper>
         </Grid>
 

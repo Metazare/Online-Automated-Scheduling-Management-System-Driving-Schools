@@ -13,6 +13,7 @@ import LessonView from './Pages/User/School/LessonView';
 import CoursesList from './Pages/User/School/CourseList'
 import ManageSchool from './Pages/Admin/School/ManageSchool';
 import Error from './Pages/Error';
+import Chat from './Pages/User/Chat';
 // Hooks
 import { ProtectedRoute } from './Hooks/useAuth';
 import { type } from 'os';
@@ -69,6 +70,7 @@ function App({openSnackbar,setOpenSnackbar}:Props) {
           {/* users */}
           <Route element={<ProtectedRoute allowedRoles={["admin", "student", "instructor"]}/>}>
             <Route path="/course/:cid/:lid" element={<LessonView/>} />
+            <Route path="/chat" element={<Chat/>} />
           </Route>
 
         </Route>
