@@ -1,7 +1,7 @@
-import { ChatDocument } from './chat.types';
+import { Chat, ChatDocument } from './chat.types';
 import { id } from '../../utilities/ids';
 import { Role } from '../auth/auth.types';
-import { Schema, model } from 'mongoose';
+import { Schema, Types, Unpacked, model } from 'mongoose';
 
 const chatSchema = new Schema(
     {
@@ -13,7 +13,17 @@ const chatSchema = new Schema(
         members: [
             {
                 user: {
-                    type: String,
+                    type: Types.ObjectId,
+                    refPath: function (this: Unpacked<Chat['members']>) {
+                        switch (this.role) {
+                            case Role.ADMIN:
+                                return 'School';
+                            case Role.INSTRUCTOR:
+                                return 'Instructor';
+                            case Role.STUDENT:
+                                return 'Student';
+                        }
+                    },
                     required: true
                 },
                 role: {
@@ -28,7 +38,7 @@ const chatSchema = new Schema(
         ],
         messages: [
             {
-                user: {
+                userId: {
                     type: String,
                     required: true
                 },

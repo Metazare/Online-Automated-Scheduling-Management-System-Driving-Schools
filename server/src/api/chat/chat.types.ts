@@ -1,25 +1,31 @@
-import { Role, User } from '../auth/auth.types';
+import { Types } from "mongoose";
+import { UserDocument, Role } from "../auth/auth.types";
 
 export interface Chat {
     chatId: string;
     members: {
-        user: string;
-        role: Role;
+        user: Types.ObjectId | Record<string, unknown>;
+        role: Role
     }[];
     messages: {
-        user: string;
+        userId: string;
         message: string;
-        date: Date;
-    }[];
+        date: Date
+    }[]
 }
 
 export interface ChatDocument extends Chat, Document {
+    members: {
+        user: UserDocument['_id'];
+        role: Role
+    }[];
     createdAt: Date;
     updatedAt: Date;
 }
 
-export interface CreateMessage {
-    sender: User;
-    receiver: User;
-    message: string;
+export interface ChatPopulatedDocument extends ChatDocument {
+    members: {
+        user: UserDocument;
+        role: Role
+    }[];
 }

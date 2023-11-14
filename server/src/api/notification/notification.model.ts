@@ -1,7 +1,7 @@
 import { id } from '../../utilities/ids';
-import { NotificationDocument, NotificationStatus } from './notification.types';
+import { Notification, NotificationDocument, NotificationStatus } from './notification.types';
 import { Role } from '../auth/auth.types';
-import { Schema, model } from 'mongoose';
+import { Schema, Types, Unpacked, model } from 'mongoose';
 
 const notificationSchema = new Schema({
     notificationId: {
@@ -12,7 +12,17 @@ const notificationSchema = new Schema({
     targets: [
         {
             user: {
-                type: String,
+                type: Types.ObjectId,
+                refPath: function (this: Unpacked<Notification['targets']>) {
+                    switch (this.role) {
+                        case Role.ADMIN:
+                            return 'School';
+                        case Role.INSTRUCTOR:
+                            return 'Instructor';
+                        case Role.STUDENT:
+                            return 'Student';
+                    }
+                },
                 required: true
             },
             role: {
@@ -36,7 +46,7 @@ const notificationSchema = new Schema({
             values: Object.values(NotificationStatus),
             message: '"{VALUE} is not supported"'
         },
-        default: NotificationStatus.UNREAD
+        required: true
     }
 });
 
