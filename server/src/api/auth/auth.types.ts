@@ -20,7 +20,7 @@ export interface User {
     role: Role;
 }
 
-export interface User {
+export interface SocketUser {
     userId: string;
     role: Role;
 }

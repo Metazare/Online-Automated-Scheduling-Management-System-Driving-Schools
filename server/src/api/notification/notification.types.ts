@@ -1,4 +1,4 @@
-import { Role, User } from '../auth/auth.types';
+import { Role, SocketUser } from '../auth/auth.types';
 import { Document } from 'mongoose';
 
 export enum NotificationStatus {
@@ -21,14 +21,9 @@ export interface NotificationDocument extends Notification, Document {
     updatedAt: Date;
 }
 
-export interface NotificationUser {
-    userId: string;
-    role: Role;
-}
-
 export interface CreateNotification {
-    sender: User;
-    targets: User[];
+    sender: SocketUser;
+    targets: SocketUser[];
     content: string;
 }
 

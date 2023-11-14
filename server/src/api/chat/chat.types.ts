@@ -1,4 +1,4 @@
-import { Role, User } from '../auth/auth.types';
+import { Role, SocketUser } from '../auth/auth.types';
 
 export interface Chat {
     chatId: string;
@@ -19,7 +19,7 @@ export interface ChatDocument extends Chat, Document {
 }
 
 export interface CreateMessage {
-    sender: User;
-    receiver: User;
+    sender: SocketUser;
+    receiver: SocketUser;
     message: string;
 }
