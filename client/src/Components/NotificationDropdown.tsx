@@ -31,7 +31,7 @@ function NotificationDropdown({socket}) {
       setAnchorEl(null);
     };
 
-    const { notifications, loading, error, sendNotification, getNotification } = useNotif();
+    const { notifications, loading, error, sendNotification, getNotification, readNotification } = useNotif();
 
      useEffect(() => {
       // Connect to the socket.io server
@@ -111,7 +111,7 @@ function NotificationDropdown({socket}) {
 
                       {loading ? <p>Loading...</p> : error ? <p>{error.message}</p> : <>
                         {notifications && notifications.map((notification: any) => (
-                            <Box display={"flex"} padding={".5em"} component={Link} to={"/"}
+                            <Box display={"flex"} padding={".5em"} 
                                 sx={{
                                     "&:hover": {
                                     backgroundColor: "#d9d9d9", // Change this to the background color you desire on hover
@@ -119,7 +119,13 @@ function NotificationDropdown({socket}) {
                                     borderRadius:"8px"
                                 }}
                                 key={notification.id}
-                            > 
+                                onClick={() => {
+                                  readNotification({ notificationId: notification.notificationId });
+                                  getNotification();
+                                  getNotification();
+                                  getNotification();
+                                }}
+                            >
                                 <Avatar
                                     alt="Remy Sharp"
                                     src="/static/images/avatar/1.jpg"
