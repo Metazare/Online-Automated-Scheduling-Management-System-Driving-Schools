@@ -55,14 +55,10 @@ function App({openSnackbar,setOpenSnackbar}:Props) {
   return (
     <ThemeProvider theme={theme}>
       <Routes>
-        <Route path="/testnotification" element={<TestNotification socket={socket}/>} />
-        <Route path="/testchat" element={<TestChat socket={socket}/>} />
-
-        {/* <Route path="*" element={<Error/>} /> */}
-
+      
         <Route element={<BaseLayout socket={socket}/>} >
-
           {/* public */}
+          <Route path="*" element={<Error/>} />
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar}/>} />
           <Route path="/" element={<LandingPage/>} />

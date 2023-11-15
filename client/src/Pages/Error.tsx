@@ -6,8 +6,8 @@ function Error() {
     return<>
       <Box display="flex" justifyContent={"center"} alignItems={"center"} flexDirection={"column"} height={"100vh"} >
         <img width={"20%"} src={imageIcon} alt="" />
-        <Typography textAlign={"center"} variant="h4" fontWeight={600} color="primary" mt={"20px"}>We Encounter Some Error</Typography>
-        <Typography variant="body1" color="initial">sorry, try another way</Typography>
+        <Typography textAlign={"center"} variant="h4" fontWeight={600} color="primary" mt={"20px"}>Error</Typography>
+        <Typography variant="body1" color="initial">Page may not exist or you do not have access</Typography>
       </Box>
     </>
 }
