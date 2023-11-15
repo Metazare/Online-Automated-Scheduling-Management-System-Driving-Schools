@@ -234,9 +234,9 @@ function CourseAccordion({variant,title, courseId}:Props) {
                       <Paper variant="elevation" elevation={2} sx={{background:"white",display:"flex",gap:"5px",alignItems:"center",cursor:"pointer",paddingRight:"1em"}}>
                           {/* {console.log(lesson)} */}
                           <div style={{flexGrow:"1"}}>
-                              <a href={`/course/${courseId}/${lesson.lessonId}`} >
+                              <a href={`/course/${courseId}/${lesson.lesson.lessonId}`} >
                                   <div style={{padding:"1em"}}>
-                                      <Typography variant="body1" color="initial">{lesson.title}</Typography>
+                                      <Typography variant="body1" color="initial">{lesson.lesson.title}</Typography>
                                   </div>
                               </a>
                           </div>
