@@ -64,8 +64,6 @@ function Appointments() {
         reschedDateTime:dayjs('2022-04-17T15:30'),
         reason:"",
     })
-   
-  
     const [open, setOpen] = useState("");
 
     const handleChangeDateTime = (date: any) => {
@@ -150,6 +148,7 @@ function Appointments() {
                       modalOpen={setOpen}
                       studentName={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.last}`}
                       instructorName={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}
+                      instructorID={appointment.instructor.id}
                       courseName={getCourseType(appointment.enrollment)}
                       schedule={appointment.schedule}
                     />

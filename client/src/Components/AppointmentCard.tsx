@@ -4,18 +4,20 @@ import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import Avatar from '@mui/material/Avatar'
+import ChatIcon from '@mui/icons-material/Chat';
 
 
 type Props= {
     modalOpen : React.Dispatch<React.SetStateAction<string>>
     studentName: string,
     instructorName: string,
+    instructorID: string,
     courseName: string,
     schedule: string,
 }
 
 function AppointmentCard(props:Props) {
-  const {modalOpen, studentName, instructorName, courseName, schedule} = props
+  const {modalOpen, studentName, instructorName, courseName, schedule,instructorID} = props
     return (
         <Paper variant="elevation" elevation={1} sx={{padding:"1em"}}>
             <div style={{display:"flex"}}>
@@ -40,11 +42,14 @@ function AppointmentCard(props:Props) {
               </div>
               </>:""}
             <div style={{margin:" 15px 0 0",display:"flex",gap:'10px', alignItems:"center",padding:".5em", background:"#D9D9D9", borderRadius:"8px"}}>
-                <Avatar variant="circular"  alt={instructorName} sx={{ width: '40px', height: '40px' }} />
-                <div>
-                    <Typography variant="subtitle1" color="initial" fontWeight={500} >{instructorName}</Typography>
-                    <Typography variant="body1"  mt={"-5px"} color="initial" >Instructor</Typography>
-                </div>
+              <Avatar variant="circular"  alt={instructorName} sx={{ width: '40px', height: '40px' }} />
+              <div style={{flexGrow:"1"}}>
+                <Typography variant="subtitle1" color="initial" fontWeight={500} >{instructorName}</Typography>
+                <Typography variant="body1"  mt={"-5px"} color="initial" >Instructor</Typography>
+              </div>
+              <IconButton aria-label="" href={`/chat/${instructorID}`}>
+                <ChatIcon/>
+              </IconButton>
             </div>
 
         </Paper>
