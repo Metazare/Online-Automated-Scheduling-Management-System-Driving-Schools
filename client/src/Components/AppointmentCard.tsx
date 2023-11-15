@@ -23,17 +23,22 @@ function AppointmentCard(props:Props) {
                     <Typography variant="h6" fontWeight={600} color="primary" >{courseName}</Typography>
                     <Typography variant="body2" mt={"-5px"} color="initial" >{schedule}</Typography>
                 </div>
-                <IconButton aria-label="resched" size="large" onClick={()=>{modalOpen("resched")}}>
+                {!!studentName?<>
+                  <IconButton aria-label="resched" size="large" onClick={()=>{modalOpen("resched")}}>
                     <EventRepeatIcon fontSize="inherit" />
-                </IconButton>
+                  </IconButton>
+                </>:""}
+                
             </div>
-            <div style={{margin:" 5px 0",display:"flex",gap:'10px', alignItems:"center"}}>
+            {!!studentName?<>
+              <div style={{margin:" 5px 0",display:"flex",gap:'10px', alignItems:"center"}}>
                 <Avatar variant="circular"  alt={studentName} sx={{ width: '30px', height: '30px' }} />
                 <div>
-                    <Typography variant="subtitle2" color="initial" >{studentName}</Typography>
-                    <Typography variant="body2"  mt={"-5px"} color="initial" >Student</Typography>
+                  <Typography variant="subtitle2" color="initial" >{studentName}</Typography>
+                  <Typography variant="body2"  mt={"-5px"} color="initial" >Student</Typography>
                 </div>
-            </div>
+              </div>
+              </>:""}
             <div style={{margin:" 15px 0 0",display:"flex",gap:'10px', alignItems:"center",padding:".5em", background:"#D9D9D9", borderRadius:"8px"}}>
                 <Avatar variant="circular"  alt={instructorName} sx={{ width: '40px', height: '40px' }} />
                 <div>
