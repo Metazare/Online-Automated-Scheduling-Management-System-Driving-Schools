@@ -26,7 +26,7 @@ const TestChat = ({socket}) => {
 
   const sendChat = () => {
     const chatData = {
-      sender: { userId : 'hulCsqKTmTFhvJrvfSs8hhyyVyAA5K0g6-', role: 'school' },
+      sender: { userId : 'hulCsqKTmTFhvJrvfSs8hhyyVyAA5K0g6-', role: 'admin' },
       receiver: { userId : 'RBcIsCYNVTFj7VzSb07XzEMZiUQ1j9x1dd', role: 'student' },
       message: 'Message Content',
     };
