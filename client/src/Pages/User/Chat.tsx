@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react'
+import { useParams } from 'react-router-dom'
+
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
@@ -14,11 +16,15 @@ import useChat from '../../Hooks/useChat'
 import { useAuth } from '../../Hooks/useAuth'
 
 function Chat({socket}) {
+
+  const { id, type } = useParams();
+
   const { chats, loading, error, sendChat, getChat } = useChat();
   const { User, getUser } = useAuth();
   const [selectedChat, setSelectedChat] = useState<any>();
   const [message, setMessage] = useState<string>('');
 
+  
 
   useEffect(() => {
     // Connect to the socket.io server
@@ -150,8 +156,8 @@ function Chat({socket}) {
                   role: getUser(),
                 },
                 receiver: { 
-                  userId: selectedChat && selectedChat.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).user,
-                  role: selectedChat && selectedChat.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).role,
+                  userId: id || selectedChat && selectedChat.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).user,
+                  role: type ? type : selectedChat && selectedChat.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).role,
                 },
                 message: message,
               });

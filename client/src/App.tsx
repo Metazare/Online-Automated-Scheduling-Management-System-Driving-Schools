@@ -75,6 +75,7 @@ function App({openSnackbar,setOpenSnackbar}:Props) {
           {/* users */}
           <Route element={<ProtectedRoute allowedRoles={["admin", "student", "instructor"]}/>}>
             <Route path="/course/:cid/:lid" element={<LessonView/>} />
+            <Route path="/chat/:type/:id" element={<Chat socket={socket}/>} />
             <Route path="/chat" element={<Chat socket={socket}/>} />
           </Route>
         </Route>

@@ -243,7 +243,7 @@ function Students() {
                             </IconButton>
                         </TableCell>
                         <TableCell >
-                            <IconButton aria-label="" href={`/chat/${student.studentId}`}>
+                            <IconButton aria-label="" href={`/chat/student/${student.studentId}`}>
                               <ChatIcon/>
                             </IconButton>
                         </TableCell>

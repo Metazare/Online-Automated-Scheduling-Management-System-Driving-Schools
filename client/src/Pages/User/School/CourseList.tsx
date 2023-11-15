@@ -119,7 +119,7 @@ function CourseList() {
                             </Box>
                           </Box>
                         </div>
-                        <IconButton aria-label="" href={`/chat/${data?.schoolId}`} size='large'>
+                        <IconButton aria-label="" href={`/chat/admin/${data?.schoolId}`} size='large'>
                           <ChatIcon/>
                         </IconButton>
                     </Box>
@@ -145,7 +145,7 @@ function CourseList() {
 
             <Grid item md={4} xs={12} sx={{display:"flex",flexDirection:"column",gap:"15px"}}>
               <Paper variant="elevation" elevation={3}>
-                <TESTCalendar/>
+                {/* <TESTCalendar appointments={appointments}/> */}
               </Paper>
               <Box display="flex" flexDirection={"column"} gap={"20px"} mt={"20px"}>
 
