@@ -39,7 +39,7 @@ type Props = {}
 // const socket = io('http://localhost:5000')
 
 
-export default function Header({}: Props) {
+export default function Header({socket}) {
   const navigate = useNavigate();
   const {logout, getUser} = useAuth();
   const user = localStorage.getItem('user')
@@ -111,7 +111,7 @@ export default function Header({}: Props) {
 
 
               
-              <NotificationDropdown/>
+              <NotificationDropdown socket={socket}/>
 
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>

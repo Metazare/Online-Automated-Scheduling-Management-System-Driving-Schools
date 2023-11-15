@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import Box from '@mui/material/Box';
 import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
@@ -20,7 +20,7 @@ type Props ={
 // but based the number of content if the data is viewed or not (enrollment(approved/declined), appointment, reschedule)
 
 
-function NotificationDropdown({}:Props) {
+function NotificationDropdown({socket}) {
     const [badgeNotif ,setBadgeNotif] = useState(2);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -31,8 +31,23 @@ function NotificationDropdown({}:Props) {
       setAnchorEl(null);
     };
 
-    // const { notifications, loading, error, sendNotification, getNotification } = useNotif();
+    const { notifications, loading, error, sendNotification, getNotification } = useNotif();
 
+     useEffect(() => {
+      // Connect to the socket.io server
+      socket.connect();
+
+      // Listen for 'notification' events
+      socket.on('notification', (data) => {
+        getNotification()
+        console.log(notifications)
+      });
+
+      // Clean up the socket connection on component unmount
+      return () => {
+        socket.disconnect();
+      };
+    }, []); // Run only once on component mount
 
     return <>
         <React.Fragment>
@@ -80,6 +95,7 @@ function NotificationDropdown({}:Props) {
                     <Typography variant="h6"  color={"primary"}>Notification</Typography>
                     <hr />
                     <Box display={"flex"} flexDirection={"column"} padding={"10px 0"}  sx={{maxHeight:"80vh",overflowY:"scroll"}}>
+                    {notifications && notifications.map((notification: any) => (
                         <Box display={"flex"} padding={".5em"} component={Link} to={"/"}
                             sx={{
                                 "&:hover": {
@@ -87,6 +103,7 @@ function NotificationDropdown({}:Props) {
                                 },
                                 borderRadius:"8px"
                             }}
+                            key={notification.id}
                         > 
                             <Avatar
                                 alt="Remy Sharp"
@@ -95,163 +112,10 @@ function NotificationDropdown({}:Props) {
                             />
                             <Box display="" >
                                 <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography>
-                                <Typography variant="body2" color="initial"  fontSize={"10px"}>I love you so so much, Can we go out in a date?</Typography>
+                                <Typography variant="body2" color="initial"  fontSize={"10px"}>{notification.content}</Typography>
                             </Box>
-                            
                         </Box>
-                        <Box display={"flex"} padding={".5em"} component={Link} to={"/"}
-                            sx={{
-                                "&:hover": {
-                                backgroundColor: "#d9d9d9", // Change this to the background color you desire on hover
-                                },
-                                borderRadius:"8px"
-                            }}
-                        > 
-                            <Avatar
-                                alt="Remy Sharp"
-                                src="/static/images/avatar/1.jpg"
-                                sx={{ width: 24, height: 24 }}
-                            />
-                            <Box display="" >
-                                <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography>
-                                <Typography variant="body2" color="initial"  fontSize={"10px"}>I love you so so much, Can we go out in a date?</Typography>
-                            </Box>
-                            
-                        </Box>
-                        <Box display={"flex"} padding={".5em"} component={Link} to={"/"}
-                            sx={{
-                                "&:hover": {
-                                backgroundColor: "#d9d9d9", // Change this to the background color you desire on hover
-                                },
-                                borderRadius:"8px"
-                            }}
-                        > 
-                            <Avatar
-                                alt="Remy Sharp"
-                                src="/static/images/avatar/1.jpg"
-                                sx={{ width: 24, height: 24 }}
-                            />
-                            <Box display="" >
-                                <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography>
-                                <Typography variant="body2" color="initial"  fontSize={"10px"}>I love you so so much, Can we go out in a date?</Typography>
-                            </Box>
-                            
-                        </Box>
-                        <Box display={"flex"} padding={".5em"} component={Link} to={"/"}
-                            sx={{
-                                "&:hover": {
-                                backgroundColor: "#d9d9d9", // Change this to the background color you desire on hover
-                                },
-                                borderRadius:"8px"
-                            }}
-                        > 
-                            <Avatar
-                                alt="Remy Sharp"
-                                src="/static/images/avatar/1.jpg"
-                                sx={{ width: 24, height: 24 }}
-                            />
-                            <Box display="" >
-                                <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography>
-                                <Typography variant="body2" color="initial"  fontSize={"10px"}>I love you so so much, Can we go out in a date?</Typography>
-                            </Box>
-                            
-                        </Box>
-                        <Box display={"flex"} padding={".5em"} component={Link} to={"/"}
-                            sx={{
-                                "&:hover": {
-                                backgroundColor: "#d9d9d9", // Change this to the background color you desire on hover
-                                },
-                                borderRadius:"8px"
-                            }}
-                        > 
-                            <Avatar
-                                alt="Remy Sharp"
-                                src="/static/images/avatar/1.jpg"
-                                sx={{ width: 24, height: 24 }}
-                            />
-                            <Box display="" >
-                                <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography>
-                                <Typography variant="body2" color="initial"  fontSize={"10px"}>I love you so so much, Can we go out in a date?</Typography>
-                            </Box>
-                            
-                        </Box>
-                        <Box display={"flex"} padding={".5em"} component={Link} to={"/"}
-                            sx={{
-                                "&:hover": {
-                                backgroundColor: "#d9d9d9", // Change this to the background color you desire on hover
-                                },
-                                borderRadius:"8px"
-                            }}
-                        > 
-                            <Avatar
-                                alt="Remy Sharp"
-                                src="/static/images/avatar/1.jpg"
-                                sx={{ width: 24, height: 24 }}
-                            />
-                            <Box display="" >
-                                <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography>
-                                <Typography variant="body2" color="initial"  fontSize={"10px"}>I love you so so much, Can we go out in a date?</Typography>
-                            </Box>
-                            
-                        </Box>
-                        <Box display={"flex"} padding={".5em"} component={Link} to={"/"}
-                            sx={{
-                                "&:hover": {
-                                backgroundColor: "#d9d9d9", // Change this to the background color you desire on hover
-                                },
-                                borderRadius:"8px"
-                            }}
-                        > 
-                            <Avatar
-                                alt="Remy Sharp"
-                                src="/static/images/avatar/1.jpg"
-                                sx={{ width: 24, height: 24 }}
-                            />
-                            <Box display="" >
-                                <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography>
-                                <Typography variant="body2" color="initial"  fontSize={"10px"}>I love you so so much, Can we go out in a date?</Typography>
-                            </Box>
-                            
-                        </Box>
-                        <Box display={"flex"} padding={".5em"} component={Link} to={"/"}
-                            sx={{
-                                "&:hover": {
-                                backgroundColor: "#d9d9d9", // Change this to the background color you desire on hover
-                                },
-                                borderRadius:"8px"
-                            }}
-                        > 
-                            <Avatar
-                                alt="Remy Sharp"
-                                src="/static/images/avatar/1.jpg"
-                                sx={{ width: 24, height: 24 }}
-                            />
-                            <Box display="" >
-                                <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography>
-                                <Typography variant="body2" color="initial"  fontSize={"10px"}>I love you so so much, Can we go out in a date?</Typography>
-                            </Box>
-                            
-                        </Box>
-                        <Box display={"flex"} padding={".5em"} component={Link} to={"/"}
-                            sx={{
-                                "&:hover": {
-                                backgroundColor: "#d9d9d9", // Change this to the background color you desire on hover
-                                },
-                                borderRadius:"8px"
-                            }}
-                        > 
-                            <Avatar
-                                alt="Remy Sharp"
-                                src="/static/images/avatar/1.jpg"
-                                sx={{ width: 24, height: 24 }}
-                            />
-                            <Box display="" >
-                                <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography>
-                                <Typography variant="body2" color="initial"  fontSize={"10px"}>I love you so so much, Can we go out in a date?</Typography>
-                            </Box>
-                            
-                        </Box>
-                        
+                    ))}
                     </Box>
                 </Box>
             </Menu>

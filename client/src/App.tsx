@@ -60,7 +60,7 @@ function App({openSnackbar,setOpenSnackbar}:Props) {
 
         {/* <Route path="*" element={<Error/>} /> */}
 
-        <Route element={<BaseLayout />} >
+        <Route element={<BaseLayout socket={socket}/>} >
 
           {/* public */}
           <Route path="/login" element={<Login/>} />
