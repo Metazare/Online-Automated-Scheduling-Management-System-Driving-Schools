@@ -209,19 +209,24 @@ function Students() {
                         </TableCell>
                         <TableCell >
                           {student.enrollments?.map((enrollment) => ( 
-                            <div>{getCourseType(enrollment)}</div>
+                            <>{enrollment.status === "accepted" && <div>{getCourseType(enrollment)}</div>}</>
                           ))}
                         </TableCell>
                         <TableCell >
                           {student.enrollments?.map((enrollment) => ( 
-                            <div>
-                              {enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({moment(enrollment?.availability?.time?.start).format('LT')} to {moment(enrollment?.availability?.time?.end).format('LT')})
-                            </div>
+                            <>{enrollment.status === "accepted" && 
+                              <div>
+                                {enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({moment(enrollment?.availability?.time?.start).format('LT')} to {moment(enrollment?.availability?.time?.end).format('LT')})
+                              </div>
+                            }</>
                           ))}   
                         </TableCell>
                         <TableCell >
                           {student.enrollments?.map((enrollment) => ( 
-                             <CircularProgressWithLabel defaultValue={0} value={CalculateProgress(enrollment)} />
+                            <>{enrollment.status === "accepted" && 
+                              <CircularProgressWithLabel defaultValue={0} value={CalculateProgress(enrollment)} />
+                            }</>
+                             
                           ))}
                            
                         </TableCell>
