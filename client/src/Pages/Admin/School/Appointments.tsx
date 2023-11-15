@@ -141,11 +141,14 @@ function Appointments() {
 
     const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
 
-    function getCourseType(value) {
-      console.log(data)
-      console.log(value)
+    function getCourseName(value) {
       const foundCourse = data.courses.find((course) => course.courseId === value );
-      console.log(foundCourse)
+      return foundCourse?.type;
+    }
+
+    function getCourseType(data) {
+      const { school, courseId } = data;
+      const foundCourse = school.courses.find((course) => course.courseId === courseId);
       return foundCourse?.type;
     }
 
@@ -289,7 +292,7 @@ function Appointments() {
                                       {selectedStudent?.enrollments?.map((course) => ( 
                                           <MenuItem  value={course.enrollmentId} key={course.enrollmentId}>
                                               {/* {course.courseId} */}
-                                              {getCourseType(course.courseId)}
+                                              {getCourseName(course.courseId)}
                                           </MenuItem>
                                       ))}
                                   </TextField>
