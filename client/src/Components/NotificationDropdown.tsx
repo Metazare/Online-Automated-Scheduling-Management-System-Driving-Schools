@@ -11,6 +11,7 @@ import Typography from '@mui/material/Typography'
 import { Link } from 'react-router-dom';
 
 import useNotif from '../Hooks/useNotif';
+import { Chip } from '@mui/material';
 
 type Props ={
 
@@ -133,7 +134,9 @@ function NotificationDropdown({socket}) {
                                 />
                                 <Box display="" >
                                     {/* <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography> */}
+                                    {notification?.status === "unread" && <Typography variant="subtitle2" color="initial" fontSize={"8px"}>New</Typography>}
                                     <Typography variant="body2" color="initial"  fontSize={"10px"}>{notification.content}</Typography>
+                                    
                                 </Box>
                             </Box>
                         ))}
