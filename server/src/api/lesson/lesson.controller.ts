@@ -21,12 +21,16 @@ export const getLessons: RequestHandler = async (req: QueryRequest<GetLessons>, 
     console.log(req.user)
   
     if (!req.user) throw new Unauthorized();
-    const user = <SchoolDocument>req.user.document;
+    const { document: user, role } = req.user;
+
+    let school: SchoolDocument = <SchoolDocument>user;
+    if (role === Role.INSTRUCTOR) school = (<InstructorDocument>user).school;
 
     console.log(user)
 
     const { courseId } = req.query;
-    const courseIds = user.courses.map(({ courseId }) => <string>courseId);
+
+    const courseIds = school.courses.map(({ courseId }) => <string>courseId);
 
     let lessons: Record<string, LessonDocument[]> | LessonDocument[] = await LessonModel.find({
         courseId: { $in: courseIds }

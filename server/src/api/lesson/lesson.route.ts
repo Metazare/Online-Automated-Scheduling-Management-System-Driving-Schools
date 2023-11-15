@@ -13,12 +13,12 @@ const router: Router = Router();
  */
 router.patch('/progress', limitUsers(Role.ADMIN, Role.INSTRUCTOR), asynchronousHandler(updateProgress));
 
-router.use(limitUsers(Role.ADMIN));
-
 /**
  * courseId (optional)
  */
-router.get('/', asynchronousHandler(getLessons));
+router.get('/', limitUsers(Role.ADMIN, Role.INSTRUCTOR), asynchronousHandler(getLessons));
+
+router.use(limitUsers(Role.ADMIN));
 
 /**
  * courseId
