@@ -132,9 +132,11 @@ function CourseList() {
 
           <Grid container spacing={2}>
             <Grid item md={8} xs={12}>
-              {data && enrolls && populateObject2(data.courses, getCourses(enrolls))?.map((course:any)=>(
-                <CourseAccordion variant='use' title={course.type} courseId={course.courseId}/>
-              ))}
+              <Box display="flex" flexDirection={"column"} gap={"10px"}>
+                {data && enrolls && populateObject2(data.courses, getCourses(enrolls))?.map((course:any)=>(
+                  <CourseAccordion variant='use' title={course.type} courseId={course.courseId}/>
+                ))}
+              </Box>
             </Grid>
 
 
