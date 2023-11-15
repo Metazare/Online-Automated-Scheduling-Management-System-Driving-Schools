@@ -23,12 +23,10 @@ export const getChats: RequestHandler = async (req, res) => {
 
 export const createMessage = async (req: CreateMessage) => {
     const { sender, receiver } = req;
-    
-    console.log(req)
 
     if ((sender.role === Role.ADMIN || sender.role === Role.INSTRUCTOR) && receiver.role !== Role.STUDENT)
         throw new Forbidden();
-    if (sender.role === Role.STUDENT && receiver.role !== Role.STUDENT) throw new Forbidden();
+    // if (sender.role === Role.STUDENT && receiver.role !== Role.STUDENT) throw new Forbidden();
 
     const chats = await ChatModel.find({
         'members.user': { $all: [sender.userId, receiver.userId] }
