@@ -60,6 +60,24 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
     );
 }
 
+function CalculateProgress(data){
+  // Create an object to store the count for each student
+  let completionCount = 0;
+  let lessonCount = 0
+
+  // Iterate through each enrollment and check progress status
+
+  data.progress.forEach((progress) => {
+    if (progress.status === 'complete') {
+      // Increment count if progress is marked as 'complete'
+      completionCount++;
+    }
+    lessonCount++;
+  });
+
+  return (completionCount / lessonCount) * 100;
+}
+
 type YourStateType<T> = T | undefined;
 
 function Students() {
@@ -184,7 +202,10 @@ function Students() {
                           ))}   
                         </TableCell>
                         <TableCell >
-                            <CircularProgressWithLabel defaultValue={0} value={60} />
+                          {student.enrollments?.map((enrollment) => ( 
+                             <CircularProgressWithLabel defaultValue={0} value={CalculateProgress(enrollment)} />
+                          ))}
+                           
                         </TableCell>
                         <TableCell >
                             <IconButton aria-label="" onClick={()=>{setOpen("update");setSelectedStudent(student)}}>
@@ -236,9 +257,11 @@ function Students() {
                                                 
                                                 const selectedCourseId = event.target.value; // Assuming the value is the courseId
                                                 const selectedCourse = selectedStudent?.enrollments.find(course => course.courseId === selectedCourseId);
-            
+
                                                 setSelectedCourse(selectedCourse);
                                                 setForm({ ...form, courseId: selectedCourseId });
+
+                                                console.log(selectedCourse)
                                               }}
                                             >
                                               {selectedStudent && selectedStudent?.enrollments.map((course) => (
@@ -263,8 +286,8 @@ function Students() {
                                             >
 
                                               {selectedCourse?.progress.map((lesson) => (
-                                                <MenuItem key={lesson.lessonId} value={lesson.lessonId}>
-                                                  {lesson.title}
+                                                <MenuItem key={lesson.lesson.lessonId} value={lesson.lesson.lessonId}>
+                                                  {lesson.lesson.title}
                                                 </MenuItem>
                                               ))}
 
