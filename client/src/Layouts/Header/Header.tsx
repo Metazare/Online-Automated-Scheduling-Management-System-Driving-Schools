@@ -29,14 +29,11 @@ import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../Hooks/useAuth';
-
+import { Link } from 'react-router-dom';
 
 import NotificationDropdown from '../../Components/NotificationDropdown';
 
 type Props = {}
-
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 // Connection to the server with port 5000
 // const socket = io('http://localhost:5000')
@@ -86,18 +83,10 @@ export default function Header({}: Props) {
   //   fetchInstructorNotif()
   // }, [])
 
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -116,7 +105,7 @@ export default function Header({}: Props) {
           </Box>
           <Box sx={{ flexGrow: 0, display:"flex", gap:'15px',alignItems:"center"}}>
             {user?<>
-              <IconButton  sx={{ p: "0" , display: { md:'flex', xs:'none', sm:'flex'} }}>
+              <IconButton  sx={{ p: "0" , display: { md:'flex', xs:'none', sm:'flex'} }} href='/chat'>
                 <ChatIcon style={{fill:"#E8E8E8"}}/>
               </IconButton>
 
