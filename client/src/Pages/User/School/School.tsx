@@ -45,7 +45,8 @@ function School() {
         friday:false,
         saturday:false,
         startTime: new Date(),
-        endTime: new Date()
+        endTime: new Date(),
+        schoolId: ""
     });
 
     const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
@@ -58,7 +59,7 @@ function School() {
         enrollmentId: null,
         courseId: null,
         status: 'accepted',
-        courseType: null
+        courseType: null,
       })
     }, [])
 
@@ -113,23 +114,10 @@ function School() {
         courseId: form.course,
         days: appendSelectedDays(form),
         startTime: form.startTime,
-        endTime: form.endTime
+        endTime: form.endTime,
+        schoolId: id || "undefined"
       });
-
-      /*
-      * sending the enrollment to school
-      * 'send_enrollment' is the event name
-      * the following data inside the bracket will be sent to the server
-      */
-      // socket.emit('send_enrollment', {
-      //   adminId: id,
-      //   studentId: form.studentId,
-      //   date: form.startTime & form.endTime,
-      //   courseId: form.courseId
-      // })
-      
     }
-    
 
     if (loading) {
         return <p>Loading...</p>

@@ -1,6 +1,8 @@
 import {useState} from 'react'
 import axios from './useAxios'
 import {useNavigate} from 'react-router-dom';
+import { useAuth } from './useAuth';
+import useNotif from './useNotif';
 
 interface Data {
   data: any;
@@ -16,6 +18,7 @@ interface CreateEnrollmentData {
   days: number[];
   startTime: Date;
   endTime: Date;
+  schoolId: string;
 }
 
 interface GetEnrollmentData {
@@ -37,6 +40,8 @@ function useReqEnroll(): Data {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
+  const {User} = useAuth();
+  const {sendNotification} = useNotif();
 
   const enroll = async (data:CreateEnrollmentData) => {
     setLoading(true);
@@ -52,6 +57,17 @@ function useReqEnroll(): Data {
         .then((response:any)=>{
           console.log(response.data);
           alert("Enroll request sent!");
+
+          sendNotification({
+            sender: User().studentId,
+            targets: [
+              {
+                user: data.schoolId,
+                role: 'admin'
+              }
+            ],
+            content: 'New Enrollment Request from' + data.courseId
+          })
           navigate("/home");
         });
       } catch (error: any) {
