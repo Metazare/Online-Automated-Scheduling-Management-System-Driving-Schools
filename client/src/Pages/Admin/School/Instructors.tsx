@@ -173,20 +173,20 @@ function Instructors() {
                                     <Grid item md={6} xs={12}>
                                         <TextField
                                             fullWidth
-                                            required
-                                            id="lastName"
-                                            label="Last Name"
-                                            value={form.lastName}
-                                            onChange={(event)=>{ setForm({...form, lastName: event.target.value });}}
+                                            id="middle"
+                                            label="Middle Name"
+                                            value={form.middleName}
+                                            onChange={(event)=>{ setForm({...form, middleName: event.target.value });}}
                                         />
                                     </Grid>
                                     <Grid item md={6} xs={12}>
                                         <TextField
                                             fullWidth
-                                            id="middle"
-                                            label="Middle Name"
-                                            value={form.middleName}
-                                            onChange={(event)=>{ setForm({...form, middleName: event.target.value });}}
+                                            required
+                                            id="lastName"
+                                            label="Last Name"
+                                            value={form.lastName}
+                                            onChange={(event)=>{ setForm({...form, lastName: event.target.value });}}
                                         />
                                     </Grid>
                                     <Grid item md={6} xs={12}>
