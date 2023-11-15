@@ -44,7 +44,9 @@ export const getAppointments: RequestHandler = async (req: QueryRequest<GetAppoi
             appointmentQuery.instructor = user._id;
             break;
         case Role.STUDENT:
-            appointmentQuery.student = user._id;
+            const studentEnrollments = await EnrollmentModel.find({ student: user._id }).exec();
+            const studentEnrollmentIds = studentEnrollments.map(enrollment => enrollment._id);
+            appointmentQuery.enrollment = { $in: studentEnrollmentIds };
             break;
     }
 
