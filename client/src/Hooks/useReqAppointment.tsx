@@ -1,6 +1,9 @@
 import {useState} from 'react'
 import axios from './useAxios'
 
+import { useAuth } from './useAuth';
+import useNotif from './useNotif'
+
 interface Data {
   appointments: any;
   loading: boolean;
@@ -15,6 +18,7 @@ interface CreateAppointmentData {
   instructorId: string;
   vehicle: string;
   schedule: Date;
+  studentId: string;
 }
 
 interface GetAppointmentData {
@@ -34,6 +38,8 @@ function useReqAppointment(): Data {
   const [appointments, setAppointments] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
+  const {User} = useAuth();
+  const {sendNotification} = useNotif();
 
   const createAppointment = async (data:CreateAppointmentData) => {
     console.log(data)
@@ -48,6 +54,22 @@ function useReqAppointment(): Data {
       })
       .then((response:any)=>{
         console.log(response.data);
+
+        sendNotification({
+          sender: User().schoolId,
+          targets: [
+            {
+              user: data.instructorId,
+              role: 'instructor'
+            },
+            {
+              user: data.studentId,
+              role: 'student'
+            }
+          ],
+          content: 'New appointment for ' + data.enrollmentId + ' on ' + data.schedule 
+        })
+
         alert("Appointment set!");
       });
     } catch (error: any) {

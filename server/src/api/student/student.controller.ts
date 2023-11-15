@@ -25,7 +25,7 @@ export const getStudents: RequestHandler = async (req: QueryRequest<GetStudents>
         enrollmentQuery.courseId = school.courses.find((c) => c.type === courseType)?.courseId || '';
 
     let enrollments: EnrollmentPopulatedDocument[] = await EnrollmentModel.find(enrollmentQuery)
-        .populate('student')
+        .populate('student progress.lesson')
         .exec();
 
     if (typeof studentId === 'string')

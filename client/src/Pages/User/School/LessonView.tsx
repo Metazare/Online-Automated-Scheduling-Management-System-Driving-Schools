@@ -9,20 +9,51 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CourseAccordion from '../../../Components/CourseAccordion';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { useParams } from 'react-router-dom';
+
+
 import useReqLesson from '../../../Hooks/useReqLesson';
+import useReqEnroll from '../../../Hooks/useReqEnroll';
+import useReqSchool from '../../../Hooks/useReqSchool';
+import { useAuth } from '../../../Hooks/useAuth';
 
 
 function LessonView() {
     const [feedback,setFeedback] = useState(false);
     const {cid, lid} = useParams();
     const {datum, loading, getLesson} = useReqLesson();
+    const {data: enrolls, getEnrollments} = useReqEnroll();
+    const {getUser} = useAuth();
+    const [lesson, setLesson] = useState<any>()
+    const {data: school, loading: schoolLoading, error: errorSchool, getSchool} = useReqSchool();
 
     useEffect(()=>{
-      getLesson({
-        courseId: cid,
-        lessonId: lid
-      })
+      if (getUser()!=='student') {
+        getLesson({
+          courseId: cid,
+          lessonId: lid
+        })
+        getSchool({
+          schoolId: null
+        })
+      }
+      else {
+        getEnrollments({
+          courseId: cid,
+          lessonView: true,
+          // enrollmentId: lid
+        })
+        // setLesson(enrolls?.progress.find((lesson) => lesson.lessonId === lid))
+        // console.log(enrolls?.progress.find((lesson) => lesson.lessonId === lid))
+      }
     }, [])
+
+    function getData(array){
+      console.log(array)
+      if (array) {
+        console.log(array.filter(lesson => lesson.lesson.lessonId === lid)[0])
+        return array.filter(lesson => lesson.lesson.lessonId === lid)[0]
+      }
+    }
 
     if(loading){
       return <div>Loading...</div>
@@ -32,12 +63,12 @@ function LessonView() {
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em"}}>
             <Container maxWidth="lg">
                 <div style={{padding:"3.8rem 0",}}>
-                    <a href="/" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
+                    <a href={getUser()!=='student' ? 'dashboard' : `/course/${enrolls?.school?.schoolId}`} style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
                         <ArrowBackIcon/>
                         <Typography variant="subtitle1" color="initial"> Go Back</Typography>
                     </a>
                     <Box
-                        sx={{
+                        sx={{ 
                         display: 'flex',
                         gap:"25px",
                         alignItems:"center"
@@ -49,7 +80,7 @@ function LessonView() {
                         sx={{ width: 80, height: 80 }}
                         />
                         <div style={{flexGrow:"1"}}>
-                        <Typography variant="h4" fontWeight={500} color="initial">SMART Driving</Typography>
+                        <Typography variant="h4" fontWeight={500} color="initial">{getUser()!=='student' ? school?.name : enrolls?.school?.name}</Typography>
                         <Box
                             sx={{
                             display: 'flex',
@@ -63,7 +94,7 @@ function LessonView() {
                             }}
                             >
                             <CallIcon/> 
-                            <Typography variant="body1" fontWeight={500}>0915-666-147</Typography>
+                            <Typography variant="body1" fontWeight={500}>{getUser()!=='student' ? school?.contact :  enrolls?.school?.contact}</Typography>
                             </Box>
                             <Box
                             sx={{
@@ -72,7 +103,7 @@ function LessonView() {
                             }}
                             >
                             <EmailIcon/> 
-                            <Typography variant="body1" fontWeight={500}>0915-666-147</Typography>
+                            <Typography variant="body1" fontWeight={500}>{getUser()!=='student' ?  school?.email :  enrolls?.school?.email}</Typography>
                             </Box>
                         </Box>
                         </div>
@@ -88,18 +119,14 @@ function LessonView() {
                 <Grid item md={feedback ? 8 : 12} xs={12}>
                     <div style={{display:"flex", alignItems:"start"}}>
                         <div style={{flexGrow:"1"}}>
-                            <Typography variant="h6" color="primary">{datum?.title}</Typography>
-                            <Typography variant="body2" mt={"-5px"} color="initial">{datum?.description}</Typography>
+                            <Typography variant="h6" color="primary">{getUser()!=='student' ? datum?.title : getData(enrolls?.progress)?.lesson.title}</Typography>
+                            <Typography variant="body2" mt={"-5px"} color="initial">{getUser()!=='student' ? datum?.description : getData(enrolls?.progress)?.lesson.description}</Typography>
                         </div>
-                        <Button variant="contained" color="primary" sx={{marginTop:"5px"}}>
-                            next
-                        </Button>
                     </div>
                     <div style={{width:"100%",borderRadius:"8px",minHeight:"400px",marginTop:"25px", background:"#D0D0D0"}}>
-                      {/* {datum?.file} */}
                       <iframe
-                        title="PDF Viewer"
-                        src={datum?.file}
+                        title="PDF Viewer" 
+                        src={getUser()!=='student' ? datum?.file : getData(enrolls?.progress)?.lesson.file}
                         width="100%"
                         height="500px" // You can adjust the height based on your preference
                         frameBorder="0"

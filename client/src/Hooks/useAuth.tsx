@@ -9,6 +9,7 @@ interface AuthContextState {
     register: (data: RegisterData) => void;
     isAuth: (id: any) => boolean;
     getUser: () => any;
+    User: () => any,
 }
 
 interface RegisterData {
@@ -38,7 +39,8 @@ export const AuthContext = createContext<AuthContextState>({
     logout: () => {},
     register: () => {},
     isAuth: () => false,
-    getUser: () => {}
+    getUser: () => {},
+    User: () => {},
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -136,6 +138,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
 
+    const User = () => {
+      return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '') : '';
+    }
+
     useEffect(() => {
         // Check if user is already logged in on first mount
         const loggedInUser = localStorage.getItem("user");
@@ -145,7 +151,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, register, isAuth, getUser }}>
+        <AuthContext.Provider value={{ user, login, logout, register, isAuth, getUser, User }}>
             {children}
         </AuthContext.Provider>
     );

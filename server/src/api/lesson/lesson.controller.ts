@@ -1,27 +1,39 @@
 import { BodyRequest, QueryRequest, RequestHandler } from 'express';
 import { CheckData } from '../../utilities/checkData';
-import { CreateLesson, DeleteLesson, GetLessons, LessonDocument, UpdateLesson, UpdateProgress } from './lesson.types';
+import {
+    CreateLesson,
+    DeleteLesson,
+    GetLessons,
+    LessonDocument,
+    LessonStatus,
+    UpdateLesson,
+    UpdateProgress
+} from './lesson.types';
 import { InstructorDocument } from '../instructor/instructor.types';
 import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import { Role } from '../auth/auth.types';
 import { SchoolDocument } from '../school/school.types';
 import EnrollmentModel from '../enrollment/enrollment.model';
 import LessonModel from './lesson.model';
+import { EnrollmentPopulatedDocument } from '../enrollment/enrollment.types';
 
 export const getLessons: RequestHandler = async (req: QueryRequest<GetLessons>, res) => {
+    console.log(req.user)
+  
     if (!req.user) throw new Unauthorized();
     const user = <SchoolDocument>req.user.document;
 
-    const { courseId } = req.query;
-    const isCourseIdGiven = typeof courseId === 'string';
+    console.log(user)
 
+    const { courseId } = req.query;
     const courseIds = user.courses.map(({ courseId }) => <string>courseId);
 
-    const lessonQuery: Record<string, unknown> = {};
-    if (isCourseIdGiven) lessonQuery.courseId = { $in: courseIds };
+    let lessons: Record<string, LessonDocument[]> | LessonDocument[] = await LessonModel.find({
+        courseId: { $in: courseIds }
+    }).exec();
 
-    let lessons: Record<string, LessonDocument[]> | LessonDocument[] = await LessonModel.find(lessonQuery).exec();
-    if (!isCourseIdGiven)
+    if (typeof courseId === 'string') lessons = lessons.filter((lesson) => lesson.courseId === courseId);
+    else {
         lessons = courseIds.reduce(
             (acc, courseId) => ({
                 ...acc,
@@ -29,6 +41,7 @@ export const getLessons: RequestHandler = async (req: QueryRequest<GetLessons>, 
             }),
             <Record<string, LessonDocument[]>>{}
         );
+    }
 
     res.json(lessons);
 };
@@ -101,7 +114,10 @@ export const deleteLesson: RequestHandler = async (req: BodyRequest<DeleteLesson
 
     const courseIds = user.courses.map(({ courseId }) => courseId);
 
-    const lesson = await LessonModel.findOneAndDelete({ lessonId, courseId: { $in: courseIds } }).exec();
+    const lesson = await LessonModel.findOneAndUpdate(
+        { lessonId, courseId: { $in: courseIds } },
+        { $set: { status: LessonStatus.INACTIVE } }
+    ).exec();
     if (!lesson) throw new NotFound('Lesson');
 
     res.sendStatus(204);
@@ -122,16 +138,16 @@ export const updateProgress: RequestHandler = async (req: BodyRequest<UpdateProg
     checker.checkType(status, 'string', 'status');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
-    const enrollment = await EnrollmentModel.findOneAndUpdate(
-        {
-            enrollmentId,
-            school,
-            'progress.lessonId': lessonId
-        },
-        { $set: { 'progress.$.status': status } }
-    ).exec();
-
+    const enrollment: EnrollmentPopulatedDocument | null = await EnrollmentModel.findOne({ enrollmentId, school })
+        .populate('progress.lesson')
+        .exec();
     if (!enrollment) throw new NotFound('Enrollment');
+
+    const lessonIndex = enrollment.progress.findIndex((lesson) => lesson.lesson.lessonId === lessonId);
+    if (lessonIndex === -1) throw new NotFound('Lesson');
+
+    enrollment.progress[lessonIndex].status = status;
+    await enrollment.save();
 
     res.sendStatus(204);
 };

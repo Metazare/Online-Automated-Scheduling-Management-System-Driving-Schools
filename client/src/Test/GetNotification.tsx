@@ -25,77 +25,87 @@ import Container from '@mui/material/Container';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import ChatIcon from '@mui/icons-material/Chat';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom';
 
-import { useAuth } from '../../Hooks/useAuth';
-import { Link } from 'react-router-dom';
-
-import NotificationDropdown from '../../Components/NotificationDropdown';
+import { useAuth } from '../Hooks/useAuth';
 
 type Props = {}
 
+const pages = ['Products', 'Pricing', 'Blog'];
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
 // Connection to the server with port 5000
-// const socket = io('http://localhost:5000')
+const socket = io('http://localhost:5000')
 
+// Setting up the badge content number
+// but based the number of content if the data is viewed or not (enrollment(approved/declined), appointment, reschedule)
+let badgeContentNumber = 0
 
-export default function Header({socket}) {
+export default function Header({}: Props) {
   const navigate = useNavigate();
-  const {logout, getUser, User} = useAuth();
+  const {logout, getUser} = useAuth();
   const user = localStorage.getItem('user')
   
 
   // Check who is login (Student, Admin, Instructor)
   // if student, show the notification for student
-  // const fetchStudentNotif = () => {
-  //   socket.on('recieve_approval', (message, appointment_status) => {
-  //     console.log(message, appointment_status)
-  //   })
+  const fetchStudentNotif = () => {
+    socket.on('recieve_approval', (message, appointment_status) => {
+      console.log(message, appointment_status)
+    })
 
-  //   socket.on('send_new_appointment', (message, appointment_date) => {
-  //     console.log(message, appointment_date)
-  //   })
-  // }
+    socket.on('send_new_appointment', (message, appointment_date) => {
+      console.log(message, appointment_date)
+    })
+  }
 
-  // // if Admin, show the notification for Admin
-  // const fetchAdminNotif = () => {
-  //   socket.on('recieve_enrollment', (studentId, date, courseId) => {
-  //     console.log(studentId, date, courseId)
+  // if Admin, show the notification for Admin
+  const fetchAdminNotif = () => {
+    socket.on('recieve_enrollment', (studentId, date, courseId) => {
+      console.log(studentId, date, courseId)
         
-  //   })
+    })
 
-  //   socket.on('recieve_resched', (studentId, date, courseId) => {
-  //     console.log(studentId, date, courseId)
-  //   })
-  // }
+    socket.on('recieve_resched', (studentId, date, courseId) => {
+      console.log(studentId, date, courseId)
+    })
+  }
 
-  // // if Instructor, show the notification for Instructor
-  // const fetchInstructorNotif = () => {
-  //   socket.on('recieve_new_appointment', (message, studentId, appointment_date) => {
-  //     console.log(message, studentId, appointment_date)
+  // if Instructor, show the notification for Instructor
+  const fetchInstructorNotif = () => {
+    socket.on('recieve_new_appointment', (message, studentId, appointment_date) => {
+      console.log(message, studentId, appointment_date)
         
-  //   })
-  // }
+    })
+  }
 
-  // useEffect(() => {
-  //   fetchStudentNotif()
-  //   fetchAdminNotif()
-  //   fetchInstructorNotif()
-  // }, [])
+  useEffect(() => {
+    fetchStudentNotif()
+    fetchAdminNotif()
+    fetchInstructorNotif()
+  }, [])
 
+  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
+  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElNav(event.currentTarget);
+  };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseNavMenu = () => {
+    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  console.log("User")
-  console.log(user)
+  
   return (
-    
     <AppBar position="static" color='secondary'>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -105,24 +115,33 @@ export default function Header({socket}) {
             </a>
             
           </Box>
-          <Box sx={{ flexGrow: 0, display:"flex", gap:'15px',alignItems:"center"}}>
+          <Box sx={{ flexGrow: 0, display:"flex", gap:'15px'}}>
             {user?<>
-              <IconButton  sx={{ p: "0" , display: { md:'flex', xs:'none', sm:'flex'} }} href='/chat'>
-                <ChatIcon style={{fill:"#E8E8E8"}}/>
-              </IconButton>
-
-
-              
-              <NotificationDropdown socket={socket}/>
-
+            <IconButton  sx={{ p: "0" , display: { md:'flex', xs:'none', sm:'flex'} }}>
+              <ChatIcon style={{fill:"#E8E8E8"}}/>
+            </IconButton>
+            
+            <IconButton  sx={{ p: "0", display: { md:'flex', xs:'none', sm:'flex'} }}>
+              <Badge badgeContent={badgeContentNumber} color="error">
+                <NotificationsIcon style={{fill:"#E8E8E8"}}/>
+              </Badge>
+            </IconButton>
+            
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Typography variant="subtitle1" color="#ffffff" sx={{marginRight:"10px",marginLeft:"20px"}}>{!User().name.first ? User().name : User().name.first + " " + User().name.last }</Typography>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
-                  
                 </IconButton>
               </Tooltip>
-              
+              <Tooltip title="Open settings">
+                <IconButton  sx={{ p: "0", display: { md:'flex', xs:'none', sm:'flex'} }}>
+                  <NotificationsIcon style={{fill:"#E8E8E8"}}/>
+                </IconButton>
+              </Tooltip>
+              <Tooltip title="Open settings">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                </IconButton>
+              </Tooltip>
               <Menu
                 sx={{ mt: '45px' }}
                 id="menu-appbar"

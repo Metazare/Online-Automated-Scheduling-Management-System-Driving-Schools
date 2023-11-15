@@ -19,7 +19,10 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 
 import useReqStudent from '../../../Hooks/useReqStudent';
-
+import useReqSchool from '../../../Hooks/useReqSchool';
+import useReqLesson from '../../../Hooks/useReqLesson';
+import moment from 'moment';
+import ChatIcon from '@mui/icons-material/Chat';
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -57,10 +60,35 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
         </Box>
     );
 }
+
+function CalculateProgress(data){
+  // Create an object to store the count for each student
+  let completionCount = 0;
+  let lessonCount = 0
+
+  // Iterate through each enrollment and check progress status
+
+  data.progress.forEach((progress) => {
+    if (progress.status === 'complete') {
+      // Increment count if progress is marked as 'complete'
+      completionCount++;
+    }
+    lessonCount++;
+  });
+
+  return (completionCount / lessonCount) * 100;
+}
+
+type YourStateType<T> = T | undefined;
+
 function Students() {
 
+    const { updateProgress } = useReqLesson();
     const { students, loading, error, getStudent } = useReqStudent();
-
+    const { data: school, loading: schoolLoading, error: errorSchool, getSchool } = useReqSchool();
+    const [selectedStudent, setSelectedStudent] = useState<YourStateType<any>>(undefined);
+    const [selectedCourse, setSelectedCourse] = useState<YourStateType<any>>(undefined);
+    
     // * Modal Open
     const [open, setOpen] = useState("");
     // TODO Pagination
@@ -76,6 +104,9 @@ function Students() {
     // TODO End Pagination
 
     const [form, setForm] = useState({
+        courseId: "",
+        studentId: "",
+        lessonId:"",
         lesson:"",
         feedback:""
     })
@@ -87,12 +118,62 @@ function Students() {
         studentId:null,
         courseType:null
       })
+      getSchool({
+        schoolId: null
+      })
     }, []);
 
-    if (loading) {
-      return <div>Loading...</div>
+    function getCourseType(data) {
+      const { courseId } = data;
+      const foundCourse = school.courses.find((course) => course.courseId === courseId);
+      return foundCourse?.type;
     }
 
+    // function getLesson(data) {
+    //   const { lessonId } = data;
+    //   const foundCourse = school.courses.find((course) => course.courseId === courseId);
+    //   return foundCourse?.type;
+    // }
+
+    async function submit(e: any){
+      e.preventDefault();
+
+      console.log({
+        enrollmentId: selectedCourse?.enrollmentId,
+        lessonId: form.lessonId,
+        status: 'complete'
+      })
+
+      if (selectedCourse && form.lessonId) {
+        updateProgress({
+          enrollmentId: selectedCourse?.enrollmentId,
+          lessonId: form.lessonId,
+          status: 'complete'
+        })
+      }
+      else {
+        alert("Please Select Course and Lesson");
+      }
+      
+    };
+
+    function filterStudentsWithAcceptedEnrollment(students) {
+      if (!students) {
+        return [];
+      }
+      
+      return students.filter((student) => {
+        const hasAcceptedEnrollment = student.enrollments.some(
+          (enrollment) => enrollment.status === 'accepted'
+        );
+        return hasAcceptedEnrollment;
+      });
+    }
+
+    if (loading || schoolLoading) {
+      return <div>Loading...</div>
+    }
+    console.log(students)
     return (
         <Grid item xs={12} sx={{padding:"40px"}}>
             <TableContainer>
@@ -109,35 +190,61 @@ function Students() {
                             Available Schedule
                         </TableCell>
                         <TableCell >
+                            Progress
+                        </TableCell>
+                        <TableCell >
+                        </TableCell>
+                        <TableCell >
                         </TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                  {students?.map((student) => ( 
+                  {filterStudentsWithAcceptedEnrollment(students)?.map((student) => ( 
                     <TableRow  hover role="checkbox" >
                         <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
                             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                             <div>
-                                <Typography variant="subtitle1" color="initial">{student.name.first} {student.name.middle} {student.name.last} </Typography>
-                                <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>{student.createdAt}</Typography>
+                                <Typography variant="subtitle1"color="initial" fontWeight={500}>{student.name.first.charAt(0).toUpperCase()  + student.name.first.slice(1)} {student.name.middle.charAt(0).toUpperCase()  + student.name.middle.slice(1)} {student.name.last.charAt(0).toUpperCase()  + student.name.last.slice(1)} </Typography>
+                                <Typography variant="body2" color="initial" sx={{marginTop:"-4px"}}>{moment(student.createdAt).format('LLL')}</Typography>
                             </div>
                         </TableCell>
                         <TableCell >
-                          {student.enrollments?.map((enrollment) => ( 
-                            <div>{enrollment.courseId}</div>
-                          ))}
+
+                          <Box display="flex" flexDirection={"column"} gap={"2em"}>
+                            {student.enrollments?.map((enrollment) => ( 
+                              <>{enrollment.status === "accepted" && <div>{getCourseType(enrollment)}</div>}</>
+                            ))}
+                          </Box>
+                          
                         </TableCell>
                         <TableCell >
-                          {student.enrollments?.map((enrollment) => ( 
-                            <div>{enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {enrollment?.availability?.time?.start}:00 to {enrollment?.availability?.time?.end}:00</div>
-                          ))}   
+                          <Box display="flex" flexDirection={"column"} gap={"2em"}>
+                            {student.enrollments?.map((enrollment) => ( 
+                              <>{enrollment.status === "accepted" && 
+                                <div>
+                                  {enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({enrollment?.availability?.time?.start+":00"} to {enrollment?.availability?.time?.end +":00"})
+                                </div>
+                              }</>
+                            ))}   
+                          </Box>
+                        </TableCell>
+                        <TableCell  >
+                          <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
+                            {student.enrollments?.map((enrollment) => ( 
+                              <>{enrollment.status === "accepted" && 
+                                <CircularProgressWithLabel defaultValue={0} value={CalculateProgress(enrollment)} />
+                              }</>
+                            ))}
+                          </Box>
                         </TableCell>
                         <TableCell >
-                            <CircularProgressWithLabel defaultValue={0} value={60} />
-                        </TableCell>
-                        <TableCell >
-                            <IconButton aria-label="" onClick={()=>{setOpen("update")}}>
+                            <IconButton aria-label="" onClick={()=>{setOpen("update");setSelectedStudent(student)}}>
                                 <TaskIcon/>
+                            </IconButton>
+                        </TableCell>
+                        <TableCell >
+                            <IconButton aria-label="" href={`/chat/student/${student.studentId}`}>
+                              <ChatIcon/>
                             </IconButton>
                         </TableCell>
                     </TableRow>
@@ -161,30 +268,64 @@ function Students() {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    
                     <Box sx={style}>
                         {open === "update"?<>
-                            <form action="">
+                          
                                 <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
-                                    Add New Instructor
+                                    Progress Update
+                                    
                                 </Typography>
                                 <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
-                                    Fill up the details of the instructor
+                                    Select the course and lesson to mark as complete.
                                 </Typography>
                                 <Grid container spacing={2} mt={3}>
                                     <Grid item  xs={12}>
                                         <FormControl fullWidth>
+                                            <InputLabel id="demo-simple-select-label">Select Course</InputLabel>
+                                            <Select
+                                              required
+                                              labelId="demo-simple-select-label"
+                                              id="demo-simple-select"
+                                              label="Select Lesson"
+                                              value={form.courseId}
+                                              onChange={(event)=>{ 
+                                                
+                                                const selectedCourseId = event.target.value; // Assuming the value is the courseId
+                                                const selectedCourse = selectedStudent?.enrollments.find(course => course.courseId === selectedCourseId);
+
+                                                setSelectedCourse(selectedCourse);
+                                                setForm({ ...form, courseId: selectedCourseId });
+
+                                                console.log(selectedCourse)
+                                              }}
+                                            >
+                                              {selectedStudent && selectedStudent?.enrollments.map((course) => (
+                                                <MenuItem key={course.courseId} value={course.courseId}>
+                                                  {getCourseType(course)}
+                                                </MenuItem>
+                                              ))}
+
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                    <Grid item  xs={12}>
+                                        <FormControl fullWidth>
                                             <InputLabel id="demo-simple-select-label">Select Lesson</InputLabel>
                                             <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            label="Select Lesson"
-                                            value={form.lesson}
-                                            onChange={(event)=>{ setForm({...form, lesson: event.target.value });}}
+                                              required
+                                              labelId="demo-simple-select-label"
+                                              id="demo-simple-select"
+                                              label="Select Lesson"
+                                              value={form.lessonId}
+                                              onChange={(event)=>{ setForm({...form, lessonId: event.target.value });}}
                                             >
-                                            <MenuItem value={"Lesson#1"}>Lesson #1</MenuItem>
-                                            <MenuItem value={"Lesson#2"}>Lesson #2</MenuItem>
-                                            <MenuItem value={"Lesson#3"}>Lesson #3</MenuItem>
+
+                                              {selectedCourse?.progress.map((lesson) => (
+                                                <MenuItem key={lesson.lesson.lessonId} value={lesson.lesson.lessonId}>
+                                                  {lesson.lesson.title}
+                                                </MenuItem>
+                                              ))}
+
                                             </Select>
                                         </FormControl>
                                     </Grid>
@@ -206,12 +347,12 @@ function Students() {
                                         </Button>
                                     </Grid>
                                     <Grid item sm={8} xs={12}>
-                                        <Button variant="contained" fullWidth color="primary" onClick={()=>{setOpen("Credential")}}>
-                                            Create
+                                        <Button variant="contained" type='submit' fullWidth color="primary" onClick={(e)=>{setOpen("");submit(e)}} >
+                                            Mark as Complete
                                         </Button>
                                     </Grid>
                                 </Grid>
-                            </form>
+                          
                         </>:""}
                     </Box>
                 </Modal>

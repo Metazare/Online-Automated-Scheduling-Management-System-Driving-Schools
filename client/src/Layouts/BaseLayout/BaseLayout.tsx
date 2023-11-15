@@ -4,10 +4,10 @@ import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
 import Container from '@mui/material/Container';
 
-export default function BaseLayout() {
+export default function BaseLayout({socket}) {
   return (
     <>
-        <Header />
+        <Header socket={socket}/>
         <Outlet />
           
         {/* <Footer /> */}

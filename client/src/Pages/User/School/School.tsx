@@ -1,4 +1,5 @@
 import React,{useState, useEffect} from 'react'
+import io from 'socket.io-client';
 
 // * MUI Imports
 import Container from '@mui/material/Container'
@@ -15,6 +16,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
+import {Link} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+
+// 
+import moment from 'moment';
 // * Components
 import CourseCard from '../../../Components/CourseCard'
 import MenuItem from '@mui/material/MenuItem';
@@ -25,7 +31,10 @@ import useReqLesson from '../../../Hooks/useReqLesson';
 
 import { useParams } from 'react-router-dom';
 
+// const socket = io('http://localhost:5000');
+
 function School() {
+  const navigate = useNavigate();
   const {data, loading, getSchool} = useReqSchool();
   const {data:lessons, loading:lessonLoading, getLessons} = useReqLesson();
   const {data: enrolls, loading: enrollLoading, error: enrollError, getEnrollments, enroll} = useReqEnroll();
@@ -42,7 +51,8 @@ function School() {
         friday:false,
         saturday:false,
         startTime: new Date(),
-        endTime: new Date()
+        endTime: new Date(),
+        schoolId: ""
     });
 
     const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
@@ -55,7 +65,7 @@ function School() {
         enrollmentId: null,
         courseId: null,
         status: 'accepted',
-        courseType: null
+        courseType: null,
       })
     }, [])
 
@@ -106,17 +116,41 @@ function School() {
 
     async function submit(e: any) {
       e.preventDefault();
+      if ((appendSelectedDays(form).length === 0) || !form.startTime || !form.endTime) {
+        alert("Please select at least one day");
+        return;
+      }
       enroll({
         courseId: form.course,
         days: appendSelectedDays(form),
         startTime: form.startTime,
-        endTime: form.endTime
+        endTime: form.endTime,
+        schoolId: id || "undefined"
       });
+      alert(enrollError)
+      console.log(enrollError)
+    }
+
+
+    function getCourses(school, enrollments){
+
+      console.log(school)
+      console.log(enrollments)
       
+      // Extract courseIds from enrollments
+      const enrolledCourseIds = enrollments.map((enrollment) => enrollment.courseId);
+
+      // Filter courses in the school that are not in the enrolledCourseIds
+      const availableCourses = school.courses.filter(
+        (course) => !enrolledCourseIds.includes(course.courseId)
+      );
+
+      console.log(availableCourses)
+
+      return availableCourses
     }
     
-
-    if (loading) {
+    if (loading && enrollLoading) {
         return <p>Loading...</p>
     }
 
@@ -140,7 +174,7 @@ function School() {
                         }}
                     >
                         <Avatar
-                        alt="Remy Sharp"
+                        alt={data?.name}
                         src="/static/images/avatar/1.jpg"
                         sx={{ width: 80, height: 80 }}
                         />
@@ -180,8 +214,6 @@ function School() {
                 
             </Container>
         </div>
-
-        
         <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
             <Grid container spacing={2}>
                 <Grid item md={8} sm={8} xs={12} sx={{padding:"40px"}}>
@@ -196,7 +228,7 @@ function School() {
                     ))}
                   </Box> 
                 </Grid>
-                <Grid item md={4} sm={4} xs={12}>
+                <Grid item md={4} sm={4} xs={12} display={"flex"} gap={"1em"} flexDirection={"column"}>
                 {!enrolled?
                     <Paper sx={{padding:"1em"}}  elevation={3}>
                         <Typography variant="h6" color="primary">Enroll Now</Typography>
@@ -220,6 +252,13 @@ function School() {
                                             {course.type}
                                           </MenuItem>
                                         ))}
+
+                                        {/* {getCourses(data, enrolls).map((course) => (
+                                          <MenuItem key={course.courseId} value={course.courseId}>
+                                            {course.type}
+                                          </MenuItem>
+                                        ))} */}
+
                                     </TextField>
                                 </Grid>
                                 
@@ -333,9 +372,9 @@ function School() {
                     :
                     ''
                 }
-                {data && enrolls && populateObject2(data.courses, getSchoolDataById(enrolls))?.map((request)=>(
+                {/* {data && enrolls && populateObject2(data.courses, getSchoolDataById(enrolls))?.map((request)=>(
                   <Paper sx={{padding:"1em"}} elevation={3}>
-                    <Typography variant="h6" color="primary">Your request is {request.status}</Typography>
+                    <Typography variant="h6" color="primary">Your Enrolled Cources is {request.status}</Typography>
                     <Typography variant="subtitle2" mt={2} mb={1} color="initial">Selected Course</Typography>
                     <Typography variant="body2" color="initial">{request.type}</Typography>
                     <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
@@ -343,7 +382,37 @@ function School() {
                       {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
                     </Typography>
                   </Paper>
-                ))}
+                ))} */}
+
+                  {/* <Paper sx={{padding:"1em",background:"#D9D9D9"}} elevation={3}>
+                    <Typography variant="subtitle2"  mb={1} color="initial">Selected Course</Typography>
+                    <Typography variant="body2" color="initial">TDC Face to Face</Typography>
+                    <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
+                    <Typography variant="body2" color="initial">
+                      Mo, Tu, We, Th, Fr, at (8:00 AM to 8:00 AM)
+                    </Typography>
+                  </Paper> */}
+
+                  {enrolls && enrolls.length > 0 ? 
+                  <Box display={"flex"} gap={"5px"} alignItems={"center"}>
+                    <hr style={{flexGrow:'1',borderColor:"#E24B5B"}} />
+                    <Typography variant="h6" color="primary">List of Enrolled Courses</Typography>
+                    <hr style={{flexGrow:'1',borderColor:"#E24B5B"}} />
+                  </Box>
+                  : <></> }
+
+                  {data && enrolls && populateObject2(data.courses, getSchoolDataById(enrolls))?.map((request)=>(
+                    <Paper sx={{padding:"1em"}} elevation={3} component={Link} to={`/course/${id}`} >
+                      <Typography variant="subtitle2"  mb={1} color="initial">Selected Course</Typography>
+                      <Typography variant="body2" color="initial">{request.type}</Typography>
+                      <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
+                      <Typography variant="body2" color="initial">
+                        {/* Mo, Tu, We, Th, Fr, at (8:00 AM to 8:00 AM) */}
+                        {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
+                      </Typography>
+                    </Paper>
+                  ))}  
+
                 </Grid>
             </Grid>
         </Container>

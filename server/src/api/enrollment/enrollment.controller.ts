@@ -8,7 +8,7 @@ import {
     GetEnrollment,
     UpdateEnrollmentStatus
 } from './enrollment.types';
-import { LessonDocument, ProgressLesson } from '../lesson/lesson.types';
+import { LessonDocument, ProgressStatus  } from '../lesson/lesson.types';
 import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import { Role } from '../auth/auth.types';
 import { SchoolDocument } from '../school/school.types';
@@ -16,6 +16,7 @@ import { StudentDocument } from '../student/student.types';
 import EnrollmentModel from './enrollment.model';
 import LessonModel from '../lesson/lesson.model';
 import SchoolModel from '../school/school.model';
+
 
 export const getEnrollments: RequestHandler = async (req: QueryRequest<GetEnrollment>, res) => {
     if (!req.user) throw new Unauthorized();
@@ -32,7 +33,7 @@ export const getEnrollments: RequestHandler = async (req: QueryRequest<GetEnroll
     if (role === Role.ADMIN) enrollmentQuery.school = user._id;
 
     let enrollments: EnrollmentPopulatedDocument[] = await EnrollmentModel.find(enrollmentQuery)
-        .populate('school student')
+        .populate('school student progress.lesson')
         .exec();
 
     if (typeof courseType === 'string') {
@@ -110,7 +111,8 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
 
     if (status === EnrollmentStatus.ACCEPTED) {
         const lessons: LessonDocument[] = await LessonModel.find({ courseId: enrollment.courseId }).exec();
-        enrollment.progress = lessons.reduce((acc, lesson) => [...acc, <ProgressLesson>lesson], <ProgressLesson[]>[]);
+        enrollment.progress = lessons.map((lesson) => ({ lesson: lesson._id, status: ProgressStatus.INCOMPLETE }));
+
     }
 
     enrollment.status = status;

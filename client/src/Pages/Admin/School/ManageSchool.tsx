@@ -22,8 +22,12 @@ import Students from './Students';
 import Instructors from './Instructors';
 
 import useReqSchool from '../../../Hooks/useReqSchool';
+import { useAuth } from '../../../Hooks/useAuth';
 
 function ManageSchool() {
+
+  const {getUser} = useAuth();
+
     const {data, loading, getSchool} = useReqSchool();
     const [value, setValue] = React.useState(0);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -56,7 +60,7 @@ function ManageSchool() {
                         }}
                     >
                         <Avatar
-                        alt="Remy Sharp"
+                        alt={data?.name}
                         src="/static/images/avatar/1.jpg"
                         sx={{ width: 80, height: 80 }}
                         />
@@ -88,19 +92,33 @@ function ManageSchool() {
                             </Box>
                         </Box>
                         </div>
-                        <IconButton aria-label="" onClick={()=>alert}>
+                        {/* <IconButton aria-label="" onClick={()=>alert}>
                         <MoreVertIcon/>
-                        </IconButton>
+                        </IconButton> */}
                     </Box>
                 </div>
-                <Tabs value={value} onChange={handleChange} >
-                    <Tab label="Home" />
-                    <Tab label="Appointments" />
-                    <Tab label="Courses" />
-                    <Tab label="Requests" />
-                    <Tab label="Students" />
-                    <Tab label="Instructors" />
-                </Tabs>
+                
+                  {getUser()==="admin"?
+
+                    <Tabs value={value} onChange={handleChange} >
+                      <Tab label="Home" />
+                      <Tab label="Appointments" />
+                      <Tab label="Courses" />
+                      <Tab label="Requests" />
+                      <Tab label="Students" />
+                      <Tab label="Instructors" />
+                    </Tabs>
+
+                  :
+                    <Tabs value={value} onChange={handleChange} >
+                      <Tab label="Home" />
+                      <Tab label="Appointments" />
+                      <Tab label="Courses" />
+                      <Tab label="Students" />
+                    </Tabs>
+                  }
+                    
+                
             </Container>
         </div>
         <Container maxWidth="lg" sx={{padding: "2em 1em "}}>

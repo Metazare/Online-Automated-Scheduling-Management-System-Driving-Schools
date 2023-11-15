@@ -12,10 +12,10 @@ import Button from '@mui/material/Button';
 import ClearIcon from '@mui/icons-material/Clear';
 import CheckIcon from '@mui/icons-material/Check';
 import Box from '@mui/material/Box';
+import moment from 'moment';
 
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+
+import { io } from 'socket.io-client'
 
 import useReqEnroll from '../../../Hooks/useReqEnroll';
 
@@ -29,7 +29,10 @@ const style = {
     borderRadius:'8px',
     boxShadow: 24,
     p: 4,
-};  
+};
+
+// Connection to the server with port 5000
+// const socket = io('http://localhost:5000');
 
 function Requests() {
     // * Modal Open
@@ -71,6 +74,22 @@ function Requests() {
       return <p>Loading...</p>
     }
 
+    // Notification for sending the approval to student
+    function sendApproval(){
+        
+        // message contains that the student has been approved, and the date of schedule
+        // appointment status contains the status of approval (approved or declined)
+        // studentId contains the id of the student to send the approval
+        
+        // socket.emit('send_approval', message, appointment_status, studentId);
+    }
+
+    // Function to get the course type based on course ID
+    function getCourseType(data) {
+      const { school, courseId } = data;
+      const foundCourse = school.courses.find((course) => course.courseId === courseId);
+      return foundCourse?.type;
+    }
 
     return (
         <Grid item xs={12} sx={{padding:"40px"}}>
@@ -109,20 +128,20 @@ function Requests() {
                 </TableHead>
                 <TableBody>
                     {data?.map((request) => ( 
-                    <TableRow  hover role="checkbox" >
-                        <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
-                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                            <div>
-                                <Typography variant="subtitle1" color="initial">{request?.student?.name?.first} {request?.student?.name?.last}</Typography>
-                                <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>{request?.createdAt}</Typography>
-                            </div>
-                        </TableCell>
-                        <TableCell >Theoretical Driving</TableCell>
-                        <TableCell >
-                          {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
-                        </TableCell>
-                        <TableCell align="right">
-                        <IconButton aria-label=""  onClick={()=>{setOpen("DeclineEnrollment"); setSelected(request.enrollmentId)}}>
+                        <TableRow  hover role="checkbox" >
+                            <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
+                                <Avatar alt={request?.student?.name?.first.toUpperCase()} src="/static/images/avatar/1.jpg" />
+                                <div>
+                                    <Typography variant="subtitle1" color="initial" fontWeight={500}>{request?.student?.name?.first.charAt(0).toUpperCase() + request?.student?.name?.first.slice(1)} {request?.student?.name?.last.charAt(0).toUpperCase() + request?.student?.name?.last.slice(1)}</Typography>
+                                    <Typography variant="body2" color="#424242" sx={{marginTop:"-4px"}}>{moment(request?.createdAt).format('LLL')}</Typography>
+                                </div>
+                            </TableCell>
+                            <TableCell >{getCourseType(request)}</TableCell>
+                            <TableCell >
+                                {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({request?.availability?.time?.start + ":00"} to {request?.availability?.time?.end +":00"})
+                            </TableCell>
+                            <TableCell align="right">
+                                <IconButton aria-label=""  onClick={()=>{setOpen("DeclineEnrollment"); setSelected(request.enrollmentId)}}>
                                     <ClearIcon/>
                                 </IconButton>
                                 <IconButton aria-label="" onClick={()=>{setOpen("AcceptEnrollment"); setSelected(request.enrollmentId)}}>
@@ -130,9 +149,9 @@ function Requests() {
                                 </IconButton>
                             </TableCell>
                         </TableRow>
-                    ))}
-                    </TableBody>
-                    </Table>
+                      ))}
+                </TableBody>
+              </Table>
                 </TableContainer>
                 <TablePagination
                     rowsPerPageOptions={[10, 25, 100]}

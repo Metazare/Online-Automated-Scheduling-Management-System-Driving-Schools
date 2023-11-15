@@ -1,10 +1,12 @@
 import React, {useEffect} from 'react'
+import { io } from 'socket.io-client'
 
 // * MUI Imports
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import { Box, Grid, Paper, Button } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import TextField from '@mui/material/TextField';
 
 import SchoolCard from '../../Components/SchoolCard';
 
@@ -53,7 +55,7 @@ function Home({}: Props)  {
     return <div>Loading...</div>
   }
 
-  console.log(data)
+  // console.log(data)
 
   return <>
     <div style={{ background: '#2F2E5A',width:"100vw",margin:'auto',padding:"1em 1em 0"}}>
@@ -85,7 +87,7 @@ function Home({}: Props)  {
 
       {enrollments && removeDuplicatesBySchoolId(enrollments)?.map((enrollment) => (
         <Grid item md={3} sm={4} xs={12} key={enrollment.enrollmentId}>
-          <SchoolCard schoolName={enrollment.school.name} about={enrollment.school.address} courseId={enrollment.school.schoolId} variant="enrolled" courses={enrollment.school.courses}/>
+          <SchoolCard schoolName={enrollment.school.name} about={enrollment.school.address} courseId={enrollment.school.schoolId} variant="enrolled" courses={enrollment.school.courses} schoolId={enrollment.school.schoolId}/>
         </Grid>
       ))}
 

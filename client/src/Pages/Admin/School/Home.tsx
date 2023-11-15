@@ -61,10 +61,6 @@ function Home() {
       });
     };
 
-    async function create(e: React.FormEvent<HTMLFormElement>){
-      e.preventDefault();
-      createAppointment(form);
-    };
 
     useEffect(() => {
       getStudent({

@@ -1,8 +1,8 @@
-import { CourseType } from "../course/course.types";
-import { Document, Types } from "mongoose";
-import { ProgressLesson } from "../lesson/lesson.types";
-import { SchoolDocument } from "../school/school.types";
-import { Student, StudentDocument } from "../student/student.types";
+import { CourseType } from '../course/course.types';
+import { Document, Types } from 'mongoose';
+import { LessonDocument, ProgressStatus } from '../lesson/lesson.types';
+import { SchoolDocument } from '../school/school.types';
+import { Student, StudentDocument } from '../student/student.types';
 
 export enum EnrollmentStatus {
     PENDING = 'pending',
@@ -25,7 +25,10 @@ export interface Enrollment {
             end: number;
         };
     };
-    progress: ProgressLesson[];
+    progress: {
+        lesson: Types.ObjectId | Record<string, unknown>;
+        status: ProgressStatus;
+    }[];
     reason?: string;
     status: EnrollmentStatus;
 }
@@ -33,6 +36,10 @@ export interface Enrollment {
 export interface EnrollmentDocument extends Enrollment, Document {
     school: SchoolDocument['_id'];
     student: StudentDocument['_id'];
+    progress: {
+        lesson: LessonDocument['_id'];
+        status: ProgressStatus;
+    }[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -40,6 +47,10 @@ export interface EnrollmentDocument extends Enrollment, Document {
 export interface EnrollmentPopulatedDocument extends EnrollmentDocument {
     school: SchoolDocument;
     student: Student;
+    progress: {
+        lesson: LessonDocument;
+        status: ProgressStatus;
+    }[];
 }
 
 /* REQUEST */
@@ -49,17 +60,17 @@ export type GetEnrollment = {
     courseId?: string;
     courseType?: CourseType;
     status?: EnrollmentStatus;
-}
+};
 
 export type CreateEnrollment = {
     courseId: string;
     days: number[];
     startTime: number;
     endTime: number;
-}
+};
 
 export type UpdateEnrollmentStatus = {
     enrollmentId: string;
     status: EnrollmentStatus;
     reason?: string;
-}
+};

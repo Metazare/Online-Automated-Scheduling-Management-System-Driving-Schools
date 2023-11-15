@@ -14,11 +14,18 @@ import useReqStudent from '../../../Hooks/useReqStudent';
 import useReqInstructor from '../../../Hooks/useReqInstructor';
 import useReqAppointment from '../../../Hooks/useReqAppointment';
 import useReqSchool from '../../../Hooks/useReqSchool';
+import { io } from 'socket.io-client';
+import moment from 'moment';
+
+import {useAuth} from '../../../Hooks/useAuth';
 
 // TODO Calendar and resched Modal
 
 // Components
 import AppointmentCard from '../../../Components/AppointmentCard';
+
+// Connection to the server with port 5000
+// const socket = io('http://localhost:5000');
 
 // Style for Modal
 const style = {
@@ -38,19 +45,24 @@ type YourStateType<T> = T | undefined;
 
 function Appointments() {
 
+  const {getUser} = useAuth();
+
   const { students, loading, error, getStudent } = useReqStudent();
   const { instructors, loading: instructorLoading, error: instructorError, credentials, getInstructor, createInstructor, updateInstructor} = useReqInstructor();
   const { appointments, loading: appointmentLoading, error: appointmentError, createAppointment, getAppointments, updateAppointment } = useReqAppointment();
   const { data, loading: schoolLoading, error: schoolError, getSchool } = useReqSchool();
 
+  const [selectedDay, setSelectedDay] = useState<Dayjs | null>()
+  const [filteredAppointments, setFilteredAppointments] = useState<any>([]);
+
     // * Reason Value 
-    const [reason,setReason] = useState("")
     const [selectedStudent, setSelectedStudent] = useState<YourStateType<any>>(undefined);
 
     // * Declaration for adding new appointments form
     const [form, setForm] = useState({
         enrollmentId:"",
         instructorId:"",
+        studentId:"",
         vehicle:"",
         schedule: new Date()
     })
@@ -58,7 +70,6 @@ function Appointments() {
         reschedDateTime:dayjs('2022-04-17T15:30'),
         reason:"",
     })
-    // * Open Modal 
     const [open, setOpen] = useState("");
 
     const handleChangeDateTime = (date: any) => {
@@ -84,7 +95,24 @@ function Appointments() {
 
     async function create(e: React.FormEvent<HTMLFormElement>){
       e.preventDefault();
-      createAppointment(form);
+      setOpen("")
+      createAppointment({
+        ...form,
+        studentId: selectedStudent?.studentId,
+      })
+      setForm({
+        enrollmentId:"",
+        instructorId:"",
+        studentId:"",
+        vehicle:"",
+        schedule: new Date()
+      })
+      getAppointments({
+        appointmentId: null,
+        studentId: null,
+        instructorId: null,
+        status: null,
+      });
     };
 
     useEffect(() => {
@@ -105,46 +133,120 @@ function Appointments() {
       getSchool({
         schoolId: null
       });
-      console.log(data)
-    }, []);
+
+      const filterObjectsByDate = (objects, targetDate) => {
+        console.log(objects)
+        if(targetDate){
+          console.log("Yes Target Date")
+          return objects.filter((object) => {
+            const objectDate = new Date(object.schedule).toLocaleDateString(); // Convert schedule to a string in the format MM/DD/YYYY
+            const targetDateString = new Date(targetDate).toLocaleDateString(); // Convert target date to a string in the format MM/DD/YYYY
+            return objectDate === targetDateString;
+          });
+        } else{
+          console.log("No Target Date")
+          return objects;
+        }
+      }
+
+      setFilteredAppointments(filterObjectsByDate(appointments, selectedDay));
+
+    }, [selectedDay]);
 
     const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
 
-    if (loading && appointmentLoading && instructorLoading) {
+    function getCourseName(value) {
+      const foundCourse = data.courses.find((course) => course.courseId === value );
+      return foundCourse?.type;
+    }
+
+    function getCourseType(data) {
+      const { school, courseId } = data;
+      const foundCourse = school.courses.find((course) => course.courseId === courseId);
+      return foundCourse?.type;
+    }
+
+    if (appointments && loading && appointmentLoading && instructorLoading) {
       return <div>Loading...</div>
     }
 
     return <>
         {/* // * Appointment body Container  */}
-        <Grid item xs={8} sx={{padding:"40px"}}>
+        <Grid item md={8} sm={6} xs={12} sx={{padding:"40px"}}>
             <div style={{display:"flex", alignItems:"center"}}>
                 <div style={{flexGrow:"1"}}>
                     <Typography variant="h6" color="primary" >My Appointments</Typography>
                     <Typography variant="body2" color="initial" >{appointments?.length} Results</Typography>
                 </div>
-                <Button variant="text" color="primary" sx={{background:"white",boxShadow:5}} startIcon={<AddIcon/>} onClick={()=>{setOpen("add")}}>
-                    add
-                </Button>
+                {getUser()==="admin" ?
+                  <Button variant="text" color="primary" sx={{background:"white",boxShadow:5}} startIcon={<AddIcon/>} onClick={()=>{setOpen("add")}}>
+                      add
+                  </Button> : <></>
+                }
+                
             </div>
-
+            
             <Grid container spacing={2} mt={1}>
-              {appointments?.map((appointment) => ( 
+
+              
+
+              {(filteredAppointments ? filteredAppointments : appointments)?.map((appointment) => ( 
                 <Grid item md={6} xs={12}>
                     <AppointmentCard 
                       modalOpen={setOpen}
-                      studentName={`${appointment.enrollment.student}`}
+                      studentName={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.last}`}
                       instructorName={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}
-                      courseName={appointment.enrollment.courseId}
+                      instructorID={appointment.instructor.id}
+                      courseName={getCourseType(appointment.enrollment)}
                       schedule={appointment.schedule}
                     />
                 </Grid>
               ))}
+
+              {/* {selectedDay ?
+              <>
+                {filterObjectsByDate(appointments, selectedDay)?.map((appointment) => ( 
+                  <Grid item md={6} xs={12}>
+                      <AppointmentCard 
+                        modalOpen={setOpen}
+                        studentName={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.last}`}
+                        instructorName={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}
+                        instructorID={appointment.instructor.id}
+                        courseName={getCourseType(appointment.enrollment)}
+                        schedule={appointment.schedule}
+                      />
+                  </Grid>
+                ))}
+              </>
+              :
+              <>
+                {appointments?.map((appointment) => ( 
+                  <Grid item md={6} xs={12}>
+                      <AppointmentCard 
+                        modalOpen={setOpen}
+                        studentName={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.last}`}
+                        instructorName={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}
+                        instructorID={appointment.instructor.id}
+                        courseName={getCourseType(appointment.enrollment)}
+                        schedule={appointment.schedule}
+                      />
+                  </Grid>
+                ))}
+              </>
+              } */}
+             
             </Grid>
         </Grid>
         {/* //* Calendar  Container */}
-        <Grid item xs={4} sx={{padding:"40px"}}>
-            <Paper variant="elevation" elevation={3} sx={{padding:"1em"}}>
-                <TESTCalendar/>
+        <Grid item md={4} sm={6} xs={12} sx={{padding:"40px"}}>
+            <Paper variant="elevation" elevation={3} sx={{padding:"1em",minWidth:"350px"}} >
+              {appointments && 
+                <TESTCalendar
+                  appointments={appointments}
+                  setSelectedDay={setSelectedDay}
+                  selectedDay={selectedDay}
+                />
+              }
             </Paper>
         </Grid>
 
@@ -176,10 +278,10 @@ function Appointments() {
                                     // value={form.studentId}
                                     onChange={(event) => 
                                     {
-                                      setSelectedStudent(event.target.value);
-                                      console.log(event.target.value)
+                                        setSelectedStudent(event.target.value);
+                                        console.log(event.target.value)
                                     }
-                                  }
+                                }
                                 >
                                   {students?.map((student) => ( 
                                     <MenuItem value={student} key={student.studentId}>
@@ -188,36 +290,42 @@ function Appointments() {
                                   ))}
                                 </TextField>
                             </Grid>
+                            {!selectedStudent?"":<>
+                              <Grid item xs={12}>
+                                  <TextField
+                                      fullWidth
+                                      id="outlined-select-currency"
+                                      select
+                                      label="Course"
+                                      required
+                                      value={form.enrollmentId}
+                                      onChange={(event) => {
+                                          setForm({...form, enrollmentId: event.target.value });
+                                      }}
+                                  >
+                                      {selectedStudent?.enrollments?.map((course) => ( 
+                                          <MenuItem  value={course.enrollmentId} key={course.enrollmentId}>
+                                              {/* {course.courseId} */}
+                                              {getCourseName(course.courseId)}
+                                          </MenuItem>
+                                      ))}
+                                  </TextField>
+                              </Grid>
+                            </>}
+                            {form.enrollmentId ? 
                             <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    id="outlined-select-currency"
-                                    select
-                                    label="Course"
-                                    required
-                                    value={form.enrollmentId}
-                                    onChange={(event) => {
-                                        setForm({...form, enrollmentId: event.target.value });
-                                    }}
-                                >
-                                  {selectedStudent?.enrollments?.map((course) => ( 
-                                    <MenuItem  value={course.enrollmentId} key={course.enrollmentId}>
-                                        {course.courseId}
-                                    </MenuItem>
-                                  ))}
-                                </TextField>
+                              <Paper variant="elevation" elevation={3} sx={{padding:"1em",background:"#D9D9D9"}}>
+                                <Typography variant="subtitle1" fontWeight={500} color="initial">Availability</Typography>
+                                <Typography variant="body2" color="initial">
+                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.days.map(dayNumber =>  daysOfWeek[dayNumber].substring(0, 2)+", ")} at (  
+                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.start +":00"}
+                                  - 
+                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.end + ":00"}
+                                  )
+                                </Typography>
+                              </Paper>
                             </Grid>
-                            {form.enrollmentId ? <>
-                              <p>Availability</p>
-                              <>
-                                <div>
-                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at 
-                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.start}:00 to 
-                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.end}:00
-                                </div>
-                              </>
-                            </>
-                            : <></>}
+                            : ""}
                             <Grid item xs={12}>
                                 <TextField
                                     fullWidth
@@ -230,11 +338,11 @@ function Appointments() {
                                         setForm({...form, instructorId: event.target.value });
                                     }}
                                 >
-                                   {instructors?.map((instructor) => ( 
-                                    <MenuItem  value={instructor.instructorId} key={instructor.instructorId}>
-                                        {instructor.name.first} {instructor.name.middle} {instructor.name.last}
-                                    </MenuItem>
-                                  ))}
+                                    {instructors?.map((instructor) => ( 
+                                        <MenuItem  value={instructor.instructorId} key={instructor.instructorId}>
+                                            {instructor.name.first} {instructor.name.middle} {instructor.name.last}
+                                        </MenuItem>
+                                    ))}
                                 </TextField>
                             </Grid>
                             <Grid item xs={12}>
@@ -257,13 +365,12 @@ function Appointments() {
                                                 setForm({...form, dateTime: dayjs(newValue)});
                                             }}
                                         /> */}
-
-                                      <DateTimePicker
-                                        slotProps={{ textField: { fullWidth: true } }}
-                                        label="Date and Time"
-                                        value={dayjs(form.schedule)}
-                                        onChange={handleChangeDateTime}
-                                      />
+                                        <DateTimePicker
+                                            slotProps={{ textField: { fullWidth: true } }}
+                                            label="Date and Time"
+                                            value={dayjs(form.schedule)}
+                                            onChange={handleChangeDateTime}
+                                        />
                                     </DemoContainer>
                                 </LocalizationProvider>
                             </Grid>
@@ -343,4 +450,4 @@ function Appointments() {
     
 }
 
-export default Appointments
+export default Appointments;
