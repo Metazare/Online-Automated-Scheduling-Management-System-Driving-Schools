@@ -37,6 +37,10 @@ function NotificationDropdown({socket}) {
       // Connect to the socket.io server
       socket.connect();
 
+      if(!notifications){
+        getNotification()
+      }
+
       // Listen for 'notification' events
       socket.on('notification', (data) => {
         getNotification()
