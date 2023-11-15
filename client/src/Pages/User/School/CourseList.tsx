@@ -13,11 +13,15 @@ import IconButton from '@mui/material/IconButton';
 import ChatIcon from '@mui/icons-material/Chat';
 import useReqSchool from '../../../Hooks/useReqSchool';
 import useReqEnroll from '../../../Hooks/useReqEnroll';
+import useReqAppointment from '../../../Hooks/useReqAppointment';
+
 import AppointmentCard from '../../../Components/AppointmentCard';
+
 function CourseList() {
 
   const {data, loading, getSchool} = useReqSchool();
   const {data:enrolls, getEnrollments} = useReqEnroll();
+  const {appointments, getAppointments} = useReqAppointment();
   const {id} = useParams();
 
   useEffect(()=>{
@@ -29,6 +33,9 @@ function CourseList() {
       courseId: null,
       status: 'accepted',
       courseType: null
+    })
+    getAppointments({
+      
     })
   }, [])
 
@@ -119,11 +126,15 @@ function CourseList() {
                 <CourseAccordion variant='use' title={course.type} courseId={course.courseId}/>
               ))}
             </Grid>
+
+
             <Grid item md={4} xs={12} sx={{display:"flex",flexDirection:"column",gap:"15px"}}>
               <Paper variant="elevation" elevation={3}>
                 <TESTCalendar/>
               </Paper>
               <Box display="flex" flexDirection={"column"} gap={"10"}>
+
+                {/* Insert Appointment here */}
                 <AppointmentCard 
                   modalOpen={setOpen}
                   studentName={""}
@@ -132,8 +143,8 @@ function CourseList() {
                   courseName={"Course Name"}
                   schedule={"Schedule"}
                 />
-              </Box>
 
+              </Box>
             </Grid>
           </Grid>
 
