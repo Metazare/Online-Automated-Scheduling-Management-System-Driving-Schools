@@ -156,6 +156,19 @@ function Students() {
       
     };
 
+    function filterStudentsWithAcceptedEnrollment(students) {
+      if (!students) {
+        return [];
+      }
+      
+      return students.filter((student) => {
+        const hasAcceptedEnrollment = student.enrollments.some(
+          (enrollment) => enrollment.status === 'accepted'
+        );
+        return hasAcceptedEnrollment;
+      });
+    }
+
     if (loading || schoolLoading) {
       return <div>Loading...</div>
     }
@@ -180,7 +193,7 @@ function Students() {
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                  {students?.map((student) => ( 
+                  {filterStudentsWithAcceptedEnrollment(students)?.map((student) => ( 
                     <TableRow  hover role="checkbox" >
                         <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
                             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
