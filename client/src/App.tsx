@@ -15,6 +15,8 @@ import CoursesList from './Pages/User/School/CourseList'
 import ManageSchool from './Pages/Admin/School/ManageSchool';
 import Error from './Pages/Error';
 import Chat from './Pages/User/Chat';
+import MuiAlert, { AlertProps, AlertColor } from '@mui/material/Alert';
+
 // Hooks
 import { ProtectedRoute } from './Hooks/useAuth';
 import { type } from 'os';
@@ -37,16 +39,17 @@ const theme = createTheme({
 
 const socket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000');
 
-type Props={
+
+type Props = {
   openSnackbar: {
-    severity: string ;
+    severity: AlertColor;
     note: string;
-  } 
-  setOpenSnackbar:React.Dispatch<React.SetStateAction<{
-      severity: string;
-      note: string;
-  }>>
-}
+  };
+  setOpenSnackbar: React.Dispatch<React.SetStateAction<{
+    severity: AlertColor;
+    note: string;
+  }>>;
+};
 
 function App({openSnackbar,setOpenSnackbar}:Props) {
   return (
@@ -56,7 +59,7 @@ function App({openSnackbar,setOpenSnackbar}:Props) {
           {/* public */}
           <Route path="*" element={<Error/>} />
           <Route path="/login" element={<Login/>} />
-          <Route path="/register" element={<Register openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar}/>} />
+          <Route path="/register" element={<Register />} />
           <Route path="/" element={<LandingPage/>} />
           
           {/* admin */}

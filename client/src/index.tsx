@@ -4,24 +4,29 @@ import {Route, Routes, BrowserRouter} from 'react-router-dom';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './Hooks/useAuth';
+import MuiAlert, { AlertProps, AlertColor } from '@mui/material/Alert';
 
 import './Styles/main.scss';
 import SnackbarComponent from './Components/SnackbarComponent';
 
 const Root = () => {
-  const [openSnackBar, setOpenSnackBar] = useState({
-    severity:"info",
-    note:""
+  const [openSnackBar, setOpenSnackBar] = useState<{
+    severity: AlertColor;
+    note: string;
+  }>({
+    severity: 'info',
+    note: '',
   });
+  
   return (
     <React.StrictMode>
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/*" element={<App openSnackbar={openSnackBar} setOpenSnackbar={setOpenSnackBar} />} />
+            <Route path="/*" element={<App  openSnackbar={openSnackBar} setOpenSnackbar={setOpenSnackBar} />} />
           </Routes>
         </AuthProvider>
-        <SnackbarComponent openSnackbar={openSnackBar} setOpenSnackbar={setOpenSnackBar}/>
+        <SnackbarComponent openSnackbar={openSnackBar} setOpenSnackbar={setOpenSnackBar} />
       </BrowserRouter>
     </React.StrictMode>
   );
