@@ -124,6 +124,17 @@ function CourseAccordion({variant,title, courseId}:Props) {
         description: form.description,
         file: form.file
       });
+      setForm({
+        title:"",
+        description:"",
+        file:""
+      })
+      getLessons({
+        courseId: courseId
+      });
+      getLessons({
+        courseId: courseId
+      });
     };
 
     async function delLesson(e: React.FormEvent<HTMLFormElement>){

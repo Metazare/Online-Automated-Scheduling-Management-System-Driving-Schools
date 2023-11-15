@@ -122,7 +122,26 @@ function School() {
       });
     }
 
-    if (loading) {
+
+    function getCourses(school, enrollments){
+
+      console.log(school)
+      console.log(enrollments)
+      
+      // Extract courseIds from enrollments
+      const enrolledCourseIds = enrollments.map((enrollment) => enrollment.courseId);
+
+      // Filter courses in the school that are not in the enrolledCourseIds
+      const availableCourses = school.courses.filter(
+        (course) => !enrolledCourseIds.includes(course.courseId)
+      );
+
+      console.log(availableCourses)
+
+      return availableCourses
+    }
+    
+    if (loading && enrollLoading) {
         return <p>Loading...</p>
     }
 
@@ -224,6 +243,13 @@ function School() {
                                             {course.type}
                                           </MenuItem>
                                         ))}
+
+                                        {/* {getCourses(data, enrolls).map((course) => (
+                                          <MenuItem key={course.courseId} value={course.courseId}>
+                                            {course.type}
+                                          </MenuItem>
+                                        ))} */}
+
                                     </TextField>
                                 </Grid>
                                 

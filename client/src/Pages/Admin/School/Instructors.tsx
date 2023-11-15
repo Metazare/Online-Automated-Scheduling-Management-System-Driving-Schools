@@ -248,6 +248,16 @@ function Instructors() {
                                             onClick={()=>{
                                                 setOpen("credential");
                                                 createInstructor(form);
+                                                setForm({
+                                                  firstName:"",
+                                                  middleName:"",
+                                                  lastName:"",
+                                                  suffix:"",
+                                                  address:"",
+                                                  contact:"",
+                                                  email:"",
+                                                })
+                                                getInstructor(instructorinstructors);
                                             }}
                                         >
                                             Create
@@ -260,10 +270,10 @@ function Instructors() {
                         {open === "credential"?<>
                             <form action="">
                                 <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
-                                    Add New Instructor
+                                    Instructor Added!
                                 </Typography>
                                 <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
-                                    Give the credential to the new instructor
+                                    These are your new instructor's credentials.
                                 </Typography>
                                 <Grid container spacing={2} mt={1}>
                                     <Grid item  xs={12}>

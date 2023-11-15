@@ -95,10 +95,24 @@ function Appointments() {
 
     async function create(e: React.FormEvent<HTMLFormElement>){
       e.preventDefault();
+      setOpen("")
       createAppointment({
         ...form,
         studentId: selectedStudent?.studentId,
       })
+      setForm({
+        enrollmentId:"",
+        instructorId:"",
+        studentId:"",
+        vehicle:"",
+        schedule: new Date()
+      })
+      getAppointments({
+        appointmentId: null,
+        studentId: null,
+        instructorId: null,
+        status: null,
+      });
     };
 
     useEffect(() => {
