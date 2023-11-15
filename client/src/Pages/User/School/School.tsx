@@ -17,6 +17,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 import {Link} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+
 // 
 import moment from 'moment';
 // * Components
@@ -32,6 +34,7 @@ import { useParams } from 'react-router-dom';
 // const socket = io('http://localhost:5000');
 
 function School() {
+  const navigate = useNavigate();
   const {data, loading, getSchool} = useReqSchool();
   const {data:lessons, loading:lessonLoading, getLessons} = useReqLesson();
   const {data: enrolls, loading: enrollLoading, error: enrollError, getEnrollments, enroll} = useReqEnroll();
@@ -113,6 +116,10 @@ function School() {
 
     async function submit(e: any) {
       e.preventDefault();
+      if ((appendSelectedDays(form).length === 0) || !form.startTime || !form.endTime) {
+        alert("Please select at least one day");
+        return;
+      }
       enroll({
         courseId: form.course,
         days: appendSelectedDays(form),
@@ -120,6 +127,8 @@ function School() {
         endTime: form.endTime,
         schoolId: id || "undefined"
       });
+      alert(enrollError)
+      console.log(enrollError)
     }
 
 
