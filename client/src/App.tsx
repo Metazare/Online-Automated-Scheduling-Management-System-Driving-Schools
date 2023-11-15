@@ -13,9 +13,11 @@ import School from './Pages/User/School/School'
 import LessonView from './Pages/User/School/LessonView';
 import CoursesList from './Pages/User/School/CourseList'
 import ManageSchool from './Pages/Admin/School/ManageSchool';
-
+import Error from './Pages/Error';
+import Chat from './Pages/User/Chat';
 // Hooks
 import { ProtectedRoute } from './Hooks/useAuth';
+import { type } from 'os';
 
 // Test
 import TestNotification from './Test/TestNotification';
@@ -34,19 +36,32 @@ const theme = createTheme({
 })
 
 
-  const socket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000');
+const socket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000');
 
-function App() {
+
+type Props={
+  openSnackbar: {
+    severity: string ;
+    note: string;
+  } 
+  setOpenSnackbar:React.Dispatch<React.SetStateAction<{
+      severity: string;
+      note: string;
+  }>>
+}
+
+
+function App({openSnackbar,setOpenSnackbar}:Props) {
   return (
     <ThemeProvider theme={theme}>
       <Routes>
+        <Route path="*" element={<Error/>} />
         <Route element={<BaseLayout />} >
 
           {/* public */}
           <Route path="/login" element={<Login/>} />
-          <Route path="/register" element={<Register/>} />
+          <Route path="/register" element={<Register openSnackbar={openSnackbar} setOpenSnackbar={setOpenSnackbar}/>} />
           <Route path="/" element={<LandingPage/>} />
-          <Route path="*" element={<LandingPage/>} />
           
           {/* admin */}
           <Route element={<ProtectedRoute allowedRoles={["admin", "instructor"]}/>}>
@@ -64,6 +79,7 @@ function App() {
           {/* users */}
           <Route element={<ProtectedRoute allowedRoles={["admin", "student", "instructor"]}/>}>
             <Route path="/course/:cid/:lid" element={<LessonView/>} />
+            <Route path="/chat" element={<Chat/>} />
           </Route>
 
         </Route>

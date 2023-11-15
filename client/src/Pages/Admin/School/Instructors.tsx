@@ -13,14 +13,12 @@ import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import useReqInstructor from '../../../Hooks/useReqInstructor';
-
+import moment from 'moment';
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -77,14 +75,14 @@ function Instructors() {
     };
 
     const[instructorinstructors,setInstructorinstructors] = useState({
-      instructorId: null,
-      status: "active",
+        instructorId: null,
+        status: "active",
     })
 
     const[selected, setSelected] = useState()
 
     useEffect(()=>{
-      getInstructor(instructorinstructors);
+        getInstructor(instructorinstructors);
     }, [])
 
     return (
@@ -92,7 +90,6 @@ function Instructors() {
             <TableContainer>
                 <Table stickyHeader aria-label="sticky table">
                 <TableHead>
-                  
                     <TableRow>
                         <TableCell >
                             Name
@@ -109,32 +106,31 @@ function Instructors() {
                             </Button>
                         </TableCell>
                     </TableRow>
-                  
                 </TableHead>
                 <TableBody>
-                  {instructors?.map((instructor) => ( 
-                    <TableRow  hover role="checkbox" >
-                        <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
-                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-                            <div>
-                                <Typography variant="subtitle1" color="initial">{instructor.name.first} {instructor.name.middle} {instructor.name.last}</Typography>
-                                <Typography variant="body2" color="initial" sx={{marginTop:"-8px"}}>{instructor.createdAt}</Typography>
-                            </div>
-                        </TableCell>
-                        <TableCell >{instructor.contact}</TableCell>
-                        <TableCell >
-                          {instructor.email}
-                        </TableCell>
-                        <TableCell align="right">
-                            {/* <IconButton aria-label=""  onClick={()=>{setSelected(instructor.instructorId);setOpen("edit")}}>
-                                <EditIcon/>
-                            </IconButton> */}
-                            <IconButton aria-label="" onClick={()=>{setSelected(instructor.instructorId);setOpen("delete")}}>
-                                <DeleteIcon/>
-                            </IconButton>
-                        </TableCell>
-                    </TableRow>
-                  ))}
+                    {instructors?.map((instructor) => ( 
+                        <TableRow  hover role="checkbox" >
+                            <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
+                                <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                                <div>
+                                    <Typography variant="subtitle1" color="initial" fontWeight={500}>{instructor.name.first.charAt(0).toUpperCase()  + instructor.name.first.slice(1)} {instructor.name.middle.charAt(0).toUpperCase()  + instructor.name.middle.slice(1)} {instructor.name.last.charAt(0).toUpperCase()  + instructor.name.last.slice(1)}</Typography>
+                                    <Typography variant="body2" color="#424242" sx={{marginTop:"-4px"}}>{moment(instructor.createdAt).format('LLL')}</Typography>
+                                </div>
+                            </TableCell>
+                            <TableCell >{instructor.contact}</TableCell>
+                            <TableCell >
+                                {instructor.email}
+                            </TableCell>
+                            <TableCell align="right">
+                                {/* <IconButton aria-label=""  onClick={()=>{setSelected(instructor.instructorId);setOpen("edit")}}>
+                                    <EditIcon/>
+                                </IconButton> */}
+                                <IconButton aria-label="" onClick={()=>{setSelected(instructor.instructorId);setOpen("delete")}}>
+                                    <DeleteIcon/>
+                                </IconButton>
+                            </TableCell>
+                        </TableRow>
+                    ))}
                 </TableBody>
                 </Table>
             </TableContainer>
@@ -219,6 +215,7 @@ function Instructors() {
                                             fullWidth
                                             required
                                             id="contact"
+                                            type='number'
                                             label="Contact Number"
                                             value={form.contact}
                                             onChange={(event)=>{ setForm({...form, contact: event.target.value });}}
@@ -245,14 +242,13 @@ function Instructors() {
                                     </Grid>
                                     <Grid item sm={8} xs={12}>
                                         <Button 
-                                          variant="contained" 
-                                          fullWidth 
-                                          color="primary" 
-                                          onClick={()=>{
-                                            setOpen("credential");
-                                            createInstructor(form);
-                                          }}
-
+                                            variant="contained" 
+                                            fullWidth 
+                                            color="primary" 
+                                            onClick={()=>{
+                                                setOpen("credential");
+                                                createInstructor(form);
+                                            }}
                                         >
                                             Create
                                         </Button>
@@ -269,10 +265,10 @@ function Instructors() {
                                 <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
                                     Give the credential to the new instructor
                                 </Typography>
-                                <Grid container spacing={2} mt={3}>
+                                <Grid container spacing={2} mt={1}>
                                     <Grid item  xs={12}>
+                                        <Typography variant="subtitle1" color="initial">Email</Typography>
                                         <FormControl sx={{ width: '100%' }} variant="outlined">
-                                            <InputLabel  htmlFor="outlined-adornment-password">Email</InputLabel>
                                             <OutlinedInput
                                                 id="outlined-adornment-password"
                                                 type={"text"}
@@ -283,8 +279,8 @@ function Instructors() {
                                                     <IconButton
                                                     aria-label="toggle password visibility"
                                                     onClick={()=>{
-                                                      navigator.clipboard.writeText(credentials?.email);
-                                                      alert("Email Copied!")
+                                                        navigator.clipboard.writeText(credentials?.email);
+                                                        alert("Email Copied!")
                                                     }}
                                                     edge="end"
                                                     >
@@ -297,8 +293,8 @@ function Instructors() {
                                         </FormControl>
                                     </Grid>
                                     <Grid item  xs={12}>
+                                        <Typography variant="subtitle1" color="initial">Password</Typography>
                                         <FormControl sx={{ width: '100%' }} variant="outlined">
-                                            <InputLabel  htmlFor="outlined-adornment-password">Password</InputLabel>
                                             <OutlinedInput
                                                 id="outlined-adornment-password"
                                                 type={"text"}
@@ -309,8 +305,8 @@ function Instructors() {
                                                     <IconButton
                                                     aria-label="toggle password visibility"
                                                     onClick={()=>{
-                                                      navigator.clipboard.writeText(credentials?.password);
-                                                      alert("Password Copied!")
+                                                        navigator.clipboard.writeText(credentials?.password);
+                                                        alert("Password Copied!")
                                                     }}
                                                     edge="end"
                                                     >
@@ -318,7 +314,6 @@ function Instructors() {
                                                     </IconButton>
                                                 </InputAdornment>
                                                 }
-                                                label="Password"
                                             />
                                         </FormControl>
                                     </Grid>

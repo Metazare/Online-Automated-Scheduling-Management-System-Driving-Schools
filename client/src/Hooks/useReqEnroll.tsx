@@ -110,6 +110,7 @@ function useReqEnroll(): Data {
     } catch (error: any) {
       console.log(error)
       setError(error);
+      console.log(error)
     } finally {
       setLoading(false);
     }

@@ -25,23 +25,19 @@ import Container from '@mui/material/Container';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import ChatIcon from '@mui/icons-material/Chat';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../Hooks/useAuth';
+import { Link } from 'react-router-dom';
+
+import NotificationDropdown from '../../Components/NotificationDropdown';
 
 type Props = {}
-
-const pages = ['Products', 'Pricing', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
 // Connection to the server with port 5000
 // const socket = io('http://localhost:5000')
 
-// Setting up the badge content number
-// but based the number of content if the data is viewed or not (enrollment(approved/declined), appointment, reschedule)
-let badgeContentNumber = 0
 
 export default function Header({}: Props) {
   const navigate = useNavigate();
@@ -87,18 +83,10 @@ export default function Header({}: Props) {
   //   fetchInstructorNotif()
   // }, [])
 
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
-  const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElNav(event.currentTarget);
-  };
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
   };
 
   const handleCloseUserMenu = () => {
@@ -115,25 +103,22 @@ export default function Header({}: Props) {
             </a>
             
           </Box>
-          <Box sx={{ flexGrow: 0, display:"flex", gap:'15px'}}>
+          <Box sx={{ flexGrow: 0, display:"flex", gap:'15px',alignItems:"center"}}>
             {user?<>
-            
-            <IconButton  sx={{ p: "0" , display: { md:'flex', xs:'none', sm:'flex'} }}>
-              <ChatIcon style={{fill:"#E8E8E8"}}/>
-            </IconButton>
-            
-            <IconButton  sx={{ p: "0", display: { md:'flex', xs:'none', sm:'flex'} }}>
-              <Badge badgeContent={badgeContentNumber} color="error">
-                <NotificationsIcon style={{fill:"#E8E8E8"}}/>
-              </Badge>
-            </IconButton>
-            
+              <IconButton  sx={{ p: "0" , display: { md:'flex', xs:'none', sm:'flex'} }} href='/chat'>
+                <ChatIcon style={{fill:"#E8E8E8"}}/>
+              </IconButton>
+
+
+              
+              <NotificationDropdown/>
+
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                 </IconButton>
               </Tooltip>
-        
+              
               <Menu
                 sx={{ mt: '45px' }}
                 id="menu-appbar"

@@ -56,7 +56,7 @@ function ManageSchool() {
                         }}
                     >
                         <Avatar
-                        alt="Remy Sharp"
+                        alt={data?.name}
                         src="/static/images/avatar/1.jpg"
                         sx={{ width: 80, height: 80 }}
                         />

@@ -155,7 +155,7 @@ function School() {
                         }}
                     >
                         <Avatar
-                        alt="Remy Sharp"
+                        alt={data?.name}
                         src="/static/images/avatar/1.jpg"
                         sx={{ width: 80, height: 80 }}
                         />
@@ -195,8 +195,6 @@ function School() {
                 
             </Container>
         </div>
-
-        
         <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
             <Grid container spacing={2}>
                 <Grid item md={8} sm={8} xs={12} sx={{padding:"40px"}}>
@@ -211,7 +209,7 @@ function School() {
                     ))}
                   </Box> 
                 </Grid>
-                <Grid item md={4} sm={4} xs={12}>
+                <Grid item md={4} sm={4} xs={12} display={"flex"} gap={"1em"} flexDirection={"column"}>
                 {!enrolled?
                     <Paper sx={{padding:"1em"}}  elevation={3}>
                         <Typography variant="h6" color="primary">Enroll Now</Typography>
@@ -348,9 +346,9 @@ function School() {
                     :
                     ''
                 }
-                {data && enrolls && populateObject2(data.courses, getSchoolDataById(enrolls))?.map((request)=>(
+                {/* {data && enrolls && populateObject2(data.courses, getSchoolDataById(enrolls))?.map((request)=>(
                   <Paper sx={{padding:"1em"}} elevation={3}>
-                    <Typography variant="h6" color="primary">Your request is {request.status}</Typography>
+                    <Typography variant="h6" color="primary">Your Enrolled Cources is {request.status}</Typography>
                     <Typography variant="subtitle2" mt={2} mb={1} color="initial">Selected Course</Typography>
                     <Typography variant="body2" color="initial">{request.type}</Typography>
                     <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
@@ -358,7 +356,28 @@ function School() {
                       {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
                     </Typography>
                   </Paper>
-                ))}
+                ))} */}
+                  <Box display={"flex"} gap={"5px"} alignItems={"center"}>
+                    <hr style={{flexGrow:'1',borderColor:"#E24B5B"}} />
+                    <Typography variant="h6" color="primary">List of Enrolled Courses</Typography>
+                    <hr style={{flexGrow:'1',borderColor:"#E24B5B"}} />
+                  </Box>
+                  <Paper sx={{padding:"1em",background:"#D9D9D9"}} elevation={3}>
+                    <Typography variant="subtitle2"  mb={1} color="initial">Selected Course</Typography>
+                    <Typography variant="body2" color="initial">TDC Face to Face</Typography>
+                    <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
+                    <Typography variant="body2" color="initial">
+                      Mo, Tu, We, Th, Fr, at (8:00 AM to 8:00 AM)
+                    </Typography>
+                  </Paper>
+                  <Paper sx={{padding:"1em",background:"#D9D9D9"}} elevation={3}>
+                    <Typography variant="subtitle2"  mb={1} color="initial">Selected Course</Typography>
+                    <Typography variant="body2" color="initial">TDC Face to Face</Typography>
+                    <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
+                    <Typography variant="body2" color="initial">
+                      Mo, Tu, We, Th, Fr, at (8:00 AM to 8:00 AM)
+                    </Typography>
+                  </Paper>
                 </Grid>
             </Grid>
         </Container>

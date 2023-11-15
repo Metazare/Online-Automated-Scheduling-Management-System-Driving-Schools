@@ -28,14 +28,14 @@ function AppointmentCard(props:Props) {
                 </IconButton>
             </div>
             <div style={{margin:" 5px 0",display:"flex",gap:'10px', alignItems:"center"}}>
-                <Avatar variant="circular"  alt="Harold James Castillo" sx={{ width: '30px', height: '30px' }} />
+                <Avatar variant="circular"  alt={studentName} sx={{ width: '30px', height: '30px' }} />
                 <div>
                     <Typography variant="subtitle2" color="initial" >{studentName}</Typography>
                     <Typography variant="body2"  mt={"-5px"} color="initial" >Student</Typography>
                 </div>
             </div>
             <div style={{margin:" 15px 0 0",display:"flex",gap:'10px', alignItems:"center",padding:".5em", background:"#D9D9D9", borderRadius:"8px"}}>
-                <Avatar variant="circular"  alt="Harold James Castillo" sx={{ width: '40px', height: '40px' }} />
+                <Avatar variant="circular"  alt={instructorName} sx={{ width: '40px', height: '40px' }} />
                 <div>
                     <Typography variant="subtitle1" color="initial" fontWeight={500} >{instructorName}</Typography>
                     <Typography variant="body1"  mt={"-5px"} color="initial" >Instructor</Typography>
