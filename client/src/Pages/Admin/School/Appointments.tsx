@@ -229,9 +229,9 @@ function Appointments() {
                                 <Typography variant="subtitle1" fontWeight={500} color="initial">Availability</Typography>
                                 <Typography variant="body2" color="initial">
                                   {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.days.map(dayNumber =>  daysOfWeek[dayNumber].substring(0, 2)+", ")} at (  
-                                  {moment(findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.start).format('LT')}
+                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.start +":00"}
                                   - 
-                                  {moment(findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.end).format('LT')}
+                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.end + ":00"}
                                   )
                                 </Typography>
                               </Paper>

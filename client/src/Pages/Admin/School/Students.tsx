@@ -190,6 +190,7 @@ function Students() {
                             Available Schedule
                         </TableCell>
                         <TableCell >
+                            Progress
                         </TableCell>
                         <TableCell >
                         </TableCell>
@@ -216,19 +217,17 @@ function Students() {
                           {student.enrollments?.map((enrollment) => ( 
                             <>{enrollment.status === "accepted" && 
                               <div>
-                                {enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({moment(enrollment?.availability?.time?.start).format('LT')} to {moment(enrollment?.availability?.time?.end).format('LT')})
+                                {enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({enrollment?.availability?.time?.start+":00"} to {enrollment?.availability?.time?.end +":00"})
                               </div>
                             }</>
                           ))}   
                         </TableCell>
-                        <TableCell >
+                        <TableCell align='center' >
                           {student.enrollments?.map((enrollment) => ( 
                             <>{enrollment.status === "accepted" && 
                               <CircularProgressWithLabel defaultValue={0} value={CalculateProgress(enrollment)} />
                             }</>
-                             
                           ))}
-                           
                         </TableCell>
                         <TableCell >
                             <IconButton aria-label="" onClick={()=>{setOpen("update");setSelectedStudent(student)}}>

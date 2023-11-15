@@ -16,6 +16,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
+// 
+import moment from 'moment';
 // * Components
 import CourseCard from '../../../Components/CourseCard'
 import MenuItem from '@mui/material/MenuItem';
@@ -370,7 +372,7 @@ function School() {
                       <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
                       <Typography variant="body2" color="initial">
                         {/* Mo, Tu, We, Th, Fr, at (8:00 AM to 8:00 AM) */}
-                        {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
+                        {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
                       </Typography>
                     </Paper>
                   ))}  
