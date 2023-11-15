@@ -17,6 +17,9 @@ import useReqAppointment from '../../../Hooks/useReqAppointment';
 
 import AppointmentCard from '../../../Components/AppointmentCard';
 
+import { Link } from 'react-router-dom';
+
+
 function CourseList() {
 
   const {data, loading, getSchool} = useReqSchool();
@@ -144,7 +147,7 @@ function CourseList() {
               <Paper variant="elevation" elevation={3}>
                 <TESTCalendar/>
               </Paper>
-              <Box display="flex" flexDirection={"column"} gap={"10"}>
+              <Box display="flex" flexDirection={"column"} gap={"20px"} mt={"20px"}>
 
                 {/* Insert Appointment here */}
 

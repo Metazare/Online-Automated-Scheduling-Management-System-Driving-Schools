@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton'
 import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import Avatar from '@mui/material/Avatar'
 import ChatIcon from '@mui/icons-material/Chat';
-
+import moment from 'moment';
 
 type Props= {
     modalOpen : React.Dispatch<React.SetStateAction<string>>
@@ -23,7 +23,7 @@ function AppointmentCard(props:Props) {
             <div style={{display:"flex"}}>
                 <div style={{flexGrow:'1'}}>
                     <Typography variant="h6" fontWeight={600} color="primary" >{courseName}</Typography>
-                    <Typography variant="body2" mt={"-5px"} color="initial" >{schedule}</Typography>
+                    <Typography variant="body2" mt={"-5px"} color="initial" >{moment(schedule).format('lll')}</Typography>
                 </div>
                 {!!studentName?<>
                   <IconButton aria-label="resched" size="large" onClick={()=>{modalOpen("resched")}}>
