@@ -113,6 +113,12 @@ function Appointments() {
         instructorId: null,
         status: null,
       });
+      getAppointments({
+        appointmentId: null,
+        studentId: null,
+        instructorId: null,
+        status: null,
+      });
     };
 
     useEffect(() => {
