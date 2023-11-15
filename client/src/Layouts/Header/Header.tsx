@@ -92,8 +92,10 @@ export default function Header({socket}) {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-  
+  console.log("User")
+  console.log(user)
   return (
+    
     <AppBar position="static" color='secondary'>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -115,7 +117,9 @@ export default function Header({socket}) {
 
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Typography variant="subtitle1" color="#ffffff" sx={{marginRight:"10px",marginLeft:"20px"}}>{"name"}</Typography>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                  
                 </IconButton>
               </Tooltip>
               

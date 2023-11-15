@@ -209,25 +209,33 @@ function Students() {
                             </div>
                         </TableCell>
                         <TableCell >
-                          {student.enrollments?.map((enrollment) => ( 
-                            <>{enrollment.status === "accepted" && <div>{getCourseType(enrollment)}</div>}</>
-                          ))}
+
+                          <Box display="flex" flexDirection={"column"} gap={"2em"}>
+                            {student.enrollments?.map((enrollment) => ( 
+                              <>{enrollment.status === "accepted" && <div>{getCourseType(enrollment)}</div>}</>
+                            ))}
+                          </Box>
+                          
                         </TableCell>
                         <TableCell >
-                          {student.enrollments?.map((enrollment) => ( 
-                            <>{enrollment.status === "accepted" && 
-                              <div>
-                                {enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({enrollment?.availability?.time?.start+":00"} to {enrollment?.availability?.time?.end +":00"})
-                              </div>
-                            }</>
-                          ))}   
+                          <Box display="flex" flexDirection={"column"} gap={"2em"}>
+                            {student.enrollments?.map((enrollment) => ( 
+                              <>{enrollment.status === "accepted" && 
+                                <div>
+                                  {enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({enrollment?.availability?.time?.start+":00"} to {enrollment?.availability?.time?.end +":00"})
+                                </div>
+                              }</>
+                            ))}   
+                          </Box>
                         </TableCell>
-                        <TableCell align='center' >
-                          {student.enrollments?.map((enrollment) => ( 
-                            <>{enrollment.status === "accepted" && 
-                              <CircularProgressWithLabel defaultValue={0} value={CalculateProgress(enrollment)} />
-                            }</>
-                          ))}
+                        <TableCell  >
+                          <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
+                            {student.enrollments?.map((enrollment) => ( 
+                              <>{enrollment.status === "accepted" && 
+                                <CircularProgressWithLabel defaultValue={0} value={CalculateProgress(enrollment)} />
+                              }</>
+                            ))}
+                          </Box>
                         </TableCell>
                         <TableCell >
                             <IconButton aria-label="" onClick={()=>{setOpen("update");setSelectedStudent(student)}}>
