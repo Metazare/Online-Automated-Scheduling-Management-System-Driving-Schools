@@ -56,6 +56,7 @@ function Appointments() {
     const [form, setForm] = useState({
         enrollmentId:"",
         instructorId:"",
+        studentId:"",
         vehicle:"",
         schedule: new Date()
     })
@@ -90,7 +91,10 @@ function Appointments() {
 
     async function create(e: React.FormEvent<HTMLFormElement>){
       e.preventDefault();
-      createAppointment(form);
+      createAppointment({
+        ...form,
+        studentId: selectedStudent?.studentId,
+      })
     };
 
     useEffect(() => {

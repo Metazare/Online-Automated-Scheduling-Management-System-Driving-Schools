@@ -40,8 +40,7 @@ function useNotif(): Data {
       await axios
       .get('/notifications')
       .then((response:any)=>{
-        setNotifications(response.data)
-        console.log(response.data);
+        setNotifications(response.data.sort((a, b) => b._id.localeCompare(a._id)))
       });
     } catch (error: any) {
       setError(error)

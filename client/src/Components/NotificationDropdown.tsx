@@ -57,7 +57,7 @@ function NotificationDropdown({socket}) {
     function getUnreadCount(value) {
       // Filter notifications with status "unread"
       const unreadNotifications = value.filter(notification => notification.status === "unread");
-      console.log(unreadNotifications.length);
+
       // Get the number of unread notifications
       return unreadNotifications.length;
     }
@@ -126,7 +126,7 @@ function NotificationDropdown({socket}) {
                                     sx={{ width: 24, height: 24 }}
                                 />
                                 <Box display="" >
-                                    <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography>
+                                    {/* <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography> */}
                                     <Typography variant="body2" color="initial"  fontSize={"10px"}>{notification.content}</Typography>
                                 </Box>
                             </Box>
