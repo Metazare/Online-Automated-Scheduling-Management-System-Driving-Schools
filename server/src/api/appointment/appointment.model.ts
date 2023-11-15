@@ -26,8 +26,7 @@ const appointmentSchema = new Schema(
             required: true
         },
         vehicle: {
-            type: String,
-            minLength: 1
+            type: String
         },
         schedule: {
             type: Date,
