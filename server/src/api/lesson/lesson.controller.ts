@@ -18,8 +18,12 @@ import LessonModel from './lesson.model';
 import { EnrollmentPopulatedDocument } from '../enrollment/enrollment.types';
 
 export const getLessons: RequestHandler = async (req: QueryRequest<GetLessons>, res) => {
+    console.log(req.user)
+  
     if (!req.user) throw new Unauthorized();
     const user = <SchoolDocument>req.user.document;
+
+    console.log(user)
 
     const { courseId } = req.query;
     const courseIds = user.courses.map(({ courseId }) => <string>courseId);

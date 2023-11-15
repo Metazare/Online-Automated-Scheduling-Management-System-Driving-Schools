@@ -48,6 +48,9 @@ function Appointments() {
   const { appointments, loading: appointmentLoading, error: appointmentError, createAppointment, getAppointments, updateAppointment } = useReqAppointment();
   const { data, loading: schoolLoading, error: schoolError, getSchool } = useReqSchool();
 
+  const [selectedDay, setSelectedDay] = useState<Dayjs | null>()
+  const [filteredAppointments, setFilteredAppointments] = useState<any>([]);
+
     // * Reason Value 
     const [selectedStudent, setSelectedStudent] = useState<YourStateType<any>>(undefined);
 
@@ -112,8 +115,25 @@ function Appointments() {
       getSchool({
         schoolId: null
       });
-      console.log(data)
-    }, []);
+
+      const filterObjectsByDate = (objects, targetDate) => {
+        console.log(objects)
+        if(targetDate){
+          console.log("Yes Target Date")
+          return objects.filter((object) => {
+            const objectDate = new Date(object.schedule).toLocaleDateString(); // Convert schedule to a string in the format MM/DD/YYYY
+            const targetDateString = new Date(targetDate).toLocaleDateString(); // Convert target date to a string in the format MM/DD/YYYY
+            return objectDate === targetDateString;
+          });
+        } else{
+          console.log("No Target Date")
+          return objects;
+        }
+      }
+
+      setFilteredAppointments(filterObjectsByDate(appointments, selectedDay));
+
+    }, [selectedDay]);
 
     const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
 
@@ -123,7 +143,7 @@ function Appointments() {
       return foundCourse?.type;
     }
 
-    if (loading && appointmentLoading && instructorLoading) {
+    if (appointments && loading && appointmentLoading && instructorLoading) {
       return <div>Loading...</div>
     }
 
@@ -139,9 +159,12 @@ function Appointments() {
                     add
                 </Button>
             </div>
-
+            
             <Grid container spacing={2} mt={1}>
-              {appointments?.map((appointment) => ( 
+
+              
+
+              {(filteredAppointments ? filteredAppointments : appointments)?.map((appointment) => ( 
                 <Grid item md={6} xs={12}>
                     <AppointmentCard 
                       modalOpen={setOpen}
@@ -153,12 +176,51 @@ function Appointments() {
                     />
                 </Grid>
               ))}
+
+              {/* {selectedDay ?
+              <>
+                {filterObjectsByDate(appointments, selectedDay)?.map((appointment) => ( 
+                  <Grid item md={6} xs={12}>
+                      <AppointmentCard 
+                        modalOpen={setOpen}
+                        studentName={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.last}`}
+                        instructorName={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}
+                        instructorID={appointment.instructor.id}
+                        courseName={getCourseType(appointment.enrollment)}
+                        schedule={appointment.schedule}
+                      />
+                  </Grid>
+                ))}
+              </>
+              :
+              <>
+                {appointments?.map((appointment) => ( 
+                  <Grid item md={6} xs={12}>
+                      <AppointmentCard 
+                        modalOpen={setOpen}
+                        studentName={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.last}`}
+                        instructorName={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}
+                        instructorID={appointment.instructor.id}
+                        courseName={getCourseType(appointment.enrollment)}
+                        schedule={appointment.schedule}
+                      />
+                  </Grid>
+                ))}
+              </>
+              } */}
+             
             </Grid>
         </Grid>
         {/* //* Calendar  Container */}
         <Grid item md={4} sm={6} xs={12} sx={{padding:"40px"}}>
             <Paper variant="elevation" elevation={3} sx={{padding:"1em",minWidth:"350px"}} >
-              <TESTCalendar/>
+              {appointments && 
+                <TESTCalendar
+                  appointments={appointments}
+                  setSelectedDay={setSelectedDay}
+                  selectedDay={selectedDay}
+                />
+              }
             </Paper>
         </Grid>
 

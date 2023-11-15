@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import dayjs, { Dayjs } from 'dayjs';
 import Badge from '@mui/material/Badge';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -18,7 +18,7 @@ function AppointmentDay(props: PickersDayProps<Dayjs> & { highlightedDaysMap?: H
 
   const highlightedDays = highlightedDaysMap[monthYearKey] || [];
   const isSelected = highlightedDays.includes(day.date());
-
+  
   return (
     <Badge
       overlap="circular"
@@ -29,21 +29,62 @@ function AppointmentDay(props: PickersDayProps<Dayjs> & { highlightedDaysMap?: H
   );
 }
 
-function TESTCalendar() {
+type Props = {
+  appointments?:any;
+  // setSelectedDay:React.Dispatch<React.SetStateAction<[dayjs.Dayjs | null | undefined, React.Dispatch<React.SetStateAction<dayjs.Dayjs | null | undefined>>]>>;
+  // selectedDay: [dayjs.Dayjs | null | undefined, React.Dispatch<React.SetStateAction<dayjs.Dayjs | null | undefined>>]
+  setSelectedDay?: any;
+  selectedDay?: any;
+}
+
+function TESTCalendar({appointments,setSelectedDay,selectedDay}:Props) {
   // selected day
   const [value, setValue] = React.useState<Dayjs | null>();
 
   const initialValue = dayjs();
 
+  const schedules = appointments?.map(item => item.schedule);
+
+
+  const formatDateToMonthYear = (dateString) => {
+    const date = new Date(dateString);
+    return `${date.toLocaleString('en-us', { month: 'long' })}-${date.getFullYear()}`;
+  };
+
+  const formatSchedulesToHighlightedDaysMap = (schedules) => {
+    const highlightedDaysMap = {};
+
+    schedules.forEach((schedule) => {
+      const key = formatDateToMonthYear(schedule);
+      if (!highlightedDaysMap[key]) {
+        highlightedDaysMap[key] = [];
+      }
+
+      // Assuming you want to highlight the day of the month
+      const dayOfMonth = new Date(schedule).getDate();
+      highlightedDaysMap[key].push(dayOfMonth);
+    });
+
+    return highlightedDaysMap;
+  };
+
+
   const [highlightedDaysMap, setHighlightedDaysMap] = useState<HighlightedDaysMap>({
     // Set initial highlighted days here, e.g., "January-2022": [1, 2, 3]
     // this initial value is todays calendar 
-    [initialValue.format('MMMM-YYYY')]: [1, 2, 3,4],
-    "January-2021": [4, 5, 6],
-    "February-2023": [7, 8, 9],
-    "February-2022": [7, 8, 9],
-    // Add more months as needed
+    [initialValue.format('MMMM-YYYY')]: []
   });
+
+  useEffect(() => {
+    const updatedHighlightedDaysMap = {
+      ...highlightedDaysMap,
+      ...formatSchedulesToHighlightedDaysMap(schedules),
+    };
+    
+
+    setHighlightedDaysMap(updatedHighlightedDaysMap);
+  }, []); // Add dependencies if needed
+
 
   const handleMonthChange = (date: Dayjs) => {
     const monthYearKey = date.format('MMMM-YYYY'); // Create a unique key for each month and year combination
@@ -62,17 +103,16 @@ function TESTCalendar() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DateCalendar
-        defaultValue={initialValue}
+        // defaultValue={initialValue}
         onMonthChange={(value) => {
           handleMonthChange(value);
         }}
         slots={{
           day: (dayProps) => <AppointmentDay {...dayProps} highlightedDaysMap={highlightedDaysMap} />,
         }}
-        value={value}
+        value={selectedDay}
         onChange={(newValue) => {
-          setValue(newValue);
-          alert(newValue?.format('YYYY-MM-DD')); // Format the date before alerting
+          setSelectedDay(newValue)
         }}
       />
     </LocalizationProvider>
