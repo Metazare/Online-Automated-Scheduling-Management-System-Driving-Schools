@@ -44,6 +44,7 @@ function useNotif(): Data {
         console.log(response.data);
       });
     } catch (error: any) {
+      setError(error)
       console.log(error);
     } finally {
       setLoading(false)
