@@ -35,6 +35,7 @@ function useNotif(): Data {
   };
 
   const getNotification = async () => {
+    setLoading(true)
     try {
       await axios
       .get('/notifications')
@@ -44,7 +45,9 @@ function useNotif(): Data {
       });
     } catch (error: any) {
       console.log(error);
-    } 
+    } finally {
+      setLoading(false)
+    }
   };
 
   return {
