@@ -35,9 +35,19 @@ function CourseList() {
       courseType: null
     })
     getAppointments({
-      
+
     })
   }, [])
+
+  function getCourseType(enrollment, school) {
+    const courseId = enrollment.courseId;
+
+    // Find the course with the matching courseId
+    const course = school.courses.find(course => course.courseId === courseId);
+
+    // Return the type of the found course, or null if not found
+    return course ? course.type : null;
+  }
 
   function getCourses(array) {
     console.log(array.filter(item => item.school && item.school.schoolId === id))
@@ -137,14 +147,18 @@ function CourseList() {
               <Box display="flex" flexDirection={"column"} gap={"10"}>
 
                 {/* Insert Appointment here */}
-                <AppointmentCard 
-                  modalOpen={setOpen}
-                  studentName={""}
-                  instructorName={"Instructor Name"}
-                  instructorID={"qweqwe"}
-                  courseName={"Course Name"}
-                  schedule={"Schedule"}
-                />
+
+                {appointments?.map((appointment)=>(
+                  <AppointmentCard 
+                    modalOpen={setOpen}
+                    studentName={""}
+                    instructorName={appointment.instructor.name.first + " " + appointment.instructor.name.last}
+                    instructorID={appointment.instructor.instructorId}
+                    courseName={getCourseType(appointment.enrollment, appointment.school)}
+                    schedule={appointment.schedule}
+                  />
+                ))}
+                
 
               </Box>
             </Grid>
