@@ -1,18 +1,18 @@
-import React, {useEffect} from 'react'
+import React, {useState,useEffect} from 'react'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar';
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, Paper } from '@mui/material';
 import CallIcon from '@mui/icons-material/Call';
 import EmailIcon from '@mui/icons-material/Email';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CourseAccordion from '../../../Components/CourseAccordion';
-
+import TESTCalendar from '../../../Components/TESTCalendar';
 import { useParams } from 'react-router-dom';
 
 import useReqSchool from '../../../Hooks/useReqSchool';
 import useReqEnroll from '../../../Hooks/useReqEnroll';
-
+import AppointmentCard from '../../../Components/AppointmentCard';
 function CourseList() {
 
   const {data, loading, getSchool} = useReqSchool();
@@ -39,7 +39,7 @@ function CourseList() {
   function populateObject2(object1, object2) {
     // Create a mapping of courseIds to their corresponding types
     const courseMapping = Object.fromEntries(object1.map(course => [course.courseId, course.type]));
-  
+    
     // Map over Object 2 and add the 'type' property based on the courseId
     const populatedObject2 = object2.map(item => ({
       ...item,
@@ -48,7 +48,7 @@ function CourseList() {
   
     return populatedObject2;
   }
-
+  const [open, setOpen] = useState("");
   
   
     return <>
@@ -113,9 +113,28 @@ function CourseList() {
             <CourseAccordion variant='use' title={course.type} courseId={course.courseId}/>
           ))} */}
 
-          {data && enrolls && populateObject2(data.courses, getCourses(enrolls))?.map((course:any)=>(
-            <CourseAccordion variant='use' title={course.type} courseId={course.courseId}/>
-          ))}
+          <Grid container spacing={2}>
+            <Grid item md={8} xs={12}>
+              {data && enrolls && populateObject2(data.courses, getCourses(enrolls))?.map((course:any)=>(
+                <CourseAccordion variant='use' title={course.type} courseId={course.courseId}/>
+              ))}
+            </Grid>
+            <Grid item md={4} xs={12} sx={{display:"flex",flexDirection:"column",gap:"15px"}}>
+              <Paper variant="elevation" elevation={3}>
+                <TESTCalendar/>
+              </Paper>
+              <Box display="flex" flexDirection={"column"} gap={"10"}>
+                <AppointmentCard 
+                  modalOpen={setOpen}
+                  studentName={""}
+                  instructorName={"Instructor Name"}
+                  courseName={"Course Name"}
+                  schedule={"Schedule"}
+                />
+              </Box>
+
+            </Grid>
+          </Grid>
 
         </Container>
         {/* {console.log(populateObject2(data?.courses, getCourses(enrolls)))} */}
