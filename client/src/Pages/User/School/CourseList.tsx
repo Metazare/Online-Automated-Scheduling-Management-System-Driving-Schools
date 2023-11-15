@@ -158,8 +158,6 @@ function CourseList() {
                     schedule={appointment.schedule}
                   />
                 ))}
-                
-
               </Box>
             </Grid>
           </Grid>

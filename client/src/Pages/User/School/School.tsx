@@ -16,6 +16,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
+import {Link} from 'react-router-dom'
 // 
 import moment from 'moment';
 // * Components
@@ -366,7 +367,7 @@ function School() {
                   : <></> }
 
                   {data && enrolls && populateObject2(data.courses, getSchoolDataById(enrolls))?.map((request)=>(
-                    <Paper sx={{padding:"1em"}} elevation={3}>
+                    <Paper sx={{padding:"1em"}} elevation={3} component={Link} to={`/course/${id}`} >
                       <Typography variant="subtitle2"  mb={1} color="initial">Selected Course</Typography>
                       <Typography variant="body2" color="initial">{request.type}</Typography>
                       <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
