@@ -35,9 +35,7 @@ const theme = createTheme({
   }
 })
 
-
 const socket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000');
-
 
 type Props={
   openSnackbar: {
@@ -50,12 +48,10 @@ type Props={
   }>>
 }
 
-
 function App({openSnackbar,setOpenSnackbar}:Props) {
   return (
     <ThemeProvider theme={theme}>
       <Routes>
-      
         <Route element={<BaseLayout socket={socket}/>} >
           {/* public */}
           <Route path="*" element={<Error/>} />
@@ -79,9 +75,8 @@ function App({openSnackbar,setOpenSnackbar}:Props) {
           {/* users */}
           <Route element={<ProtectedRoute allowedRoles={["admin", "student", "instructor"]}/>}>
             <Route path="/course/:cid/:lid" element={<LessonView/>} />
-            <Route path="/chat" element={<Chat/>} />
+            <Route path="/chat" element={<Chat socket={socket}/>} />
           </Route>
-
         </Route>
       </Routes>
     </ThemeProvider>

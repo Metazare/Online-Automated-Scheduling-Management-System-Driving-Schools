@@ -45,8 +45,6 @@ function NotificationDropdown({socket}) {
       // Listen for 'notification' events
       socket.on('notification', (data) => {
         getNotification()
-
-        
       });
 
       // Clean up the socket connection on component unmount

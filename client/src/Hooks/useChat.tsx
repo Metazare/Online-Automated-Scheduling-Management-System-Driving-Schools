@@ -13,8 +13,8 @@ interface Data {
 }
 
 interface SendChatData {
-  sender: { user: string; role: string };
-  receiver: { user: string; role: string };
+  sender: { userId: string; role: string };
+  receiver: { userId: string; role: string };
   message: string;
 }
 
@@ -29,7 +29,7 @@ function useChat(): Data {
       receiver: data.receiver,
       message: data.message,
     };
-
+    console.log(chatData);
     socket.emit('chat', chatData);
   };
 

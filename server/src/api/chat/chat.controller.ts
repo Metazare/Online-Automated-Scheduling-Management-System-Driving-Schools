@@ -23,6 +23,8 @@ export const getChats: RequestHandler = async (req, res) => {
 
 export const createMessage = async (req: CreateMessage) => {
     const { sender, receiver } = req;
+    
+    console.log(req)
 
     if ((sender.role === Role.ADMIN || sender.role === Role.INSTRUCTOR) && receiver.role !== Role.STUDENT)
         throw new Forbidden();
