@@ -44,19 +44,28 @@ function NotificationDropdown({socket}) {
       // Listen for 'notification' events
       socket.on('notification', (data) => {
         getNotification()
-        console.log(notifications)
+
+        
       });
 
       // Clean up the socket connection on component unmount
       return () => {
         socket.disconnect();
       };
-    }, []); // Run only once on component mount
+    }, []); // Run only once on component mount'
+
+    function getUnreadCount(value) {
+      // Filter notifications with status "unread"
+      const unreadNotifications = value.filter(notification => notification.status === "unread");
+      console.log(unreadNotifications.length);
+      // Get the number of unread notifications
+      return unreadNotifications.length;
+    }
 
     return <>
         <React.Fragment>
             <IconButton  sx={{ p: "0", display: { md:'flex', xs:'none', sm:'flex'} }} onClick={handleClick}>
-                <Badge badgeContent={badgeNotif} color="info">
+                <Badge badgeContent={notifications ? getUnreadCount(notifications) : 0} color="info">
                     <NotificationsIcon style={{fill:"#E8E8E8"}}/>
                 </Badge>
             </IconButton>
@@ -99,27 +108,30 @@ function NotificationDropdown({socket}) {
                     <Typography variant="h6"  color={"primary"}>Notification</Typography>
                     <hr />
                     <Box display={"flex"} flexDirection={"column"} padding={"10px 0"}  sx={{maxHeight:"80vh",overflowY:"scroll"}}>
-                    {notifications && notifications.map((notification: any) => (
-                        <Box display={"flex"} padding={".5em"} component={Link} to={"/"}
-                            sx={{
-                                "&:hover": {
-                                backgroundColor: "#d9d9d9", // Change this to the background color you desire on hover
-                                },
-                                borderRadius:"8px"
-                            }}
-                            key={notification.id}
-                        > 
-                            <Avatar
-                                alt="Remy Sharp"
-                                src="/static/images/avatar/1.jpg"
-                                sx={{ width: 24, height: 24 }}
-                            />
-                            <Box display="" >
-                                <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography>
-                                <Typography variant="body2" color="initial"  fontSize={"10px"}>{notification.content}</Typography>
+
+                      {loading ? <p>Loading...</p> : error ? <p>{error.message}</p> : <>
+                        {notifications && notifications.map((notification: any) => (
+                            <Box display={"flex"} padding={".5em"} component={Link} to={"/"}
+                                sx={{
+                                    "&:hover": {
+                                    backgroundColor: "#d9d9d9", // Change this to the background color you desire on hover
+                                    },
+                                    borderRadius:"8px"
+                                }}
+                                key={notification.id}
+                            > 
+                                <Avatar
+                                    alt="Remy Sharp"
+                                    src="/static/images/avatar/1.jpg"
+                                    sx={{ width: 24, height: 24 }}
+                                />
+                                <Box display="" >
+                                    <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography>
+                                    <Typography variant="body2" color="initial"  fontSize={"10px"}>{notification.content}</Typography>
+                                </Box>
                             </Box>
-                        </Box>
-                    ))}
+                        ))}
+                      </>}
                     </Box>
                 </Box>
             </Menu>
