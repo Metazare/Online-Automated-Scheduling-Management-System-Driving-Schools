@@ -14,7 +14,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import useReqSchool from '../../../Hooks/useReqSchool';
 import useReqEnroll from '../../../Hooks/useReqEnroll';
 import useReqAppointment from '../../../Hooks/useReqAppointment';
-
+import dayjs, { Dayjs } from 'dayjs';
 import AppointmentCard from '../../../Components/AppointmentCard';
 
 import { Link } from 'react-router-dom';
@@ -26,6 +26,9 @@ function CourseList() {
   const {data:enrolls, getEnrollments} = useReqEnroll();
   const {appointments, getAppointments} = useReqAppointment();
   const {id} = useParams();
+
+  const [selectedDay, setSelectedDay] = useState<Dayjs | null>()
+  const [filteredAppointments, setFilteredAppointments] = useState<any>([]);
 
   useEffect(()=>{
     getSchool({
@@ -40,7 +43,25 @@ function CourseList() {
     getAppointments({
 
     })
-  }, [])
+    
+    const filterObjectsByDate = (objects, targetDate) => {
+      console.log(objects)
+      if(targetDate){
+        console.log("Yes Target Date")
+        return objects.filter((object) => {
+          const objectDate = new Date(object.schedule).toLocaleDateString(); // Convert schedule to a string in the format MM/DD/YYYY
+          const targetDateString = new Date(targetDate).toLocaleDateString(); // Convert target date to a string in the format MM/DD/YYYY
+          return objectDate === targetDateString;
+        });
+      } else{
+        console.log("No Target Date")
+        return objects;
+      }
+    }
+
+    setFilteredAppointments(filterObjectsByDate(appointments, selectedDay));
+
+  }, [selectedDay]);
 
   function getCourseType(enrollment, school) {
     const courseId = enrollment.courseId;
@@ -146,12 +167,20 @@ function CourseList() {
             <Grid item md={4} xs={12} sx={{display:"flex",flexDirection:"column",gap:"15px"}}>
               <Paper variant="elevation" elevation={3}>
                 {/* <TESTCalendar appointments={appointments}/> */}
+
+                {appointments && 
+                  <TESTCalendar
+                    appointments={appointments}
+                    setSelectedDay={setSelectedDay}
+                    selectedDay={selectedDay}
+                  />
+                }
               </Paper>
               <Box display="flex" flexDirection={"column"} gap={"20px"} mt={"20px"}>
 
                 {/* Insert Appointment here */}
 
-                {appointments?.map((appointment)=>(
+                {/* {appointments?.map((appointment)=>(
                   <AppointmentCard 
                     modalOpen={setOpen}
                     studentName={""}
@@ -160,7 +189,19 @@ function CourseList() {
                     courseName={getCourseType(appointment.enrollment, appointment.school)}
                     schedule={appointment.schedule}
                   />
-                ))}
+                ))} */}
+
+              {(filteredAppointments ? filteredAppointments : appointments)?.map((appointment) => ( 
+                <AppointmentCard 
+                  modalOpen={setOpen}
+                  studentName={""}
+                  instructorName={appointment.instructor.name.first + " " + appointment.instructor.name.last}
+                  instructorID={appointment.instructor.instructorId}
+                  courseName={getCourseType(appointment.enrollment, appointment.school)}
+                  schedule={appointment.schedule}
+                />
+              ))}
+
               </Box>
             </Grid>
           </Grid>
