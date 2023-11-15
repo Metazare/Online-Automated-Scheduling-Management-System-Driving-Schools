@@ -345,27 +345,36 @@ function School() {
                     </Typography>
                   </Paper>
                 ))} */}
+
+                  {/* <Paper sx={{padding:"1em",background:"#D9D9D9"}} elevation={3}>
+                    <Typography variant="subtitle2"  mb={1} color="initial">Selected Course</Typography>
+                    <Typography variant="body2" color="initial">TDC Face to Face</Typography>
+                    <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
+                    <Typography variant="body2" color="initial">
+                      Mo, Tu, We, Th, Fr, at (8:00 AM to 8:00 AM)
+                    </Typography>
+                  </Paper> */}
+
+                  {enrolls && enrolls.length > 0 ? 
                   <Box display={"flex"} gap={"5px"} alignItems={"center"}>
                     <hr style={{flexGrow:'1',borderColor:"#E24B5B"}} />
                     <Typography variant="h6" color="primary">List of Enrolled Courses</Typography>
                     <hr style={{flexGrow:'1',borderColor:"#E24B5B"}} />
                   </Box>
-                  <Paper sx={{padding:"1em",background:"#D9D9D9"}} elevation={3}>
-                    <Typography variant="subtitle2"  mb={1} color="initial">Selected Course</Typography>
-                    <Typography variant="body2" color="initial">TDC Face to Face</Typography>
-                    <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
-                    <Typography variant="body2" color="initial">
-                      Mo, Tu, We, Th, Fr, at (8:00 AM to 8:00 AM)
-                    </Typography>
-                  </Paper>
-                  <Paper sx={{padding:"1em",background:"#D9D9D9"}} elevation={3}>
-                    <Typography variant="subtitle2"  mb={1} color="initial">Selected Course</Typography>
-                    <Typography variant="body2" color="initial">TDC Face to Face</Typography>
-                    <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
-                    <Typography variant="body2" color="initial">
-                      Mo, Tu, We, Th, Fr, at (8:00 AM to 8:00 AM)
-                    </Typography>
-                  </Paper>
+                  : <></> }
+
+                  {data && enrolls && populateObject2(data.courses, getSchoolDataById(enrolls))?.map((request)=>(
+                    <Paper sx={{padding:"1em"}} elevation={3}>
+                      <Typography variant="subtitle2"  mb={1} color="initial">Selected Course</Typography>
+                      <Typography variant="body2" color="initial">{request.type}</Typography>
+                      <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
+                      <Typography variant="body2" color="initial">
+                        {/* Mo, Tu, We, Th, Fr, at (8:00 AM to 8:00 AM) */}
+                        {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
+                      </Typography>
+                    </Paper>
+                  ))}  
+
                 </Grid>
             </Grid>
         </Container>
