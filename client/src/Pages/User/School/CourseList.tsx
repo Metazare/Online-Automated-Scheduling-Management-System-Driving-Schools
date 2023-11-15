@@ -128,6 +128,7 @@ function CourseList() {
                   modalOpen={setOpen}
                   studentName={""}
                   instructorName={"Instructor Name"}
+                  instructorID={"qweqwe"}
                   courseName={"Course Name"}
                   schedule={"Schedule"}
                 />
