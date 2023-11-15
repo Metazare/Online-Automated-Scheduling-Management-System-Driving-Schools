@@ -17,6 +17,8 @@ import useReqSchool from '../../../Hooks/useReqSchool';
 import { io } from 'socket.io-client';
 import moment from 'moment';
 
+import {useAuth} from '../../../Hooks/useAuth';
+
 // TODO Calendar and resched Modal
 
 // Components
@@ -42,6 +44,8 @@ const style = {
 type YourStateType<T> = T | undefined;
 
 function Appointments() {
+
+  const {getUser} = useAuth();
 
   const { students, loading, error, getStudent } = useReqStudent();
   const { instructors, loading: instructorLoading, error: instructorError, credentials, getInstructor, createInstructor, updateInstructor} = useReqInstructor();
@@ -137,9 +141,11 @@ function Appointments() {
 
     const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
 
-    function getCourseType(data) {
-      const { school, courseId } = data;
-      const foundCourse = school.courses.find((course) => course.courseId === courseId);
+    function getCourseType(value) {
+      console.log(data)
+      console.log(value)
+      const foundCourse = data.courses.find((course) => course.courseId === value );
+      console.log(foundCourse)
       return foundCourse?.type;
     }
 
@@ -155,9 +161,12 @@ function Appointments() {
                     <Typography variant="h6" color="primary" >My Appointments</Typography>
                     <Typography variant="body2" color="initial" >{appointments?.length} Results</Typography>
                 </div>
-                <Button variant="text" color="primary" sx={{background:"white",boxShadow:5}} startIcon={<AddIcon/>} onClick={()=>{setOpen("add")}}>
-                    add
-                </Button>
+                {getUser()==="admin" ?
+                  <Button variant="text" color="primary" sx={{background:"white",boxShadow:5}} startIcon={<AddIcon/>} onClick={()=>{setOpen("add")}}>
+                      add
+                  </Button> : <></>
+                }
+                
             </div>
             
             <Grid container spacing={2} mt={1}>
@@ -279,7 +288,8 @@ function Appointments() {
                                   >
                                       {selectedStudent?.enrollments?.map((course) => ( 
                                           <MenuItem  value={course.enrollmentId} key={course.enrollmentId}>
-                                              {course.courseId}
+                                              {/* {course.courseId} */}
+                                              {getCourseType(course.courseId)}
                                           </MenuItem>
                                       ))}
                                   </TextField>

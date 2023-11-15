@@ -47,7 +47,7 @@ function AppointmentCard(props:Props) {
                 <Typography variant="subtitle1" color="initial" fontWeight={500} >{instructorName}</Typography>
                 <Typography variant="body1"  mt={"-5px"} color="initial" >Instructor</Typography>
               </div>
-              <IconButton aria-label="" href={`/chat/${instructorID}`}>
+              <IconButton aria-label="" href={`/chat/instructor/${instructorID}`}>
                 <ChatIcon/>
               </IconButton>
             </div>
