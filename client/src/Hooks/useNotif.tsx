@@ -39,6 +39,7 @@ function useNotif(): Data {
       await axios
       .get('/notifications')
       .then((response:any)=>{
+        setNotifications(response.data)
         console.log(response.data);
       });
     } catch (error: any) {

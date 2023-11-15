@@ -9,6 +9,9 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import Typography from '@mui/material/Typography'
 
 import { Link } from 'react-router-dom';
+
+import useNotif from '../Hooks/useNotif';
+
 type Props ={
 
 }
@@ -27,6 +30,9 @@ function NotificationDropdown({}:Props) {
     const handleClose = () => {
       setAnchorEl(null);
     };
+
+    // const { notifications, loading, error, sendNotification, getNotification } = useNotif();
+
 
     return <>
         <React.Fragment>

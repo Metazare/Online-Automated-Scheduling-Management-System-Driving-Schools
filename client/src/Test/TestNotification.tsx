@@ -5,7 +5,15 @@ import axios from './../Hooks/useAxios'
 
 // const socket = io('http://your-backend-server-url'); // Replace with your backend server URL
 
+import useNotif from '../Hooks/useNotif';
+import { useAuth } from '../Hooks/useAuth';
+import { map } from '@firebase/util';
+
 const TestNotification = ({socket}) => {
+  const { notifications, loading, error, sendNotification, getNotification } = useNotif();
+  const { getUser } = useAuth();
+
+  const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user') || '') : '';
 
   useEffect(() => {
     // Connect to the socket.io server
@@ -13,8 +21,8 @@ const TestNotification = ({socket}) => {
 
     // Listen for 'notification' events
     socket.on('notification', (data) => {
-      console.log('New Notification:', data);
-      // Handle the notification on the client side
+      getNotification()
+      console.log(notifications)
     });
 
     // Clean up the socket connection on component unmount
@@ -24,34 +32,25 @@ const TestNotification = ({socket}) => {
     };
   }, []); // Run only once on component mount
 
-  const sendNotification = () => {
-    const notificationData = {
+  async function submit(e: any){
+    e.preventDefault();
+    sendNotification({
       sender: 'hulCsqKTmTFhvJrvfSs8hhyyVyAA5K0g6-',
       targets: [{ user : 'RBcIsCYNVTFj7VzSb07XzEMZiUQ1j9x1dd', role: 'student' }],
       content: 'Notification content',
-    };
-
-    // Emit a 'notification' event to the server
-    socket.emit('notification', notificationData);
-  };
-
-  const getNotification = async () => {
-
-    try {
-      await axios
-      .get('/notifications')
-      .then((response:any)=>{
-        console.log(response.data);
-      });
-    } catch (error: any) {
-      console.log(error);
-    } 
+    })
   };
 
   return (
     <div>
-      <Button onClick={sendNotification}>Test Send Notification</Button>
-      <Button onClick={getNotification}>Test Get Notification</Button>
+      <Button onClick={submit}>Test Send Notification</Button>
+
+      {notifications && notifications.map((notification: any) => (
+        <div key={notification.id}>
+          <p>{notification.content}</p>
+        </div>
+      ))}
+
     </div>
   );
 };
