@@ -41,7 +41,7 @@ type Props = {}
 
 export default function Header({socket}) {
   const navigate = useNavigate();
-  const {logout, getUser} = useAuth();
+  const {logout, getUser, User} = useAuth();
   const user = localStorage.getItem('user')
   
 
@@ -117,7 +117,7 @@ export default function Header({socket}) {
 
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Typography variant="subtitle1" color="#ffffff" sx={{marginRight:"10px",marginLeft:"20px"}}>{"name"}</Typography>
+                  <Typography variant="subtitle1" color="#ffffff" sx={{marginRight:"10px",marginLeft:"20px"}}>{!User().name.first ? User().name : User().name.first + " " + User().name.last }</Typography>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                   
                 </IconButton>
