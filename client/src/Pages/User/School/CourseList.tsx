@@ -9,7 +9,8 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import CourseAccordion from '../../../Components/CourseAccordion';
 import TESTCalendar from '../../../Components/TESTCalendar';
 import { useParams } from 'react-router-dom';
-
+import IconButton from '@mui/material/IconButton';
+import ChatIcon from '@mui/icons-material/Chat';
 import useReqSchool from '../../../Hooks/useReqSchool';
 import useReqEnroll from '../../../Hooks/useReqEnroll';
 import AppointmentCard from '../../../Components/AppointmentCard';
@@ -50,7 +51,6 @@ function CourseList() {
   }
   const [open, setOpen] = useState("");
   
-  
     return <>
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em"}}>
             <Container maxWidth="lg">
@@ -72,36 +72,36 @@ function CourseList() {
                         sx={{ width: 80, height: 80 }}
                         />
                         <div style={{flexGrow:"1"}}>
-                        <Typography variant="h4" fontWeight={500} color="initial">{data?.name}</Typography>
-                        <Box
+                          <Typography variant="h4" fontWeight={500} color="initial">{data?.name}</Typography>
+                          <Box
                             sx={{
                             display: 'flex',
                             gap:"10px"
                             }}
-                        >
+                          >
                             <Box
-                            sx={{
-                            display: 'flex',
-                            gap:"5px"
-                            }}
+                              sx={{
+                                display: 'flex',
+                                gap:"5px"
+                              }}
                             >
-                            <CallIcon/> 
-                            <Typography variant="body1" fontWeight={500}>{data?.contact}</Typography>
+                              <CallIcon/> 
+                              <Typography variant="body1" fontWeight={500}>{data?.contact}</Typography>
                             </Box>
                             <Box
-                            sx={{
-                            display: 'flex',
-                            gap:"5px"
-                            }}
+                              sx={{
+                              display: 'flex',
+                              gap:"5px"
+                              }}
                             >
-                            <EmailIcon/> 
-                            <Typography variant="body1" fontWeight={500}>{data?.email}</Typography>
+                              <EmailIcon/> 
+                              <Typography variant="body1" fontWeight={500}>{data?.email}</Typography>
                             </Box>
-                        </Box>
+                          </Box>
                         </div>
-                        {/* <IconButton aria-label="" onClick={()=>alert}>
-                        <MoreVertIcon/>
-                        </IconButton> */}
+                        <IconButton aria-label="" href={`/chat/${data?.schoolId}`} size='large'>
+                          <ChatIcon/>
+                        </IconButton>
                     </Box>
                 </div>
                 

@@ -22,6 +22,7 @@ import useReqStudent from '../../../Hooks/useReqStudent';
 import useReqSchool from '../../../Hooks/useReqSchool';
 import useReqLesson from '../../../Hooks/useReqLesson';
 import moment from 'moment';
+import ChatIcon from '@mui/icons-material/Chat';
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -172,7 +173,7 @@ function Students() {
     if (loading || schoolLoading) {
       return <div>Loading...</div>
     }
-
+    console.log(students)
     return (
         <Grid item xs={12} sx={{padding:"40px"}}>
             <TableContainer>
@@ -187,6 +188,10 @@ function Students() {
                         </TableCell>
                         <TableCell >
                             Available Schedule
+                        </TableCell>
+                        <TableCell >
+                        </TableCell>
+                        <TableCell >
                         </TableCell>
                         <TableCell >
                         </TableCell>
@@ -223,6 +228,11 @@ function Students() {
                         <TableCell >
                             <IconButton aria-label="" onClick={()=>{setOpen("update");setSelectedStudent(student)}}>
                                 <TaskIcon/>
+                            </IconButton>
+                        </TableCell>
+                        <TableCell >
+                            <IconButton aria-label="" href={`/chat/${student.studentId}`}>
+                              <ChatIcon/>
                             </IconButton>
                         </TableCell>
                     </TableRow>
