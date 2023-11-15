@@ -28,14 +28,42 @@ export const createMessage = async (req: CreateMessage) => {
         throw new Forbidden();
     if (sender.role === Role.STUDENT && receiver.role !== Role.STUDENT) throw new Forbidden();
 
-    await ChatModel.findOneAndUpdate(
-        { 'members.user': { $all: [sender.userId, receiver.userId] } },
-        {
-            $push: {
-                'messages.user': sender.userId,
-                'messages.message': req.message
-            }
-        },
-        { upsert: true }
+    const chats = await ChatModel.find({
+        'members.user': { $all: [sender.userId, receiver.userId] }
+    }).exec();
+
+    const chat = chats.find(
+        ({ members }) =>
+            members.find((member) => member.user === sender.userId) &&
+            members.find((member) => member.user === receiver.userId)
     );
+
+    if (chat) {
+        chat.messages.push({
+            user: sender.userId,
+            message: req.message,
+            date: new Date()
+        });
+
+        await chat.save();
+    } else
+        await ChatModel.create({
+            members: [
+                {
+                    user: sender.userId,
+                    role: sender.role
+                },
+                {
+                    user: receiver.userId,
+                    role: receiver.role
+                }
+            ],
+            messages: [
+                {
+                    user: sender.userId,
+                    message: req.message,
+                    date: new Date()
+                }
+            ]
+        });
 };

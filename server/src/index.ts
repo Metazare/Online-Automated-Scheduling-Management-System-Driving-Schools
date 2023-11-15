@@ -72,10 +72,6 @@ io.on('connection', (socket) => {
         io.emit('notification', req);
     });
 
-    socket.on('read', async () => {
-        
-    });
-
     /**
      * sender
      * receiver
