@@ -108,31 +108,67 @@ function Home({}: Props)  {
         </>
       )}
 
-
-
-      <Typography variant="h6" color="primary" mb={2}>Enrolled Schools</Typography>
-      <Grid container spacing={2}>
-
-      {enrollments && removeDuplicatesBySchoolId(enrollments)?.map((enrollment) => (
-        <Grid item md={3} sm={4} xs={12} key={enrollment.enrollmentId}>
-          <SchoolCard schoolName={enrollment.school.name} about={enrollment.school.address} courseId={enrollment.school.schoolId} variant="enrolled" courses={enrollment.school.courses} schoolId={enrollment.school.schoolId}/>
-        </Grid>
-      ))}
-
-        {/* <Grid item md={3} sm={4} xs={12}>
-          <SchoolCard schoolName={"Smart Driving"} about={"test"} schoolId={"123"} variant="enrolled"/>
-        </Grid> */}
-
-      </Grid>
-      <Typography variant="h6" mt={4} color="primary" mb={2}>Available Schools</Typography>
-      <Grid container spacing={2}>
-        {data?.map((school) => ( 
-          <Grid item md={3} sm={4} xs={12}>
-            <SchoolCard schoolName={school.name} about={school.about} schoolId={school.schoolId} variant=""/>
+      {enrollments && enrollments.length > 0 ? (
+        <>
+          <Typography variant="h6" color="primary" mb={2}>
+            Enrolled Schools
+          </Typography>
+          <Grid container spacing={2}>
+            {removeDuplicatesBySchoolId(enrollments)?.map((enrollment) => (
+              <Grid item md={3} sm={4} xs={12} key={enrollment.enrollmentId}>
+                <SchoolCard
+                  schoolName={enrollment.school.name}
+                  about={enrollment.school.address}
+                  courseId={enrollment.school.schoolId}
+                  variant="enrolled"
+                  courses={enrollment.school.courses}
+                  schoolId={enrollment.school.schoolId}
+                />
+              </Grid>
+            ))}
           </Grid>
-        ))}
-        
-      </Grid>
+        </>
+      ) : <>
+        <Typography variant="h6" color="primary" mb={2}>
+          Enrolled Schools
+        </Typography>
+        <Box display="flex" alignItems={"center"} justifyContent={"center"} minHeight={"300px"} alignContent={"center"}>
+          <Typography variant="subtitle1"  >
+            Enroll Now!
+          </Typography>
+        </Box>
+      </>}
+
+      
+      {data && data.length > 0 ? (
+        <>
+          <Typography variant="h6" mt={4} color="primary" mb={2}>
+            Available Schools
+          </Typography>
+          <Grid container spacing={2}>
+            {data.map((school) => (
+              <Grid item md={3} sm={4} xs={12} key={school.schoolId}>
+                <SchoolCard
+                  schoolName={school.name}
+                  about={school.about}
+                  schoolId={school.schoolId}
+                  variant=""
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </>
+      ) : <>
+      
+        <Typography variant="h6" color="primary" mb={2}>
+          Driving Schools
+        </Typography>
+        <Box display="flex" alignItems={"center"} justifyContent={"center"} minHeight={"300px"} alignContent={"center"}>
+          <Typography variant="subtitle1"  >
+            Sorry, But there's no available driving school
+          </Typography>
+        </Box>
+      </>}
     </Container>
   </>
   
