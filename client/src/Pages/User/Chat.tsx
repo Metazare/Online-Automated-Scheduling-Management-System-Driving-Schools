@@ -92,9 +92,7 @@ function Chat({socket}) {
           {chats && chats?.map((chat: any) => (
             <Box display="flex" alignItems={"center"} gap={"10px"} width={"100%"} sx={{'&:hover': {backgroundColor: '#e0e0e0', cursor: 'pointer',}, padding:"1em"}} 
               onClick={() => {
-                setSelectedChat(chat);
-                navigate(`/chat/${chat?.members.filter(item => item.user !== User()[getIdType()])[0].role}/${chat?.members.filter(item => item.user !== User()[getIdType()])[0].user}`);
-                // navigate(`/chat/${chat?.getConversationPartner(selectedChat?.members, User()[getIdType()]).role}/${chat?.getConversationPartner(selectedChat?.members, User()[getIdType()]).user}`);
+                window.location.href = `/chat/${chat?.members.filter(item => item.user !== User()[getIdType()])[0].role}/${chat?.members.filter(item => item.user !== User()[getIdType()])[0].user}`;
               }}
             >
               <Avatar
@@ -138,7 +136,24 @@ function Chat({socket}) {
           }
         </Typography>
         <Box display="flex" flexDirection={"column"} sx={{padding:"1em",overflowY:"scroll",minHeight:"400px"}} flexGrow={"1"} justifyContent={"end"} gap="15px">
-          {chats && chats?.filter(item => item.chatId === selectedChat?.chatId)[0]?.messages.map((chat: any) => (<>
+          {/* {chats && chats?.filter(item => item.members === selectedChat?.chatId)[0]?.messages.map((chat: any) => (<>
+            {(chat?.user === User()[getIdType()]) ? 
+              <Box display="flex" justifyContent={"end"}>
+                <Paper elevation={3}  sx={{background:"#E24B5B",borderRadius:"8px",padding:"1em",maxWidth:"60%"}} >
+                  <Typography variant="body1" color="#F5F5F5">{chat?.message}</Typography>
+                </Paper>
+              </Box>
+              :
+              <Box display="flex" justifyContent={"start"}>
+                <Paper elevation={3}  sx={{background:"#CBCBCB",borderRadius:"8px",padding:"1em",maxWidth:"60%"}} >
+                  <Typography variant="body1" color="initial" >{chat?.message}</Typography>
+                </Paper>
+              </Box>
+            }
+          </>))} */}
+
+          
+          {chats && chats?.filter((chat) => chat.members.map((member) => member.user).includes(id))[0]?.messages?.map((chat: any) => (<>
             {(chat?.user === User()[getIdType()]) ? 
               <Box display="flex" justifyContent={"end"}>
                 <Paper elevation={3}  sx={{background:"#E24B5B",borderRadius:"8px",padding:"1em",maxWidth:"60%"}} >
@@ -153,7 +168,6 @@ function Chat({socket}) {
               </Box>
             }
           </>))}
-
           
         </Box>
         <Box display="flex" height={"100px"} gap={"10px"} alignItems={"center"}>
