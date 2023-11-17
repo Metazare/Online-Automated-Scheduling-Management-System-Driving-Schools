@@ -60,7 +60,7 @@ function useReqEnroll(): Data {
           setOpenSnackBar(openSnackBar => ({
             ...openSnackBar,
             severity:'success',
-            note:"Enroll request sent!",
+            note:"Enrollment Request Sent, Wait For School To Approve",
           })); 
           sendNotification({
             sender: User().studentId,

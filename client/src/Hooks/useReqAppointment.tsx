@@ -80,6 +80,11 @@ function useReqAppointment(): Data {
     } catch (error: any) {
       setError(error);
       console.log(error);
+      setOpenSnackBar(openSnackBar => ({
+        ...openSnackBar,
+        severity:'warning',
+        note:"Set schedule is not aligned to the availability of the student!",
+      }));
     } finally {
       setLoading(false);
     }
