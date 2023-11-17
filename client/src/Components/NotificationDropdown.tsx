@@ -10,6 +10,10 @@ import Typography from '@mui/material/Typography'
 
 import useNotif from '../Hooks/useNotif';
 import moment from 'moment';
+
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../Hooks/useAuth';
+
 type Props ={
 
 }
@@ -19,6 +23,8 @@ type Props ={
 
 
 function NotificationDropdown({socket}) {
+    const navigate = useNavigate();
+    const {getUser} = useAuth();
     const [badgeNotif ,setBadgeNotif] = useState(2);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -124,6 +130,12 @@ function NotificationDropdown({socket}) {
                               getNotification();
                               getNotification();
                               getNotification();
+                              getNotification();
+
+                              console.log(notification)
+                              // if (getUser()==="student") {
+                              //   navigate(`/course/${notification.sender}`);
+                              // }
                             }}
                           >
                             <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 24, height: 24 }} />

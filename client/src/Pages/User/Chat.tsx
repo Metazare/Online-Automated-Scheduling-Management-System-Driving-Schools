@@ -138,8 +138,6 @@ function Chat({socket}) {
         <Typography variant="h5" color="primary" fontWeight={600}>Messages</Typography>
         <Box display="flex" flexDirection={"column"}  width={"100%"} mt={"10px"}>
 
-        {/* {JSON.stringify(appendSchoolDataToChat(chats, schools))} */}
-
 {getUser() === "student" ? <>
 {chats && appendSchoolDataToChat(chats, schools)?.map((chat: any) => (
             <Box display="flex" alignItems={"center"} gap={"10px"} width={"100%"} sx={{'&:hover': {backgroundColor: '#e0e0e0', cursor: 'pointer',}, padding:"1em"}} 

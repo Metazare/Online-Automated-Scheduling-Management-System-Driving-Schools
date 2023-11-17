@@ -18,6 +18,7 @@ import { io } from 'socket.io-client';
 import moment from 'moment';
 
 import {useAuth} from '../../../Hooks/useAuth';
+import useNotif from '../../../Hooks/useNotif';
 
 // TODO Calendar and resched Modal
 
@@ -45,7 +46,8 @@ type YourStateType<T> = T | undefined;
 
 function Appointments() {
 
-  const {getUser} = useAuth();
+  const {User, getUser} = useAuth();
+  const {sendNotification} = useNotif();
 
   const { students, loading, error, getStudent } = useReqStudent();
   const { instructors, loading: instructorLoading, error: instructorError, credentials, getInstructor, createInstructor, updateInstructor} = useReqInstructor();
@@ -53,6 +55,7 @@ function Appointments() {
   const { data, loading: schoolLoading, error: schoolError, getSchool } = useReqSchool();
 
   const [selectedDay, setSelectedDay] = useState<Dayjs | null>()
+  const [selectedCourse, setSelectedCourse] = useState<YourStateType<any>>(undefined);
   const [filteredAppointments, setFilteredAppointments] = useState<any>([]);
 
     // * Reason Value 
