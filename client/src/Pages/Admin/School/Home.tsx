@@ -9,10 +9,10 @@ import useReqSchool from '../../../Hooks/useReqSchool';
 import useReqStudent from '../../../Hooks/useReqStudent';
 import useReqAppointment from '../../../Hooks/useReqAppointment';
 import useReqInstructor from '../../../Hooks/useReqInstructor';
-
-
+import TodayIcon from '@mui/icons-material/Today';
 import dayjs, { Dayjs } from 'dayjs';
-
+import WorkIcon from '@mui/icons-material/Work';
+import PersonIcon from '@mui/icons-material/Person';
 // Style for Modal
 const style = {
   position: 'absolute' as 'absolute',
@@ -101,21 +101,21 @@ function Home() {
             <Paper variant="elevation" elevation={3} sx={{padding:"1em",marginBottom:"25px",opacity:".7"}}>
                 <div style={{display:"flex"}}>
                     <Typography sx={{flexGrow:"1"}} variant="subtitle1" color="primary" mb={"15px"}>Total Appointments</Typography>
-                    <AttachMoneyIcon sx={{fill:"#E24B5B"}}/> 
+                    <TodayIcon sx={{fill:"#E24B5B"}}/> 
                 </div>
                 <Typography  variant="h4" color="initial">{appointments?.length}</Typography>
             </Paper>
             <Paper variant="elevation" elevation={3} sx={{padding:"1em",marginBottom:"25px",opacity:".7"}}>
                 <div style={{display:"flex"}}>
                     <Typography sx={{flexGrow:"1"}} variant="subtitle1" color="primary" mb={"15px"}>Total Instructors</Typography>
-                    <AttachMoneyIcon sx={{fill:"#E24B5B"}}/> 
+                    <WorkIcon sx={{fill:"#E24B5B"}}/> 
                 </div>
                 <Typography  variant="h4" color="initial">{instructors?.length}</Typography>
             </Paper>
             <Paper variant="elevation" elevation={3} sx={{padding:"1em",marginBottom:"25px",opacity:".7"}}>
                 <div style={{display:"flex"}}>
                     <Typography sx={{flexGrow:"1"}} variant="subtitle1" color="primary" mb={"15px"}>Total Students</Typography>
-                    <AttachMoneyIcon sx={{fill:"#E24B5B"}}/> 
+                    <PersonIcon sx={{fill:"#E24B5B"}}/> 
                 </div>
                 <Typography  variant="h4" color="initial">{students?.length}</Typography>
             </Paper>

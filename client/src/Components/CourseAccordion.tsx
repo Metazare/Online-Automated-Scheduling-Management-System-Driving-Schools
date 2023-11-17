@@ -302,29 +302,23 @@ function CourseAccordion({variant,title, courseId}:Props) {
                                 />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    required
-                                    id="description"
-                                    label="Description"
-                                    value={editForm.description}
-                                    onChange={(event)=>{setEditForm({...editForm, description : event.target.value })}}
-                                />
+                              <TextField
+                                  fullWidth
+                                  required
+                                  id="description"
+                                  label="Description"
+                                  value={editForm.description}
+                                  onChange={(event)=>{setEditForm({...editForm, description : event.target.value })}}
+                              />
                             </Grid>
                             <Grid item xs={12}>
-                                <TextField
-                                    fullWidth
-                                    id="description"
-                                    type='file'
-                                    // accept=".pdf"
-                                    // onChange={(e:any)=>{console.log(e.target.files[0])}}
-                                />
-                                <input
-                                    type="file"
-                                    accept=".pdf"
-                                    onChange={(e:any)=>{uploadImage(e.target.files[0])}}
-                                    id="file-upload-input"
-                                  />
+                              <TextField
+                                  fullWidth
+                                  id="file-upload-input"
+                                  type='file'
+                                  inputProps={{ accept: '.pdf' }}
+                                  onChange={(e:any)=>{uploadImage(e.target.files[0])}}
+                              />
                             </Grid>
                             
                             <Grid item sm={4} xs={12}>
@@ -371,16 +365,10 @@ function CourseAccordion({variant,title, courseId}:Props) {
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
-                                  {/* <TextField
+                                  <TextField
                                     fullWidth
-                                    id="description"
                                     type='file'
-                                    accept=".pdf"
-                                    onChange={(e:any)=>{console.log(e.target.files[0])}}
-                                  /> */}
-                                  <input
-                                    type="file"
-                                    accept=".pdf"
+                                    inputProps={{ accept: '.pdf' }}
                                     onChange={(e:any)=>{uploadImage(e.target.files[0])}}
                                     id="file-upload-input"
                                   />
