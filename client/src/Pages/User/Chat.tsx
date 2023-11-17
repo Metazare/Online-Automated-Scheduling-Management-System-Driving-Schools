@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
@@ -14,11 +14,13 @@ import Paper from '@mui/material/Paper'
 
 import useChat from '../../Hooks/useChat'
 import { useAuth } from '../../Hooks/useAuth'
+import useReqSchool from '../../Hooks/useReqSchool'
 
 function Chat({socket}) {
-
+  const navigate = useNavigate();
   const { id, type } = useParams();
 
+  const { data: school, getSchool } = useReqSchool();
   const { chats, loading, error, sendChat, getChat } = useChat();
   const { User, getUser } = useAuth();
   const [selectedChat, setSelectedChat] = useState<any>();
@@ -29,21 +31,20 @@ function Chat({socket}) {
     socket.connect();
 
     if(!chats){
-      getChat({
-        userId: id,
-        role: type
-      })
+      getChat()
     }
 
     socket.on('chat', (data) => {
       console.log(data)
-      getChat({
-        userId: id,
-        role: type
-      })
+      getChat()
     });
 
-    console.log(chats?.filter(item => item.user !== "VAYEsdyuyT_J7LPlnPlyWcf13yx7dtrZBH")[0])
+    if (getUser()==="student"){
+      getSchool({
+        schoolId: id
+      })
+    }
+    
 
     // Clean up the socket connection on component unmount
     return () => {
@@ -66,14 +67,20 @@ function Chat({socket}) {
   }
 
   function getConversationPartner(data, userId) {
-    // console.log(data.filter(item => item.user !== userId))
     return data.filter(item => item.user !== userId)[0];
   }
 
-  function findConversation(data, chatId) {
-    console.log(data.filter(item => item.chatId !== chatId)[0])
-    return data.filter(item => item.chatId !== chatId)[0];
+  function getChatData(){
+
   }
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // if (!id) {
+  //   return <div>No chats available</div>;
+  // }
 
   return <>
     <Box sx={{background:"white",position:"fixed",top:"66px",left:"0",height:"100%",width:"100%",display:"flex"}}>
@@ -86,6 +93,8 @@ function Chat({socket}) {
             <Box display="flex" alignItems={"center"} gap={"10px"} width={"100%"} sx={{'&:hover': {backgroundColor: '#e0e0e0', cursor: 'pointer',}, padding:"1em"}} 
               onClick={() => {
                 setSelectedChat(chat);
+                navigate(`/chat/${chat?.members.filter(item => item.user !== User()[getIdType()])[0].role}/${chat?.members.filter(item => item.user !== User()[getIdType()])[0].user}`);
+                // navigate(`/chat/${chat?.getConversationPartner(selectedChat?.members, User()[getIdType()]).role}/${chat?.getConversationPartner(selectedChat?.members, User()[getIdType()]).user}`);
               }}
             >
               <Avatar
@@ -117,6 +126,16 @@ function Chat({socket}) {
       <Box flexGrow={1} sx={{background:"",height:"95%",padding:"1em"}} display={"flex"} flexDirection={"column"}>
         <Typography variant="h5" color="primary">
           {/* {selectedChat && selectedChat?.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).user} */}
+          {/* {id || <>Select a Conversation Partner</>} */}
+          {getUser() === "student" ? <>
+            { selectedChat && getConversationPartner(selectedChat?.members, User()[getIdType()]).user 
+            ? <>{school?.name}</> 
+            : <>{school?.name}</>
+            }
+          </> : <>
+            Student
+          </>
+          }
         </Typography>
         <Box display="flex" flexDirection={"column"} sx={{padding:"1em",overflowY:"scroll",minHeight:"400px"}} flexGrow={"1"} justifyContent={"end"} gap="15px">
           {chats && chats?.filter(item => item.chatId === selectedChat?.chatId)[0]?.messages.map((chat: any) => (<>
@@ -134,6 +153,8 @@ function Chat({socket}) {
               </Box>
             }
           </>))}
+
+          
         </Box>
         <Box display="flex" height={"100px"} gap={"10px"} alignItems={"center"}>
           <TextField
@@ -149,15 +170,6 @@ function Chat({socket}) {
             color="primary" 
             sx={{height:"4em",width:"150px"}}
             onClick={() => {
-              
-              // console.log("SENDER")
-              // console.log(User()[getIdType()])
-              // console.log(getUser())
-
-              // console.log("RECEIVER")
-              // console.log(selectedChat && selectedChat.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).user)
-              // console.log(selectedChat && selectedChat.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).role)
-
               sendChat({
                 sender: { 
                   userId: User()[getIdType()],
@@ -170,6 +182,7 @@ function Chat({socket}) {
                 message: message,
               });
               setMessage("");
+              getChat();
             }}
           >
             Send
