@@ -117,8 +117,20 @@ export default function Header({socket}) {
 
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Typography variant="subtitle1" color="#ffffff" sx={{marginRight:"10px",marginLeft:"20px"}}>{!User().name.first ? User().name : User().name.first + " " + User().name.last }</Typography>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Typography
+                    variant="subtitle1"
+                    color="#ffffff"
+                    sx={{ marginRight: "10px", marginLeft: "20px" }}
+                  >
+                    {!User().name.first
+                      ? User().name
+                      : User().name.first.charAt(0).toUpperCase() +
+                        User().name.first.slice(1) +
+                        " " +
+                        User().name.last.charAt(0).toUpperCase() +
+                        User().name.last.slice(1)}
+                  </Typography>
+                  <Avatar alt={!User().name.first ? User().name : User().name.first + " " + User().name.last } />
                   
                 </IconButton>
               </Tooltip>
