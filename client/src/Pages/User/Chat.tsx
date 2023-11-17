@@ -200,11 +200,13 @@ function Chat({socket}) {
             variant="outlined"
             value={message}
             onChange={(e) => setMessage(e.target.value)}
+            disabled={id ? false : true}
           />
           <Button 
             variant="contained" 
             color="primary" 
             sx={{height:"4em",width:"150px"}}
+            disabled={id ? false : true}
             onClick={() => {
               sendChat({
                 sender: { 
