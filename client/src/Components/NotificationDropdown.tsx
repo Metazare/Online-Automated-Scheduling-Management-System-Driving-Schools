@@ -8,11 +8,8 @@ import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Typography from '@mui/material/Typography'
 
-import { Link } from 'react-router-dom';
-
 import useNotif from '../Hooks/useNotif';
-import { Chip } from '@mui/material';
-
+import moment from 'moment';
 type Props ={
 
 }
@@ -106,37 +103,39 @@ function NotificationDropdown({socket}) {
                 <Box sx={{padding:".5em 1em .5em"}} width={"300px"}>
                     <Typography variant="h6"  color={"primary"}>Notification</Typography>
                     <hr />
-                    <Box display={"flex"} flexDirection={"column"} padding={"10px 0"}  sx={{maxHeight:"80vh",overflowY:"scroll"}}>
+                    <Box display={"flex"} flexDirection={"column"} padding={"10px 0"}  sx={{maxHeight:"80vh",overflowY:"scroll",gap:".5em"}}>
 
                       {loading ? <p>Loading...</p> : error ? <p>{error.message}</p> : <>
                         {notifications && notifications.map((notification: any) => (
-                            <Box display={"flex"} padding={".5em"} 
-                                sx={{
-                                    "&:hover": {
-                                    backgroundColor: "#d9d9d9", // Change this to the background color you desire on hover
-                                    },
-                                    borderRadius:"8px"
-                                }}
-                                key={notification.id}
-                                onClick={() => {
-                                  readNotification({ notificationId: notification.notificationId });
-                                  getNotification();
-                                  getNotification();
-                                  getNotification();
-                                }}
-                            >
-                                <Avatar
-                                    alt="Remy Sharp"
-                                    src="/static/images/avatar/1.jpg"
-                                    sx={{ width: 24, height: 24 }}
-                                />
-                                <Box display="" >
-                                    {/* <Typography variant="subtitle2" color="initial" fontSize={"11px"}><span>Harold James H. Castillo </span>  to Dianne Chrystalin Brandez</Typography> */}
-                                    {notification?.status === "unread" && <Typography variant="subtitle2" color="initial" fontSize={"8px"}>New</Typography>}
-                                    <Typography variant="body2" color="initial"  fontSize={"10px"}>{notification.content}</Typography>
-                                    
-                                </Box>
+                            <Box
+                            display="flex"
+                            padding=".5em"
+                            sx={{
+                              "&:hover": {
+                                backgroundColor: "#2795D4",
+                                color:"white",cursor:"pointer"
+                              },
+                              borderRadius: "8px",
+                              backgroundColor: notification?.status === "unread" ? "#d7d7d7" : "transparent",
+                            }}
+                            key={notification.id}
+                            onClick={() => {
+                              readNotification({ notificationId: notification.notificationId });
+                              getNotification();
+                              getNotification();
+                              getNotification();
+                            }}
+                          >
+                            <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 24, height: 24 }} />
+                            <Box display="">
+                              {/* <Typography variant="subtitle2" color="initial" fontSize="11px">
+                                <span>Harold James H. Castillo </span> to Dianne Chrystalin Brandez
+                              </Typography> */}
+                              <Typography variant="body2" color="inherit" fontSize="10px">
+                                {notification.content}
+                              </Typography>
                             </Box>
+                          </Box>
                         ))}
                       </>}
                     </Box>
