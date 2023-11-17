@@ -20,7 +20,8 @@ function Chat({socket}) {
   const navigate = useNavigate();
   const { id, type } = useParams();
 
-  const { data: school, getSchool } = useReqSchool();
+  const { data: school, getSchool,  } = useReqSchool();
+  const {data:schools, getSchool: getSchools} = useReqSchool();
   const { chats, loading, error, sendChat, getChat } = useChat();
   const { User, getUser } = useAuth();
   const [selectedChat, setSelectedChat] = useState<any>();
@@ -44,7 +45,10 @@ function Chat({socket}) {
         schoolId: id
       })
     }
-    
+
+    getSchools({
+      schoolId: null
+    })
 
     // Clean up the socket connection on component unmount
     return () => {
@@ -52,6 +56,7 @@ function Chat({socket}) {
     };
   }, []); // Run only once on component mount
 
+  
 
   function getIdType(){
     switch(getUser()){
@@ -70,11 +75,25 @@ function Chat({socket}) {
     return data.filter(item => item.user !== userId)[0];
   }
 
-  function getChatData(){
+  function appendSchoolDataToChat(chatData, schoolData) {
+    // Iterate through school data
+    schoolData.forEach(school => {
+        // Find the chat associated with the school
+        const associatedChat = chatData.find(chat =>
+            chat.members.some(member => member.user === school.schoolId)
+        );
 
-  }
+        if (associatedChat) {
+            // Append school data to the chat object
+            associatedChat.schoolData = school;
+        }
+    });
 
-  if (loading) {
+    console.log(chatData)
+    return chatData;
+}
+
+  if (!schools || loading) {
     return <div>Loading...</div>;
   }
 
@@ -89,7 +108,9 @@ function Chat({socket}) {
         <Typography variant="h5" color="primary" fontWeight={600}>Messages</Typography>
         <Box display="flex" flexDirection={"column"}  width={"100%"} mt={"10px"}>
 
-          {chats && chats?.map((chat: any) => (
+        {/* {JSON.stringify(appendSchoolDataToChat(chats, schools))} */}
+
+          {chats && appendSchoolDataToChat(chats, schools)?.map((chat: any) => (
             <Box display="flex" alignItems={"center"} gap={"10px"} width={"100%"} sx={{'&:hover': {backgroundColor: '#e0e0e0', cursor: 'pointer',}, padding:"1em"}} 
               onClick={() => {
                 window.location.href = `/chat/${chat?.members.filter(item => item.user !== User()[getIdType()])[0].role}/${chat?.members.filter(item => item.user !== User()[getIdType()])[0].user}`;
@@ -101,7 +122,7 @@ function Chat({socket}) {
                 sx={{ width: 40, height: 40 }}
               />
               <Box width={"100%"}>
-                <Typography variant="subtitle2" color="initial">{chat?.chatId}</Typography>
+                <Typography variant="subtitle2" color="initial">{chat?.schoolData?.name}</Typography>
                 <Typography
                   variant="body2"
                   color="initial"
@@ -114,6 +135,7 @@ function Chat({socket}) {
                   }}
                 >
                   {chat?.messages[chat.messages.length - 1]?.message}
+                  
                 </Typography>
               </Box>
             </Box>
