@@ -24,19 +24,26 @@ function Chat({socket}) {
   const [selectedChat, setSelectedChat] = useState<any>();
   const [message, setMessage] = useState<string>('');
 
-  
-
   useEffect(() => {
     // Connect to the socket.io server
     socket.connect();
 
     if(!chats){
-      getChat()
+      getChat({
+        userId: id,
+        role: type
+      })
     }
 
     socket.on('chat', (data) => {
-      getChat()
+      console.log(data)
+      getChat({
+        userId: id,
+        role: type
+      })
     });
+
+    console.log(chats?.filter(item => item.user !== "VAYEsdyuyT_J7LPlnPlyWcf13yx7dtrZBH")[0])
 
     // Clean up the socket connection on component unmount
     return () => {
@@ -59,7 +66,7 @@ function Chat({socket}) {
   }
 
   function getConversationPartner(data, userId) {
-    console.log(data.filter(item => item.user !== userId))
+    // console.log(data.filter(item => item.user !== userId))
     return data.filter(item => item.user !== userId)[0];
   }
 
@@ -70,6 +77,7 @@ function Chat({socket}) {
 
   return <>
     <Box sx={{background:"white",position:"fixed",top:"66px",left:"0",height:"100%",width:"100%",display:"flex"}}>
+      {/* {JSON.stringify(chats?.filter(item => item.chatId === "VAYEsdyuyT_J7LPlnPlyWcf13yx7dtrZBH")[0])} */}
       <Box width={"300px"} height={"100%"} sx={{borderRight:"1px solid #cbcbcb",padding:"1em"}}>
         <Typography variant="h5" color="primary" fontWeight={600}>Messages</Typography>
         <Box display="flex" flexDirection={"column"}  width={"100%"} mt={"10px"}>
@@ -108,10 +116,10 @@ function Chat({socket}) {
 
       <Box flexGrow={1} sx={{background:"",height:"95%",padding:"1em"}} display={"flex"} flexDirection={"column"}>
         <Typography variant="h5" color="primary">
-          {selectedChat && selectedChat?.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).user}
+          {/* {selectedChat && selectedChat?.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).user} */}
         </Typography>
         <Box display="flex" flexDirection={"column"} sx={{padding:"1em",overflowY:"scroll",minHeight:"400px"}} flexGrow={"1"} justifyContent={"end"} gap="15px">
-          {selectedChat && selectedChat?.messages && selectedChat?.messages.map((chat: any) => (<>
+          {chats && chats?.filter(item => item.chatId === selectedChat?.chatId)[0]?.messages.map((chat: any) => (<>
             {(chat?.user === User()[getIdType()]) ? 
               <Box display="flex" justifyContent={"end"}>
                 <Paper elevation={3}  sx={{background:"#E24B5B",borderRadius:"8px",padding:"1em",maxWidth:"60%"}} >
@@ -142,13 +150,13 @@ function Chat({socket}) {
             sx={{height:"4em",width:"150px"}}
             onClick={() => {
               
-              console.log("SENDER")
-              console.log(User()[getIdType()])
-              console.log(getUser())
+              // console.log("SENDER")
+              // console.log(User()[getIdType()])
+              // console.log(getUser())
 
-              console.log("RECEIVER")
-              console.log(selectedChat && selectedChat.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).user)
-              console.log(selectedChat && selectedChat.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).role)
+              // console.log("RECEIVER")
+              // console.log(selectedChat && selectedChat.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).user)
+              // console.log(selectedChat && selectedChat.members && getConversationPartner(selectedChat?.members, User()[getIdType()]).role)
 
               sendChat({
                 sender: { 
@@ -162,7 +170,6 @@ function Chat({socket}) {
                 message: message,
               });
               setMessage("");
-              getChat();
             }}
           >
             Send

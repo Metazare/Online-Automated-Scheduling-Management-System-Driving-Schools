@@ -9,13 +9,18 @@ interface Data {
   loading: boolean;
   error: Error | null;
   sendChat: (data: SendChatData) => void;
-  getChat: () => void;
+  getChat: (data: GetChatData) => void;
 }
 
 interface SendChatData {
   sender: { userId: string; role: string };
   receiver: { userId: string; role: string };
   message: string;
+}
+
+interface GetChatData {
+  userId?: string,
+  role?: string
 }
 
 function useChat(): Data {
@@ -33,7 +38,7 @@ function useChat(): Data {
     socket.emit('chat', chatData);
   };
 
-  const getChat = async () => {
+  const getChat = async (data: GetChatData) => {
     try {
       await axios
       .get('/chats')
