@@ -5,22 +5,21 @@ import React from 'react';
 import { Button } from '@react-email/components';
 import { FormLabel  } from "@mui/material"
 import { Input } from '@mui/material';
+import axios from 'axios';
 
 const resend = new Resend(process.env.RESEND_KEY);
+
+interface sendingEmail {
+    from: string;
+    to: string;
+    subject: string;
+    react: any;
+}
 
 const dateAsString = '2023-11-10T12:00:00Z';
 
 export async function POST(){
-    await resend.emails.send({
-        from: 'v0h7H@example.com',
-        to: 'deuzaxel@gmail.com',
-        subject: 'Slack Confirm Email',
-        react: SlackConfirmEmail({
-            reservationNumber: '12345',
-            reservationDate: new Date(dateAsString),
-            reservationStatus: 'Pending',
-        })
-    })
+    
 }
 
 const SendEmails = () => {
@@ -29,14 +28,25 @@ const SendEmails = () => {
         e.preventDefault();
 
         const formData: Record<string, string> = {};
-
-        await fetch('/api/email', {
-        method: 'POST',
-        body: JSON.stringify({
-            firstName: formData.firstName,
-            email: formData.email
-        })
-        })
+        try{
+            await axios
+            .post('/otp', {
+                from: 'v0h7H@example.com',
+                to: 'deuzaxel@gmail.com',
+                subject: 'Slack Confirm Email',
+                react: SlackConfirmEmail({
+                    reservationNumber: '12345',
+                    reservationDate: new Date(dateAsString),
+                    reservationStatus: 'Pending',
+                })
+            })
+            .then((response:any)=>{
+                console.log(response.data);
+                alert("Email sent!");
+            });
+        } catch (error: any) {
+            console.log(error);
+        }
     }
 
     return (

@@ -19,6 +19,7 @@ import Logout from './Test/Logout';
 import AddCourse from './Test/AddCourse';
 import EnrollStudent from './Test/EnrollStudent';
 import EnrollGet from './Test/EnrollGet';
+import SendEmails from './Test/SendEmail';
 // import AppointmentCreate from './Test/AppointmentCreate';
 
 
@@ -51,6 +52,9 @@ function App() {
           <Route path="/register" element={<Register/>} />
           <Route path="/" element={<LandingPage/>} />
           <Route path="*" element={<LandingPage/>} />
+            
+          {/* test */}
+          <Route path="/sendEmail" element={<SendEmails/>} />
           
           {/* admin */}
           <Route element={<ProtectedRoute allowedRoles={["admin", "instructor"]}/>}>
