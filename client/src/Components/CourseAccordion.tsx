@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useState,useContext} from 'react'
 import {storage} from "./../firebase";
 import {ref, uploadBytes, getDownloadURL} from "firebase/storage";
 import {v4} from 'uuid'
@@ -13,6 +13,8 @@ import Box from '@mui/material/Box';
 import {  Grid, IconButton, Typography,Modal , TextField, Button } from '@mui/material';
 import CircularProgress, {CircularProgressProps,} from '@mui/material/CircularProgress';
 import VerifiedIcon from '@mui/icons-material/Verified';
+
+import { SnackbarContext } from '../Context/SnackbarContext';
 
 import useReqLesson from '../Hooks/useReqLesson';
 import useReqCourse from '../Hooks/useReqCourse';
@@ -67,7 +69,7 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 
 
 function CourseAccordion({variant,title, courseId}:Props) {
-
+    const{setOpenSnackBar} = useContext(SnackbarContext)
     const {
       data:lessons, 
       datum: lesson,
@@ -157,12 +159,20 @@ function CourseAccordion({variant,title, courseId}:Props) {
 
     const uploadImage = (image) => {
       if (image == null) return;
-      alert("Uploading image...")
+      setOpenSnackBar(openSnackBar => ({
+        ...openSnackBar,
+        severity:'warning', 
+        note:"Please wait, Uploading Image...",
+      })); 
       const imageRef = ref(storage, `oasms/${image.name + v4()}`);
       uploadBytes(imageRef, image).then(async () => {
         const downloadURL = await getDownloadURL(imageRef);
         console.log('Download URL:', downloadURL);
-        alert("Image Uploaded!")
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'success',
+          note:"Image Successfully Uploaded",
+        })); 
         setForm({
           ...form,
           file: downloadURL

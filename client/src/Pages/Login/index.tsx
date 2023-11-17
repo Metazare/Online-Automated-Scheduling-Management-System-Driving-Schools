@@ -1,4 +1,4 @@
-import React, { useState} from 'react'
+import React, { useState,useContext} from 'react'
 
 import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
@@ -8,9 +8,11 @@ import Button from '@mui/material/Button';
 import patternImg from '../../Images/Resources/Pattern.jpg'
 
 import { useAuth } from '../../Hooks/useAuth';
+import { SnackbarContext } from '../../Context/SnackbarContext';
 
 function Index() {
   const { login } = useAuth();
+  const{setOpenSnackBar} = useContext(SnackbarContext)
   const styleContainer = {
     minHeight:"100vh",
     display:"grid",

@@ -40,18 +40,7 @@ const theme = createTheme({
 const socket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000');
 
 
-type Props = {
-  openSnackbar: {
-    severity: AlertColor;
-    note: string;
-  };
-  setOpenSnackbar: React.Dispatch<React.SetStateAction<{
-    severity: AlertColor;
-    note: string;
-  }>>;
-};
-
-function App({openSnackbar,setOpenSnackbar}:Props) {
+function App() {
   return (
     <ThemeProvider theme={theme}>
       <Routes>

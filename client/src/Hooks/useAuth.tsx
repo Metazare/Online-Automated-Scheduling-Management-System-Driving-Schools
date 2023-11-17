@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import {useNavigate, Outlet, Navigate} from 'react-router-dom';
 import axios from './useAxios';
+import { SnackbarContext } from '../Context/SnackbarContext';
 
 interface AuthContextState {
     user: any;
@@ -46,36 +47,40 @@ export const AuthContext = createContext<AuthContextState>({
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const navigate = useNavigate()
     const [user, setUser] = useState<any>(null);
-
+    const{setOpenSnackBar} = useContext(SnackbarContext)
     const login = async (data: LoginData) => {
         const { email, password} = data;
         try{
-            await axios
-            .post(`/auth/login`,{
-                "email" : email,
-                "password" : password
-            })
-            .then((response: any) => {
-                console.log(response.data)
-                setUser(response.data);
+          await axios
+          .post(`/auth/login`,{
+              "email" : email,
+              "password" : password
+          })
+          .then((response: any) => {
+              console.log(response.data)
+              setUser(response.data);
 
-                if (response.data.schoolId) {
-                  navigate("/dashboard")  
-                }
-                else if (response.data.studentId) {
-                  navigate("/home")  
-                }
-                else if (response.data.instructorId) {
-                  navigate("/dashboard")  
-                }
+              if (response.data.schoolId) {
+                navigate("/dashboard")  
+              }
+              else if (response.data.studentId) {
+                navigate("/home")  
+              }
+              else if (response.data.instructorId) {
+                navigate("/dashboard")  
+              }
 
-                localStorage.setItem('user', JSON.stringify(response.data))
-            });
-        }
-        catch (error: any){
-            console.log(error);
-            alert(error.response.data.message);
-        }
+              localStorage.setItem('user', JSON.stringify(response.data))
+          });
+      }
+      catch (error: any){
+        console.log(error);
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'error',
+          note:error.response.data.message,
+        })); 
+      }
     };
 
     const register = async (data: RegisterData) => {
@@ -100,13 +105,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           })
           .then((response: any) => {
               console.log(response.data)
-              alert("Account created!")
+              setOpenSnackBar(openSnackBar => ({
+                ...openSnackBar,
+                severity:'success',
+                note:"Account created!",
+              })); 
               navigate("/login")
           });
       }
       catch (error: any){
-          console.log(error);
-          alert(error.message);
+        console.log(error);
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'error',
+          note:error.message,
+        })); 
       }
     };
 

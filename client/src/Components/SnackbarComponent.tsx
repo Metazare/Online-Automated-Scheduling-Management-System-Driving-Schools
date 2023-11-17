@@ -1,35 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import Button from '@mui/material/Button';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps, AlertColor } from '@mui/material/Alert';
 
-
+import { SnackbarContext } from '../Context/SnackbarContext';
 
 
 
 // TODO STEP 1 : Import Utilities
-// import MuiAlert, { AlertProps, AlertColor } from '@mui/material/Alert';
-// import SnackbarComponent 
+// import React, { useState,useContext } from 'react';
+// import { SnackbarContext } from '../../Context/SnackbarContext';
 
 
-// TODO STEP 2 : Declare snackbar usestate  
+// TODO STEP 2 : Declare snackbar usestate using Context 
 {/*
-  const [openSnackBar, setOpenSnackBar] = useState<{
-    severity: AlertColor;
-    note: string;
-    }>({
-    severity: 'info',
-    note: '',
-  });
+  const{setOpenSnackBar} = useContext(SnackbarContext)
 */}
 
 
 // TODO STEP 3 : place the snackbar component somewhere in return of your function page
-{/* 
-  <SnackbarComponent  openSnackbar={openSnackBar} setOpenSnackbar={setOpenSnackBar} /> 
-*/}
-
-// TODO STEP 4 : use this function to trigger the snacbar by putting a text on the note
 {/* 
   setOpenSnackBar(openSnackBar => ({
     ...openSnackBar,

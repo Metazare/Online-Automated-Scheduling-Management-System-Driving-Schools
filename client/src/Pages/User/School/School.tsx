@@ -1,4 +1,5 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState, useEffect,useContext} from 'react'
+
 import io from 'socket.io-client';
 
 // * MUI Imports
@@ -21,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 
 // 
 import moment from 'moment';
+import { SnackbarContext } from '../../../Context/SnackbarContext';
 // * Components
 import CourseCard from '../../../Components/CourseCard'
 import MenuItem from '@mui/material/MenuItem';
@@ -34,6 +36,7 @@ import { useParams } from 'react-router-dom';
 // const socket = io('http://localhost:5000');
 
 function School() {
+  const{setOpenSnackBar} = useContext(SnackbarContext)
   const navigate = useNavigate();
   const {data, loading, getSchool} = useReqSchool();
   const {data:lessons, loading:lessonLoading, getLessons} = useReqLesson();
@@ -117,7 +120,11 @@ function School() {
     async function submit(e: any) {
       e.preventDefault();
       if ((appendSelectedDays(form).length === 0) || !form.startTime || !form.endTime) {
-        alert("Please select at least one day");
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'warning',
+          note:"Please select at least one day",
+        })); 
         return;
       }
       enroll({
@@ -127,7 +134,11 @@ function School() {
         endTime: form.endTime,
         schoolId: id || "undefined"
       });
-      alert(enrollError)
+      setOpenSnackBar(openSnackBar => ({
+        ...openSnackBar,
+        severity:'error',
+        note:enrollError,
+      })); 
       console.log(enrollError)
     }
 

@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState, useEffect,useContext} from 'react'
 import {  Grid, IconButton, Typography, TextField } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -20,6 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import useReqInstructor from '../../../Hooks/useReqInstructor';
 import moment from 'moment';
 
+import { SnackbarContext } from '../../../Context/SnackbarContext';
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -64,7 +65,7 @@ function Instructors() {
         email:"",
     })
 
-
+    const{setOpenSnackBar} = useContext(SnackbarContext)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const openAnchor = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -290,7 +291,11 @@ function Instructors() {
                                                     aria-label="toggle password visibility"
                                                     onClick={()=>{
                                                         navigator.clipboard.writeText(credentials?.email);
-                                                        alert("Email Copied!")
+                                                        setOpenSnackBar(openSnackBar => ({
+                                                          ...openSnackBar,
+                                                          severity:'success',
+                                                          note:"Email Copied!",
+                                                        })); 
                                                     }}
                                                     edge="end"
                                                     >
@@ -316,7 +321,11 @@ function Instructors() {
                                                     aria-label="toggle password visibility"
                                                     onClick={()=>{
                                                         navigator.clipboard.writeText(credentials?.password);
-                                                        alert("Password Copied!")
+                                                        setOpenSnackBar(openSnackBar => ({
+                                                          ...openSnackBar,
+                                                          severity:'success',
+                                                          note:"Password Copied",
+                                                        })); 
                                                     }}
                                                     edge="end"
                                                     >

@@ -1,9 +1,9 @@
-import {useState} from 'react'
+import {useState,useContext} from 'react'
 import axios from './useAxios'
 import {useNavigate} from 'react-router-dom';
 import { useAuth } from './useAuth';
 import useNotif from './useNotif';
-
+import { SnackbarContext } from '../Context/SnackbarContext';
 interface Data {
   data: any;
   loading: boolean;
@@ -36,6 +36,7 @@ interface UpdateEnrollmentData {
 }
 
 function useReqEnroll(): Data {
+  const{setOpenSnackBar} = useContext(SnackbarContext)
   const navigate = useNavigate();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -56,8 +57,11 @@ function useReqEnroll(): Data {
         })
         .then((response:any)=>{
           console.log(response.data);
-          alert("Enroll request sent!");
-
+          setOpenSnackBar(openSnackBar => ({
+            ...openSnackBar,
+            severity:'success',
+            note:"Enroll request sent!",
+          })); 
           sendNotification({
             sender: User().studentId,
             targets: [

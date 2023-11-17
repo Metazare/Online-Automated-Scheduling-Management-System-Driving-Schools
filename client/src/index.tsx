@@ -8,7 +8,7 @@ import MuiAlert, { AlertProps, AlertColor } from '@mui/material/Alert';
 
 import './Styles/main.scss';
 import SnackbarComponent from './Components/SnackbarComponent';
-
+import {SnackbarContext} from './Context/SnackbarContext'
 const Root = () => {
   const [openSnackBar, setOpenSnackBar] = useState<{
     severity: AlertColor;
@@ -21,12 +21,14 @@ const Root = () => {
   return (
     <React.StrictMode>
       <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/*" element={<App  openSnackbar={openSnackBar} setOpenSnackbar={setOpenSnackBar} />} />
-          </Routes>
-        </AuthProvider>
-        <SnackbarComponent openSnackbar={openSnackBar} setOpenSnackbar={setOpenSnackBar} />
+        <SnackbarContext.Provider value={{openSnackBar,setOpenSnackBar}}>
+          <AuthProvider>
+            <Routes>
+              <Route path="/*" element={<App/>} />
+            </Routes>
+          </AuthProvider>
+          <SnackbarComponent openSnackbar={openSnackBar} setOpenSnackbar={setOpenSnackBar} />
+        </SnackbarContext.Provider>
       </BrowserRouter>
     </React.StrictMode>
   );

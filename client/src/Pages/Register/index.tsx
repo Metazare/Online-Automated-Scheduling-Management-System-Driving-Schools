@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
 
 // mui utilities
 import Typography from '@mui/material/Typography';
@@ -22,12 +22,11 @@ import schoolImg from '../../Images/Resources/school.png';
 
 // Hooks
 import { useAuth } from '../../Hooks/useAuth';
-
-// SnackbarComponent
-import MuiAlert, { AlertProps, AlertColor } from '@mui/material/Alert';
-import SnackbarComponent from '../../Components/SnackbarComponent';
+import { SnackbarContext } from '../../Context/SnackbarContext';
 
 function Index() {
+  const{setOpenSnackBar} = useContext(SnackbarContext)
+
   const { register } = useAuth();
 
   const styleContainer = {
@@ -37,14 +36,6 @@ function Index() {
 
   };
 
-
-  const [openSnackBar, setOpenSnackBar] = useState<{
-    severity: AlertColor;
-    note: string;
-  }>({
-    severity: 'info',
-    note: '',
-  });
 
   
 
@@ -88,7 +79,11 @@ function Index() {
       register(form);
     } 
     else {
-      alert("Passwords do not match");
+      setOpenSnackBar(openSnackBar => ({
+        ...openSnackBar,
+        severity:'error',
+        note:"Passwords do not match",
+      })); 
     }
   };
 
@@ -404,7 +399,6 @@ function Index() {
           
         </div>
       </div>
-      <SnackbarComponent  openSnackbar={openSnackBar} setOpenSnackbar={setOpenSnackBar} />
     </div>
   )
 }

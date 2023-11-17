@@ -1,9 +1,9 @@
-import {useState} from 'react'
+import {useState,useContext} from 'react'
 import axios from './useAxios'
 
 import { useAuth } from './useAuth';
 import useNotif from './useNotif'
-
+import { SnackbarContext } from '../Context/SnackbarContext';
 interface Data {
   appointments: any;
   loading: boolean;
@@ -35,6 +35,8 @@ interface UpdateAppointmentData {
 }
 
 function useReqAppointment(): Data {
+  const{setOpenSnackBar} = useContext(SnackbarContext)
+
   const [appointments, setAppointments] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -69,8 +71,11 @@ function useReqAppointment(): Data {
           ],
           content: 'New appointment for ' + data.enrollmentId + ' on ' + data.schedule 
         })
-
-        alert("Appointment set!");
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'success',
+          note:"Appointment set!",
+        }));
       });
     } catch (error: any) {
       setError(error);
@@ -116,7 +121,11 @@ function useReqAppointment(): Data {
       })
       .then((response:any)=>{
         console.log(response.data);
-        alert(response.data);
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'info',
+          note:response.data,
+        })); 
       });
     } catch (error: any) {
       setError(error);

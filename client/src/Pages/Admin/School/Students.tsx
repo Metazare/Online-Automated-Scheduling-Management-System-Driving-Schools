@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState, useEffect,useContext} from 'react'
 import {  Grid, Typography, IconButton, TextField } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -23,6 +23,7 @@ import useReqSchool from '../../../Hooks/useReqSchool';
 import useReqLesson from '../../../Hooks/useReqLesson';
 import moment from 'moment';
 import ChatIcon from '@mui/icons-material/Chat';
+import { SnackbarContext } from '../../../Context/SnackbarContext';
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -82,6 +83,7 @@ function CalculateProgress(data){
 type YourStateType<T> = T | undefined;
 
 function Students() {
+    const{setOpenSnackBar} = useContext(SnackbarContext)
 
     const { updateProgress } = useReqLesson();
     const { students, loading, error, getStudent } = useReqStudent();
@@ -152,7 +154,11 @@ function Students() {
         })
       }
       else {
-        alert("Please Select Course and Lesson");
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'warning',
+          note:"Please Select Course and Lesson",
+        })); 
       }
       
     };

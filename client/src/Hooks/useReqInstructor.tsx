@@ -1,5 +1,6 @@
-import {useState} from 'react'
+import {useState,useContext} from 'react'
 import axios from './useAxios'
+import { SnackbarContext } from '../Context/SnackbarContext';
 
 interface Data {
   instructors: any;
@@ -32,6 +33,8 @@ interface UpdateInstructorData {
 }
 
 function useReqInstructor(): Data {
+  const{setOpenSnackBar} = useContext(SnackbarContext)
+
   const [instructors, setInstructors] = useState<any>(null);
   const [credentials, setCredentials] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -96,7 +99,11 @@ function useReqInstructor(): Data {
       })
       .then((response:any)=>{
         console.log(response.data);
-        alert("Instructor Deleted!");
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'error',
+          note:"Instructor Deleted!",
+        })); 
       });
     } catch (error: any) {
       setError(error);

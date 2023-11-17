@@ -1,5 +1,6 @@
-import {useState} from 'react'
+import {useState,useContext} from 'react'
 import axios from './useAxios'
+import { SnackbarContext } from '../Context/SnackbarContext';
 
 interface Data {
   data: any;
@@ -48,6 +49,7 @@ interface UpdateProgressData {
 }
 
 function useReqLesson(): Data {
+  const{setOpenSnackBar} = useContext(SnackbarContext)
   const [data, setData] = useState<any>(null);
   const [datum, setDatum] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
@@ -66,7 +68,11 @@ function useReqLesson(): Data {
       })
       .then((response:any)=>{
         console.log(response.data);
-        alert("Lesson created!");
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'success',
+          note:"Lesson Successfully Created",
+        })); 
       });
     } catch (error: any) {
       setError(error);
@@ -139,7 +145,11 @@ function useReqLesson(): Data {
       })
       .then((response:any)=>{
         console.log(response.data);
-        alert(response.data);
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'info',
+          note:response.data,
+        })); 
       });
     } catch (error: any) {
       setError(error);
@@ -157,7 +167,11 @@ function useReqLesson(): Data {
       })
       .then((response:any)=>{
         console.log(response.data);
-        alert(response.data);
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'info',
+          note:response.data,
+        })); 
       });
     } catch (error: any) {
       setError(error);
@@ -177,7 +191,11 @@ function useReqLesson(): Data {
       })
       .then((response:any)=>{
         console.log(response.data);
-        alert(response.data);
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'info',
+          note:response.data,
+        })); 
       });
     } catch (error: any) {
       setError(error);

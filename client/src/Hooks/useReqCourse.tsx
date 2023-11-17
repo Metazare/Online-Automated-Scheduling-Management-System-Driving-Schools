@@ -1,6 +1,6 @@
-import {useState} from 'react'
+import {useState,useContext} from 'react'
 import axios from './useAxios'
-
+import { SnackbarContext } from '../Context/SnackbarContext';
 interface Data {
   data: any;
   loading: boolean;
@@ -13,6 +13,8 @@ interface CourseData {
 }
 
 function useReqCourse(): Data {
+  const{setOpenSnackBar} = useContext(SnackbarContext)
+
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
@@ -26,7 +28,11 @@ function useReqCourse(): Data {
       })
       .then((response:any)=>{
         setData(response.data);
-        alert(response.data)
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'info',
+          note:response.data,
+        })); 
       });
       
     } catch (error: any) {
