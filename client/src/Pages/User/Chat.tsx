@@ -15,6 +15,7 @@ import Paper from '@mui/material/Paper'
 import useChat from '../../Hooks/useChat'
 import { useAuth } from '../../Hooks/useAuth'
 import useReqSchool from '../../Hooks/useReqSchool'
+import useReqStudent from '../../Hooks/useReqStudent'
 
 function Chat({socket}) {
   const navigate = useNavigate();
@@ -22,6 +23,9 @@ function Chat({socket}) {
 
   const { data: school, getSchool,  } = useReqSchool();
   const {data:schools, getSchool: getSchools} = useReqSchool();
+  const {students:student, getStudent: getStudent} = useReqStudent();
+  const {students:students, getStudent: getStudents} = useReqStudent();
+
   const { chats, loading, error, sendChat, getChat } = useChat();
   const { User, getUser } = useAuth();
   const [selectedChat, setSelectedChat] = useState<any>();
@@ -44,10 +48,17 @@ function Chat({socket}) {
       getSchool({
         schoolId: id
       })
+    } else{
+      getStudent({
+        studentId: id
+      })
     }
 
     getSchools({
       schoolId: null
+    })
+    getStudents({
+      studentId: null
     })
 
     // Clean up the socket connection on component unmount
@@ -91,15 +102,34 @@ function Chat({socket}) {
 
     console.log(chatData)
     return chatData;
-}
-
-  if (!schools || loading) {
-    return <div>Loading...</div>;
   }
 
-  // if (!id) {
-  //   return <div>No chats available</div>;
-  // }
+  function appendStudentDataToChat(chatData, studentData) {
+    // Iterate through school data
+      studentData.forEach(student => {
+        const associatedChat = chatData.find(chat =>
+            chat.members.some(member => member.user === student.studentId)
+        );
+
+        if (associatedChat) {
+            associatedChat.studentData = student;
+        }
+    });
+
+    console.log(chatData)
+    return chatData;
+  }
+
+
+  if (getUser()==="student"){
+    if (!schools || loading) {
+      return <div>Loading...</div>;
+    }
+  } else{
+    if (!student || !students || loading) {
+      return <div>Loading...</div>;
+    }
+  }
 
   return <>
     <Box sx={{background:"white",position:"fixed",top:"66px",left:"0",height:"100%",width:"100%",display:"flex"}}>
@@ -110,7 +140,8 @@ function Chat({socket}) {
 
         {/* {JSON.stringify(appendSchoolDataToChat(chats, schools))} */}
 
-          {chats && appendSchoolDataToChat(chats, schools)?.map((chat: any) => (
+{getUser() === "student" ? <>
+{chats && appendSchoolDataToChat(chats, schools)?.map((chat: any) => (
             <Box display="flex" alignItems={"center"} gap={"10px"} width={"100%"} sx={{'&:hover': {backgroundColor: '#e0e0e0', cursor: 'pointer',}, padding:"1em"}} 
               onClick={() => {
                 window.location.href = `/chat/${chat?.members.filter(item => item.user !== User()[getIdType()])[0].role}/${chat?.members.filter(item => item.user !== User()[getIdType()])[0].user}`;
@@ -140,6 +171,45 @@ function Chat({socket}) {
               </Box>
             </Box>
           ))}
+</> : <>
+
+{chats && appendStudentDataToChat(chats, students)?.map((chat: any) => (
+            <Box display="flex" alignItems={"center"} gap={"10px"} width={"100%"} sx={{'&:hover': {backgroundColor: '#e0e0e0', cursor: 'pointer',}, padding:"1em"}} 
+              onClick={() => {
+                window.location.href = `/chat/${chat?.members.filter(item => item.user !== User()[getIdType()])[0].role}/${chat?.members.filter(item => item.user !== User()[getIdType()])[0].user}`;
+              }}
+            >
+              <Avatar
+                alt="Remy Sharp"
+                src="/static/images/avatar/1.jpg"
+                sx={{ width: 40, height: 40 }}
+              />
+              <Box width={"100%"}>
+                <Typography variant="subtitle2" color="initial">
+                  
+                  {chat?.studentData?.name.first} {chat?.studentData?.name.last}
+                  
+                  </Typography>
+                <Typography
+                  variant="body2"
+                  color="initial"
+                  mt="-5px"
+                  sx={{
+                    width: '80%',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  {chat?.messages[chat.messages.length - 1]?.message}
+                  
+                </Typography>
+              </Box>
+            </Box>
+          ))}
+
+</>}
+          
         </Box>
       </Box>
 
