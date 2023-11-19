@@ -133,7 +133,7 @@ function LessonView() {
                       />
                     </div>
                 </Grid>
-                {feedback?
+                {getUser()==='student' && getData(enrolls?.progress)?.feedback ?
                     <Grid item md={4} xs={12}>
                         <Paper variant="elevation" elevation={3} sx={{padding:"4.5em 1em 1em"}}>
 
@@ -141,20 +141,20 @@ function LessonView() {
                                 <ThumbUpAltIcon sx={{fill:"#ffffff", fontSize:"60px"}}/>
                             </div>
 
-                            <Typography variant="h5"  color="primary" textAlign={"center"} fontWeight={500} mt={3}>Well Done</Typography>
-                            <div style={{margin:" 35px 0 15px",display:"flex",gap:'10px', alignItems:"center"}}>
+                            <Typography variant="h5"  color="primary" textAlign={"center"} fontWeight={500} mt={3}>Feedback</Typography>
+                            {/* <div style={{margin:" 35px 0 15px",display:"flex",gap:'10px', alignItems:"center"}}>
                                 <Avatar variant="circular"  alt="Harold James Castillo" sx={{ width: '40px', height: '40px' }} />
                                 <div>
                                     <Typography variant="subtitle1" color="initial" fontWeight={500} >Dianne Chrystalin Brandez</Typography>
                                     <Typography variant="body1"  mt={"-5px"} color="initial" >Instructor</Typography>
                                 </div>
-                            </div>
+                            </div> */}
                             <Typography variant="body1" color="initial"  textAlign={"justify"}>
-                                After reviewing [Student's Name]'s recent driving lesson, it's evident that they have made progress in terms of vehicle control, observations, and understanding traffic signals. Their confidence behind the wheel is growing, though I've identified areas for improvement, such as parallel parking, maintaining a consistent speed, and merging onto highways. Overall, their commitment to becoming a safe and confident driver is commendable, and with continued practice and focus on these specific areas, they are on track to achieve their goal.
+                                {JSON.stringify(getData(enrolls?.progress)?.feedback)}
                             </Typography>
                         </Paper>
                     </Grid>
-                :""}
+                :""} 
             </Grid>
         </Container>
   
