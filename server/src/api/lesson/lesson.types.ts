@@ -53,6 +53,7 @@ export type UpdateProgress = {
     enrollmentId: string;
     lessonId: string;
     status: ProgressStatus;
+    feedback?: string;
 }
 
 /* OTHER */
@@ -63,4 +64,5 @@ export interface ProgressLesson {
     description: string;
     file?: string;
     status?: ProgressStatus;
+    feedback?: string;
 }

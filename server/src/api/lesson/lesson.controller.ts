@@ -134,12 +134,13 @@ export const updateProgress: RequestHandler = async (req: BodyRequest<UpdateProg
     let school = user._id;
     if (role === Role.INSTRUCTOR) school = (<InstructorDocument>user).school;
 
-    const { enrollmentId, lessonId, status } = req.body;
+    const { enrollmentId, lessonId, status, feedback } = req.body;
     const checker = new CheckData();
 
     checker.checkType(enrollmentId, 'string', 'enrollmentId');
     checker.checkType(lessonId, 'string', 'lessonId');
     checker.checkType(status, 'string', 'status');
+    checker.checkType(feedback, 'string', 'feedback');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const enrollment: EnrollmentPopulatedDocument | null = await EnrollmentModel.findOne({ enrollmentId, school })
@@ -151,6 +152,7 @@ export const updateProgress: RequestHandler = async (req: BodyRequest<UpdateProg
     if (lessonIndex === -1) throw new NotFound('Lesson');
 
     enrollment.progress[lessonIndex].status = status;
+    enrollment.progress[lessonIndex].feedback = feedback;
     await enrollment.save();
 
     res.sendStatus(204);

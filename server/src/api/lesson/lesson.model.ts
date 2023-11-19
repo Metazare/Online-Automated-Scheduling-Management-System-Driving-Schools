@@ -30,6 +30,9 @@ const lessonSchema = new Schema(
                 message: '"{VALUE}" is not supported'
             }
         },
+        feedback: {
+          type: String,
+        },
         file: String
     },
     {
