@@ -48,7 +48,7 @@ export interface EnrollmentPopulatedDocument extends EnrollmentDocument {
     school: SchoolDocument;
     student: Student;
     progress: {
-        feedback: string | undefined;
+        feedback?: string;
         lesson: LessonDocument;
         status: ProgressStatus;
     }[];
