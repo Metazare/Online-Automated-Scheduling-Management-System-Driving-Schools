@@ -25,7 +25,8 @@ import { useAuth } from '../Hooks/useAuth';
 type Props ={
     variant: "manage"|"use",
     title: string,
-    courseId: string
+    courseId: string,
+    progress?: number,
 }
 
 const style = {
@@ -68,7 +69,7 @@ function CircularProgressWithLabel(props: CircularProgressProps & { value: numbe
 }
 
 
-function CourseAccordion({variant,title, courseId}:Props) {
+function CourseAccordion({variant,title, courseId, progress}:Props) {
     const{setOpenSnackBar} = useContext(SnackbarContext)
     const {
       data:lessons, 
@@ -204,7 +205,8 @@ function CourseAccordion({variant,title, courseId}:Props) {
                         <AddIcon sx={{fill:"#F0F0F0"}}/>
                     </IconButton>
                 :
-                    <CircularProgressWithLabel defaultValue={0} value={0} />
+                    <CircularProgressWithLabel defaultValue={0} value={progress || 0} />
+                    // <></>
                 }
                 <IconButton aria-label="add" onClick={()=>{setOpenAccordion(!openAccordion)}}>
                     {openAccordion?<KeyboardArrowDownIcon sx={{fill:"#F0F0F0"}}/>:<NavigateNextIcon sx={{fill:"#F0F0F0"}}/>}

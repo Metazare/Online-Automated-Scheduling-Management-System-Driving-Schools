@@ -90,6 +90,27 @@ function CourseList() {
   
     return populatedObject2;
   }
+
+  function CalculateProgress(data){
+
+    console.log(data)
+    // Create an object to store the count for each student
+    let completionCount = 0;
+    let lessonCount = 0
+  
+    // Iterate through each enrollment and check progress status
+  
+    data.forEach((progress) => {
+      if (progress.status === 'complete') {
+        // Increment count if progress is marked as 'complete'
+        completionCount++;
+      }
+      lessonCount++;
+    });
+  
+    return (completionCount / lessonCount) * 100;
+  }
+
   const [open, setOpen] = useState("");
   
     return <>
@@ -158,7 +179,7 @@ function CourseList() {
             <Grid item md={8} xs={12}>
               <Box display="flex" flexDirection={"column"} gap={"10px"}>
                 {data && enrolls && populateObject2(data.courses, getCourses(enrolls))?.map((course:any)=>(
-                  <CourseAccordion variant='use' title={course.type} courseId={course.courseId}/>
+                  <CourseAccordion variant='use' title={course.type} courseId={course.courseId} progress={CalculateProgress(course?.progress)}/>
                 ))}
               </Box>
             </Grid>

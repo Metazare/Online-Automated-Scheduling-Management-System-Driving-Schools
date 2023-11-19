@@ -157,7 +157,6 @@ function LessonView() {
                 :""} 
             </Grid>
         </Container>
-  
     </>
     
 }
