@@ -76,7 +76,10 @@ const enrollmentSchema = new Schema(
                         message: '"{VALUE}" is not supported'
                     },
                     default: ProgressStatus.INCOMPLETE
-                }
+                },
+                feedback: {
+                  type: String
+              }
             }
         ],
         reason: String,
