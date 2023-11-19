@@ -150,7 +150,8 @@ function Students() {
         updateProgress({
           enrollmentId: selectedCourse?.enrollmentId,
           lessonId: form.lessonId,
-          status: 'complete'
+          status: 'complete',
+          feedback: form.feedback
         })
       }
       else {

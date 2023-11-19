@@ -36,6 +36,7 @@ interface UpdateLessonData {
   title?: string;
   description?: string;
   file?: string;
+  
 }
 
 interface DeleteLessonData {
@@ -46,6 +47,7 @@ interface UpdateProgressData {
   enrollmentId: string;
   lessonId: string;
   status: string;
+  feedback?: string;
 }
 
 function useReqLesson(): Data {
@@ -188,6 +190,7 @@ function useReqLesson(): Data {
         enrollmentId: value.enrollmentId,
         lessonId: value.lessonId,
         status: value.status,
+        feedback: value.feedback
       })
       .then((response:any)=>{
         console.log(response.data);
