@@ -1,9 +1,6 @@
 import React,{useState,useContext} from 'react'
 
 // mui utilities
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import dayjs from 'dayjs';
@@ -13,7 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-
+import {  Grid, Typography,Modal , TextField } from '@mui/material';
 // image
 import patternImg from '../../Images/Resources/Pattern.jpg';
 import studentImg from '../../Images/Resources/student.png';
@@ -24,7 +21,23 @@ import schoolImg from '../../Images/Resources/school.png';
 import { useAuth } from '../../Hooks/useAuth';
 import { SnackbarContext } from '../../Context/SnackbarContext';
 
+const style = {
+  position: 'absolute' as 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  borderRadius:'8px',
+  boxShadow: 24,
+  p: 4,
+};
+
+
 function Index() {
+  // * Modal Open
+  const [open, setOpen] = useState("");
+
   const{setOpenSnackBar} = useContext(SnackbarContext)
 
   const { register } = useAuth();
@@ -35,10 +48,6 @@ function Index() {
     gridTemplateColumns:".4fr .6fr"
 
   };
-
-
-  
-
 
   const [role, setRole] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -58,6 +67,18 @@ function Index() {
     password: '',
     role: '',
   });
+
+
+  const [verificationCode, setVerificationCode] = useState('');
+
+  const handleChangeVerify = (event) => {
+    // Ensure that the entered value contains only numbers
+    const sanitizedValue = event.target.value.replace(/[^0-9]/g, '');
+
+    // Set the value, considering the maximum length of 6
+    setVerificationCode(sanitizedValue.substring(0, 6));
+  };
+
   
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -207,19 +228,7 @@ function Index() {
                     onChange={handleChange}
                   />
                 </Grid>
-                <Grid item  md={6} xs={12}>
-                  <TextField
-                    fullWidth
-                    id="contactNo"
-                    label="Contact Number"
-                    variant="outlined"
-                    required
-                    name="contact"
-                    value={form.contact}
-                    onChange={handleChange}
-                  />
-                </Grid>
-                <Grid item  md={6} xs={12}>
+                <Grid item  md={5} xs={9}>
                   <TextField
                     fullWidth
                     id="email"
@@ -231,6 +240,22 @@ function Index() {
                     onChange={handleChange}
                   />
                 </Grid>
+                <Grid item  md={2} xs={3} >
+                  <Button fullWidth variant="contained" sx={{background:"#414141",height:"100%"}} onClick={()=>{setOpen("verify")}}>verify</Button>
+                </Grid>
+                <Grid item  md={5} xs={12}>
+                  <TextField
+                    fullWidth
+                    id="contactNo"
+                    label="Contact Number"
+                    variant="outlined"
+                    required
+                    name="contact"
+                    value={form.contact}
+                    onChange={handleChange}
+                  />
+                </Grid>
+                
                 <Grid item  md={6} xs={12}>
                   <TextField
                     fullWidth
@@ -357,7 +382,7 @@ function Index() {
                 </Grid>
 
 
-                <Grid item xs={12}>
+                <Grid item xs={9}>
                   <TextField
                     fullWidth
                     id="email"
@@ -370,6 +395,10 @@ function Index() {
                     onChange={handleChange}
                   />
                 </Grid>
+                <Grid item  xs={3} >
+                  <Button fullWidth variant="contained" sx={{background:"#414141",height:"100%"}} onClick={()=>{setOpen("verify")}}>verify</Button>
+                </Grid>
+
 
                 <Grid item md={6} xs={12}>
                   <TextField
@@ -412,6 +441,54 @@ function Index() {
           
         </div>
       </div>
+      <Modal
+          open={open.length > 0}
+          onClose={()=>{setOpen("")}}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+      >
+          <Box sx={style}>
+              {/* Enrollment Request  */}
+              {(open === "verify")?<>
+                  <form action="">
+                    <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
+                      Email verification
+                    </Typography>
+                    <Typography id="modal-modal-title"  variant="body2" fontWeight={400} component="h2">
+                      We already email you a 6 digit code, Please check your email and enter the code to complete the verification
+                    </Typography>
+                    <Grid container spacing={1} mt={2}>
+                      <Grid item xs={12}>
+                        <TextField
+                          fullWidth
+                          id="verify"
+                          value={verificationCode}
+                          onChange={handleChangeVerify}
+                          inputProps={{
+                            maxLength: 6,
+                            pattern: '[0-9]*', // Allow only numbers
+                          }}
+                        />
+                      </Grid>
+                      <Grid item xs={12} mt={1} mb={1}>
+                      </Grid>
+                      <Grid item sm={4} xs={12}>
+                          <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                              cancel
+                          </Button>
+                      </Grid>
+                      <Grid item sm={8} xs={12}>
+                          <Button variant="contained" fullWidth color="primary"
+                            onClick={() => {}}
+                          >
+                              Verify
+                          </Button>
+                      </Grid>
+                    </Grid>
+                  </form>
+              </>:""}
+          </Box>
+      </Modal>
     </div>
   )
 }
