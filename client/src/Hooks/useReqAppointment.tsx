@@ -31,7 +31,7 @@ interface GetAppointmentData {
 interface UpdateAppointmentData {
   appointmentId: string;
   status?: string;
-  schedule?: string;
+  schedule: Date;
 }
 
 function useReqAppointment(): Data {
@@ -122,7 +122,7 @@ function useReqAppointment(): Data {
       .patch('/appointments', {
         appointmentId: data.appointmentId,
         status: data.status,
-        schedule: data.schedule
+        schedule: data.schedule.getTime()
       })
       .then((response:any)=>{
         console.log(response.data);
@@ -134,6 +134,7 @@ function useReqAppointment(): Data {
       });
     } catch (error: any) {
       setError(error);
+      console.log(error);
     } finally {
       setLoading(false);
     }

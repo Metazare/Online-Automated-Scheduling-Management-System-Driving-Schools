@@ -70,14 +70,21 @@ function Appointments() {
         schedule: new Date()
     })
     const [formResched,setFormResched] = useState({
-        reschedDateTime:dayjs('2022-04-17T15:30'),
-        reason:"",
+      schedule: new Date(),
+      appointmentId:"",
     })
     const [open, setOpen] = useState("");
 
     const handleChangeDateTime = (date: any) => {
       setForm({
         ...form,
+        schedule: date.toDate(),
+      });
+    };
+
+    const handleReschedChangeDateTime = (date: any) => {
+      setFormResched({
+        ...formResched,
         schedule: date.toDate(),
       });
     };
@@ -123,6 +130,22 @@ function Appointments() {
         status: null,
       });
     };
+
+    async function resched(e: React.FormEvent<HTMLFormElement>){
+      e.preventDefault();
+      setOpen("")
+      updateAppointment(formResched)
+      setFormResched({
+        schedule: new Date(),
+        appointmentId:"",
+      })
+      getAppointments({
+        appointmentId: null,
+        studentId: null,
+        instructorId: null,
+        status: null,
+      });
+    }
 
     useEffect(() => {
       getStudent({
@@ -203,6 +226,9 @@ function Appointments() {
                 <Grid item md={6} xs={12}>
                     <AppointmentCard 
                       modalOpen={setOpen}
+                      formResched={formResched}
+                      selectAppointment={setFormResched}
+                      appointmentId={appointment.appointmentId}
                       studentName={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.last}`}
                       instructorName={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}
                       instructorID={appointment.instructor.id}
@@ -401,30 +427,34 @@ function Appointments() {
                     </form>
                 </>:""}
                 {open === "resched"?<>
-                    <form action="">
+                    <form onSubmit={resched}>
                         <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
                             Reschedule Appointment
                         </Typography>
                         <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
                             Please input your desired date
                         </Typography>
-
                         <Grid container spacing={2}>
-                            
                             <Grid item xs={12}>
-                                {/* <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <DemoContainer components={['DateTimePicker']}>
-                                        <DateTimePicker label="Date and Time" 
-                                            slotProps={{ textField: { fullWidth: true } }}
-                                            value={form.dateTime}
-                                            onChange={(newValue) => {
-                                                setForm({...form, dateTime: dayjs(newValue)});
-                                            }}
-                                        />
-                                    </DemoContainer>
-                                </LocalizationProvider> */}
+                              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                  <DemoContainer components={['DateTimePicker']}>
+                                      {/* <DateTimePicker label="Date and Time" 
+                                          slotProps={{ textField: { fullWidth: true } }}
+                                          value={form.dateTime}
+                                          onChange={(newValue) => {
+                                              setForm({...form, dateTime: dayjs(newValue)});
+                                          }}
+                                      /> */}
+                                      <DateTimePicker
+                                        slotProps={{ textField: { fullWidth: true } }}
+                                        label="Date and Time"
+                                        value={dayjs(formResched.schedule)}
+                                        onChange={handleReschedChangeDateTime}
+                                      />
+                                  </DemoContainer>
+                              </LocalizationProvider>
                             </Grid>
-                            <Grid item xs={12}>
+                            {/* <Grid item xs={12}>
                                 <TextField
                                     required
                                     fullWidth
@@ -435,7 +465,7 @@ function Appointments() {
                                         setFormResched({...formResched, reason: event.target.value});
                                     }}
                                 />
-                            </Grid>
+                            </Grid> */}
                             <Grid item  xs={12} mt={"4"} height={"40px"}>
                                 
                             </Grid>
@@ -446,8 +476,8 @@ function Appointments() {
                                 </Button>
                             </Grid>
                             <Grid item sm={8} xs={12}>
-                                <Button variant="contained" fullWidth color="primary">
-                                    Send
+                                <Button variant="contained" fullWidth color="primary" type="submit">
+                                    Reschedule
                                 </Button>
                             </Grid>
                         </Grid>

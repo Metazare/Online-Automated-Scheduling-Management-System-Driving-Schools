@@ -14,10 +14,14 @@ type Props= {
     instructorID: string,
     courseName: string,
     schedule: string,
+    appointmentId?: string
+    selectAppointment?: React.Dispatch<React.SetStateAction<any>>,
+    formResched?: any
 }
 
 function AppointmentCard(props:Props) {
-  const {modalOpen, studentName, instructorName, courseName, schedule,instructorID} = props
+  const {modalOpen, studentName, instructorName, courseName, schedule,instructorID, appointmentId, selectAppointment, formResched} = props
+  console.log(appointmentId)
     return (
         <Paper variant="elevation" elevation={1} sx={{padding:"1em"}}>
             <div style={{display:"flex"}}>
@@ -26,7 +30,12 @@ function AppointmentCard(props:Props) {
                     <Typography variant="body2" mt={"-5px"} color="initial" >{moment(schedule).format('lll')}</Typography>
                 </div>
                 {!!studentName?<>
-                  <IconButton aria-label="resched" size="large" onClick={()=>{modalOpen("resched")}}>
+                  <IconButton aria-label="resched" size="large" onClick={()=>{
+                      modalOpen("resched");
+                      if (selectAppointment && formResched) {
+                        selectAppointment({...formResched, appointmentId: appointmentId});
+                      }
+                    }}>
                     <EventRepeatIcon fontSize="inherit" />
                   </IconButton>
                 </>:""}
