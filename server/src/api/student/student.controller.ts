@@ -1,11 +1,11 @@
 import { CheckData } from '../../utilities/checkData';
-import { CreateStudent, GetStudents, StudentsList } from './student.types';
+import { CreateStudent, GetStudents, StudentsList, UpdateStudent } from './student.types';
 import { Enrollment, EnrollmentPopulatedDocument } from '../enrollment/enrollment.types';
 import { InstructorDocument } from '../instructor/instructor.types';
 import { Payload, Role } from '../auth/auth.types';
-import { QueryRequest, RequestHandler } from 'express';
+import { BodyRequest, QueryRequest, RequestHandler } from 'express';
 import { SchoolDocument } from '../school/school.types';
-import { Unauthorized, UnprocessableEntity } from '../../utilities/errors';
+import {NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import EnrollmentModel from '../enrollment/enrollment.model';
 import StudentModel from './student.model';
 
@@ -72,9 +72,32 @@ export const createStudent = async (body: CreateStudent): Promise<Payload> => {
         address,
         contact,
         birthday,
+        profile: '',
         sex,
         credentials: { email, password }
     });
 
     return { userId: studentId, role: Role.STUDENT };
+};
+
+export const updateStudentProfile: RequestHandler = async (req: BodyRequest<UpdateStudent>, res) => {
+  if (!req.user) throw new Unauthorized();  
+
+  const { studentId, ...updateData } = req.body;
+
+  // Find the student by studentId
+  const existingStudent = await StudentModel.findOne({ studentId });
+
+  if (!existingStudent) {
+      throw new NotFound('Student');
+  }
+
+  // Update the student's data based on the properties sent in the request
+  Object.assign(existingStudent, updateData);
+
+  // Save the updated student data
+  await existingStudent.save();
+
+  // Return the updated student data
+  res.json(existingStudent);
 };
