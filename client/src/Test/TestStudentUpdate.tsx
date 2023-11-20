@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 
 import useReqStudent from '../Hooks/useReqStudent'
+import useFirebase from '../Hooks/useFirebase';
 
 
 type Props = {}
@@ -8,6 +9,7 @@ type Props = {}
 export default function TestStudentUpdate({}: Props) {
 
   const {students, loading, error, getStudent, updateStudentProfile} = useReqStudent();
+  const {downloadURL, uploading, uploadFile} = useFirebase();
 
   const [form, setForm] = useState({
     studentId: '',
@@ -20,6 +22,10 @@ export default function TestStudentUpdate({}: Props) {
   })
 
   useEffect(() => {
+    getStudent({
+      studentId: null,
+      courseType: null
+    });
     getStudent({
       studentId: null,
       courseType: null
@@ -40,7 +46,16 @@ export default function TestStudentUpdate({}: Props) {
     // console.log(form);
     updateStudentProfile(form);
   }
-  
+
+  async function uploadProfile(file) {
+    uploadFile(file, 'oasms');
+    setForm({
+      ...form,
+      profile: downloadURL
+    })
+    console.log(downloadURL)
+  }
+
   if (loading) {
     return <div>Loading...</div>
   }
@@ -48,16 +63,16 @@ export default function TestStudentUpdate({}: Props) {
   return (
     <div>
       {students && 
-      <form onSubmit={updateProfile}>
-        {/* <input type="text" defaultValue={form.studentId} placeholder='studentId' onChange={(e) => setForm({...form, studentId: e.target.value})} /> */}
-        <input type="text" defaultValue={form.email} placeholder='email' onChange={(e) => setForm({...form, email: e.target.value})} />
-        <input type="text" defaultValue={form.contact} placeholder='contact' onChange={(e) => setForm({...form, contact: e.target.value})} />
-        <input type="text" defaultValue={form.address} placeholder='address' onChange={(e) => setForm({...form, address: e.target.value})} />
-        <input type="text" defaultValue={form.sex} placeholder='sex' onChange={(e) => setForm({...form, sex: e.target.value})} />
-        <input type="text" defaultValue={form.birthday} placeholder='birthday' onChange={(e) => setForm({...form, birthday: e.target.value})} />
-        <input type="text" defaultValue={form.profile} placeholder='profile' onChange={(e) => setForm({...form, profile: e.target.value})} />
-        <button type='submit'>Update</button>
-      </form>
+        <form onSubmit={updateProfile}>
+          <input type="text" defaultValue={form.email} placeholder='email' onChange={(e) => setForm({...form, email: e.target.value})} />
+          <input type="text" defaultValue={form.contact} placeholder='contact' onChange={(e) => setForm({...form, contact: e.target.value})} />
+          <input type="text" defaultValue={form.address} placeholder='address' onChange={(e) => setForm({...form, address: e.target.value})} />
+          <input type="text" defaultValue={form.sex} placeholder='sex' onChange={(e) => setForm({...form, sex: e.target.value})} />
+          <input type="text" defaultValue={form.birthday} placeholder='birthday' onChange={(e) => setForm({...form, birthday: e.target.value})} />
+          <img src={form.profile} alt="profile" />
+          <input type="file" placeholder='profile' onChange={(e:any)=>{uploadProfile(e.target.files[0])}} />
+          <button type='submit'>Update</button>
+        </form>
       }
     </div>
   )
