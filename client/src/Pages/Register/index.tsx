@@ -42,6 +42,7 @@ function Index() {
 
   const [role, setRole] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [otp, setOtp] = useState('');
   const [form, setForm] = useState({
     name: '',
     first: '',
@@ -72,6 +73,18 @@ function Index() {
       birthday: date.toDate(),
     });
   };
+
+  function generateOTP(){
+    const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    let otp = '';
+  
+    for (let i = 0; i < 6; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      otp += characters.charAt(randomIndex);
+    }
+  
+    setOtp(otp);
+  }
 
   async function submit(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault();
