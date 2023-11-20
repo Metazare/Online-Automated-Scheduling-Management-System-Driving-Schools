@@ -49,6 +49,9 @@ const studentSchema = new Schema(
             },
             required: true
         },
+        profile:{
+          type: String,
+        },
         credentials: {
             type: {
                 email: {
