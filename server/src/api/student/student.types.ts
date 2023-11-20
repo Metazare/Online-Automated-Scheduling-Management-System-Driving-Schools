@@ -20,6 +20,7 @@ export interface Student {
     contact: string;
     birthday: Date;
     sex: Sex;
+    profile: string;
     credentials: {
         email: string;
         password: string;
@@ -47,8 +48,20 @@ export type CreateStudent = {
     contact: string;
     birthday: number;
     sex: Sex;
+    profile: string;
     email: string;
     password: string;
+}
+
+export type UpdateStudent = {
+  studentId: string;
+  address: string;
+  contact: string;
+  birthday: number;
+  sex: Sex;
+  profile: string;
+  email: string;
+  password: string;
 }
 
 /* OTHER */
