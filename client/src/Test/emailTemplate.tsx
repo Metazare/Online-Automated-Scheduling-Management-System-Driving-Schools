@@ -25,9 +25,9 @@ export const SlackConfirmEmail = ({ reservationNumber, reservationDate, reservat
                     <Row>
                         <Text style={confirmationCodeText}>Reservation Number: {reservationNumber}</Text>
                     </Row>
-                    <Row>
+                    {/* <Row>
                         <Text style={confirmationCodeText}>Reservation Date: {reservationDate}</Text>
-                    </Row>
+                    </Row> */}
                     <Row>
                         <Text style={confirmationCodeText}>Reservation Status: {reservationStatus}</Text>
                     </Row>

@@ -1,13 +1,13 @@
 import { SlackConfirmEmail } from './emailTemplate';
-import { Resend } from 'resend';
+// import { Resend } from 'resend';
 
 import React from 'react';
-import { Button } from '@react-email/components';
+// import { Button } from '@react-email/components';
 import { FormLabel  } from "@mui/material"
 import { Input } from '@mui/material';
 import axios from 'axios';
 
-const resend = new Resend(process.env.RESEND_KEY);
+// const resend = new Resend(process.env.RESEND_KEY);
 
 interface sendingEmail {
     from: string;
@@ -17,10 +17,6 @@ interface sendingEmail {
 }
 
 const dateAsString = '2023-11-10T12:00:00Z';
-
-export async function POST(){
-    
-}
 
 const SendEmails = () => {
 

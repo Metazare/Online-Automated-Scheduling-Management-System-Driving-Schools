@@ -7,6 +7,6 @@ export default cleanEnv(process.env, {
     JWT_ACCESS: str(),
     JWT_REFRESH: str(),
     CORS_ORIGIN: str(),
-    MONGO_URI: str()
+    MONGO_URI: str(),
     RESEND_KEY: str()
 });
