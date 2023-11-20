@@ -20,6 +20,7 @@ import enrollmentRoute from './api/enrollment/enrollment.route';
 import instructorRoute from './api/instructor/instructor.route';
 import lessonRoute from './api/lesson/lesson.route';
 import notificationRoute from './api/notification/notification.route';
+import otpRoute from './api/otp/otp.route';
 import schoolRoute from './api/school/school.route';
 import studentRoute from './api/student/student.route';
 
@@ -46,6 +47,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(helmet());
 
+app.use('/otp', otpRoute);
 app.use('/auth', authRoute);
 app.use(authenticate);
 app.use('/appointments', appointmentRoute);

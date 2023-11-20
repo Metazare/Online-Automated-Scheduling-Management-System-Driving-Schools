@@ -12,6 +12,7 @@ import BaseLayout from './Layouts/BaseLayout/BaseLayout';
 import School from './Pages/User/School/School'
 import LessonView from './Pages/User/School/LessonView';
 import CoursesList from './Pages/User/School/CourseList'
+
 import ManageSchool from './Pages/Admin/School/ManageSchool';
 import Error from './Pages/Error';
 import Chat from './Pages/User/Chat';
@@ -25,6 +26,7 @@ import { type } from 'os';
 import TestNotification from './Test/TestNotification';
 import TestChat from './Test/TestChat';
 import TestStudentUpdate from './Test/TestStudentUpdate';
+import SendEmails from './Test/SendEmail';
 
 const theme = createTheme({
   palette:{
@@ -50,6 +52,8 @@ function App() {
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<LandingPage/>} />
+            
+          
           
           {/* admin */}
           <Route element={<ProtectedRoute allowedRoles={["admin", "instructor"]}/>}>
@@ -74,6 +78,7 @@ function App() {
 
         {/* test */}
         <Route path="/test/update" element={<TestStudentUpdate/>} />
+        <Route path="/sendEmail" element={<SendEmails/>} />
       </Routes>
     </ThemeProvider>
   );
