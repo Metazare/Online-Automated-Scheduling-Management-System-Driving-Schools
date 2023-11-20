@@ -24,6 +24,7 @@ import { type } from 'os';
 // Test
 import TestNotification from './Test/TestNotification';
 import TestChat from './Test/TestChat';
+import TestStudentUpdate from './Test/TestStudentUpdate';
 
 const theme = createTheme({
   palette:{
@@ -38,7 +39,6 @@ const theme = createTheme({
 })
 
 const socket = io(process.env.REACT_APP_API_URL || 'http://localhost:5000');
-
 
 function App() {
   return (
@@ -71,6 +71,9 @@ function App() {
             <Route path="/chat" element={<Chat socket={socket}/>} />
           </Route>
         </Route>
+
+        {/* test */}
+        <Route path="/test/update" element={<TestStudentUpdate/>} />
       </Routes>
     </ThemeProvider>
   );
