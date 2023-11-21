@@ -155,6 +155,7 @@ function Home({}: Props)  {
                   schoolId={school.schoolId}
                   variant=""
                   profile={school.profile}
+                  
                 />
               </Grid>
             ))}

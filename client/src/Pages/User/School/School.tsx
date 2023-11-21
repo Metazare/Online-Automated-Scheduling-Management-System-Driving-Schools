@@ -186,7 +186,7 @@ function School() {
                     >
                         <Avatar
                         alt={data?.name}
-                        src="/static/images/avatar/1.jpg"
+                        src={data?.profile}
                         sx={{ width: 80, height: 80 }}
                         />
                         <div style={{flexGrow:"1"}}>
@@ -228,8 +228,8 @@ function School() {
         <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
             <Grid container spacing={2}>
                 <Grid item md={8} sm={8} xs={12} sx={{padding:"40px"}}>
-                  {/* <Typography variant="h6" color="primary" mb={1}>About</Typography>
-                  <Typography variant="body2" align='justify'>{data?.about}</Typography> */}
+                  <Typography variant="h6" color="primary" mb={1}>About</Typography>
+                  <Typography variant="body2" align='justify'>{data?.about}</Typography>
                   <Typography variant="h6" color="primary" mt={2} mb={1}>Courses</Typography>
                   <Box sx={{display:'flex', gap:"25px",flexWrap:"wrap"}}>
                     {data?.courses?.map((course)=>(
