@@ -8,5 +8,6 @@ export default cleanEnv(process.env, {
     JWT_REFRESH: str(),
     CORS_ORIGIN: str(),
     MONGO_URI: str(),
-    RESEND_KEY: str()
+    NODEMAILER_EMAIL: str(),
+    NODEMAILER_PASSWORD: str(),
 });
