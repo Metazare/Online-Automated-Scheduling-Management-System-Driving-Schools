@@ -1,4 +1,4 @@
-import { createInstructor, getInstructors, updateInstructorStatus } from "./instructor.controller";
+import { createInstructor, getInstructors, updateInstructorStatus, updateInstructor } from "./instructor.controller";
 import { limitUsers } from "../../middlewares/authorize";
 import { Role } from "../auth/auth.types";
 import { Router } from "express";
@@ -28,5 +28,7 @@ router.post('/', limitUsers(Role.ADMIN), asynchronousHandler(createInstructor));
  * status
  */
 router.patch('/', limitUsers(Role.ADMIN), asynchronousHandler(updateInstructorStatus));
+
+router.patch('/profile', asynchronousHandler(updateInstructor));
 
 export default router;
