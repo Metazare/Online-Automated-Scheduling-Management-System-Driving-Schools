@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useEffect} from 'react'
 import { Box,Avatar,Typography,Container, Grid,Modal , TextField ,Button } from '@mui/material'
 import CallIcon from '@mui/icons-material/Call';
 import EmailIcon from '@mui/icons-material/Email';
@@ -16,6 +16,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import PlaceIcon from '@mui/icons-material/Place';
+
+import useReqStudent from '../../Hooks/useReqStudent';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -40,6 +42,31 @@ function Profile() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const {students, loading, error, getStudent, updateStudentProfile} = useReqStudent();
+  const [form, setForm] = useState({
+    email: "",
+    contact: "",
+    address: "",
+    sex: "",
+    birthday: "",
+    profile: "",
+    password: "",
+  })
+
+  useEffect(()=>{
+    getStudent({
+      studentId: null,
+    });
+    setForm(students)
+  },[])
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
   
   return <>
     <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em 1em 0"}}>
@@ -62,7 +89,7 @@ function Profile() {
                   sx={{ width: 80, height: 80 }}
                   />
                   <div style={{flexGrow:"1"}}>
-                    <Typography variant="h4" fontWeight={500} color="initial">Dianne Chrystalin Castillo</Typography>
+                    <Typography variant="h4" fontWeight={500} color="initial">{students.name.first} {students.name.middle} {students.name.last} {students.name.suffix}</Typography>
                     <Box
                       sx={{
                         display: 'flex',
@@ -79,7 +106,7 @@ function Profile() {
                         }}
                       >
                         <CallIcon/> 
-                        <Typography variant="body1" fontWeight={500}>0915-666-6147</Typography>
+                        <Typography variant="body1" fontWeight={500}>{students.contact}</Typography>
                       </Box>
                       <Box
                         sx={{
@@ -89,7 +116,7 @@ function Profile() {
                         }}
                       >
                         <EmailIcon/> 
-                        <Typography variant="body1" fontWeight={500}>chrystarin@gmail.com</Typography>
+                        <Typography variant="body1" fontWeight={500}>{students.email}</Typography>
                       </Box>
                       <Box  
                         sx={{
@@ -99,7 +126,7 @@ function Profile() {
                         }}
                       >
                         <CakeIcon/> 
-                        <Typography variant="body1" fontWeight={500}>Nov 25, 1999</Typography>
+                        <Typography variant="body1" fontWeight={500}>{students.birthday}</Typography>
                       </Box>
                       <Box  
                         sx={{
@@ -108,8 +135,8 @@ function Profile() {
                           gap:"5px"
                         }}
                       >
-                        {true?<MaleIcon/> :<FemaleIcon/> }
-                        <Typography variant="body1" fontWeight={500}>Female</Typography>
+                        {students.sex==='male'?<MaleIcon/> :<FemaleIcon/> }
+                        <Typography variant="body1" fontWeight={500}>{students.sex}</Typography>
                       </Box>
                       <Box
                         sx={{
@@ -119,7 +146,7 @@ function Profile() {
                         }}
                       >
                         <PlaceIcon/> 
-                        <Typography variant="body1" fontWeight={500}>San Mateo Abuab</Typography>
+                        <Typography variant="body1" fontWeight={500}>{students.address}</Typography>
                       </Box>
                     </Box>
                   </div>
