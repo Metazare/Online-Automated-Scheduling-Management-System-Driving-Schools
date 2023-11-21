@@ -37,6 +37,9 @@ const instructorSchema = new Schema(
             minLength: 1,
             required: true
         },
+        profile: {
+          type: String
+        },
         credentials: {
             type: {
                 email: {
