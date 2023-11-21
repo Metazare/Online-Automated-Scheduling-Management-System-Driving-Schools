@@ -47,8 +47,10 @@ export default function TestStudentUpdate({}: Props) {
     updateStudentProfile(form);
   }
 
+
+  
   async function uploadProfile(file) {
-    uploadFile(file, 'oasms');
+    await uploadFile(file, 'oasms');
     setForm({
       ...form,
       profile: downloadURL
@@ -59,6 +61,7 @@ export default function TestStudentUpdate({}: Props) {
   if (loading) {
     return <div>Loading...</div>
   }
+
 
   return (
     <div>

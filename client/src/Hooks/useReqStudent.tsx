@@ -70,6 +70,7 @@ function useReqStudent(): Data {
         console.log(response.data);
       });
     } catch (error: any) {
+      console.log(error)
       setError(error);
     } finally {
       setLoading(false);

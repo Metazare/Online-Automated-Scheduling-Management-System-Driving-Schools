@@ -18,6 +18,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import PlaceIcon from '@mui/icons-material/Place';
 
 import useReqStudent from '../../Hooks/useReqStudent';
+import useFirebase from '../../Hooks/useFirebase';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -43,8 +44,10 @@ function Profile() {
     setAnchorEl(null);
   };
 
+  const {downloadURL, uploading, uploadFile} = useFirebase();
   const {students, loading, error, getStudent, updateStudentProfile} = useReqStudent();
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<any>({
+    studentId: "",
     email: "",
     contact: "",
     address: "",
@@ -54,12 +57,57 @@ function Profile() {
     password: "",
   })
 
-  useEffect(()=>{
-    getStudent({
-      studentId: null,
-    });
-    setForm(students)
-  },[])
+  // useEffect(()=>{
+  //   getStudent({
+  //     studentId: null,
+  //   });
+  //   setForm(students)
+  // },[])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        await getStudent({
+          studentId: null,
+        });
+      } catch (error) {
+        // Handle error if needed
+        console.error('Error fetching student data: ', error);
+      }
+    };
+  
+    fetchData();
+  }, []);
+  
+  useEffect(() => {
+    if (students) {
+      setForm({
+        studentId: students.studentId || "",
+        email: students.email || "",
+        contact: students.contact || "",
+        address: students.address || "",
+        sex: students.sex || "",
+        birthday: students.birthday || "",
+        profile: students.profile || "",
+        password: students.password || "",
+      });
+    }
+  }, [students]);
+
+  async function uploadProfile(file) {
+    const url = await uploadFile(file, 'oasms');
+    setForm({
+      ...form,
+      profile: url
+    })
+    console.log( url)
+  }
+
+  const updateProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(form);
+    updateStudentProfile(form);
+  }
 
   if (loading) {
     return <div>Loading...</div>;
@@ -85,11 +133,11 @@ function Profile() {
               >
                   <Avatar
                   // alt={data?.name}
-                  src="/static/images/avatar/1.jpg"
+                  src={students?.profile}
                   sx={{ width: 80, height: 80 }}
                   />
                   <div style={{flexGrow:"1"}}>
-                    <Typography variant="h4" fontWeight={500} color="initial">{students.name.first} {students.name.middle} {students.name.last} {students.name.suffix}</Typography>
+                    <Typography variant="h4" fontWeight={500} color="initial">{students?.name?.first} {students?.name?.middle} {students?.name?.last} {students?.name?.suffix}</Typography>
                     <Box
                       sx={{
                         display: 'flex',
@@ -106,7 +154,7 @@ function Profile() {
                         }}
                       >
                         <CallIcon/> 
-                        <Typography variant="body1" fontWeight={500}>{students.contact}</Typography>
+                        <Typography variant="body1" fontWeight={500}>{students?.contact}</Typography>
                       </Box>
                       <Box
                         sx={{
@@ -116,7 +164,7 @@ function Profile() {
                         }}
                       >
                         <EmailIcon/> 
-                        <Typography variant="body1" fontWeight={500}>{students.email}</Typography>
+                        <Typography variant="body1" fontWeight={500}>{students?.email}</Typography>
                       </Box>
                       <Box  
                         sx={{
@@ -126,7 +174,7 @@ function Profile() {
                         }}
                       >
                         <CakeIcon/> 
-                        <Typography variant="body1" fontWeight={500}>{students.birthday}</Typography>
+                        <Typography variant="body1" fontWeight={500}>{students?.birthday}</Typography>
                       </Box>
                       <Box  
                         sx={{
@@ -135,8 +183,8 @@ function Profile() {
                           gap:"5px"
                         }}
                       >
-                        {students.sex==='male'?<MaleIcon/> :<FemaleIcon/> }
-                        <Typography variant="body1" fontWeight={500}>{students.sex}</Typography>
+                        {students?.sex==='male'?<MaleIcon/> :<FemaleIcon/> }
+                        <Typography variant="body1" fontWeight={500}>{students?.sex}</Typography>
                       </Box>
                       <Box
                         sx={{
@@ -146,7 +194,7 @@ function Profile() {
                         }}
                       >
                         <PlaceIcon/> 
-                        <Typography variant="body1" fontWeight={500}>{students.address}</Typography>
+                        <Typography variant="body1" fontWeight={500}>{students?.address}</Typography>
                       </Box>
                     </Box>
                   </div>
@@ -176,7 +224,7 @@ function Profile() {
           <Box sx={style}>
               {/* Enrollment Request  */}
               {(open === "infoUpdate")?<>
-                  <form action="">
+                  <form onSubmit={updateProfile}>
                     <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
                       Update Profile
                     </Typography>
@@ -189,6 +237,8 @@ function Profile() {
                           id="location"
                           label="Location"
                           fullWidth
+                          value={form?.address}
+                          onChange={(e)=>{setForm({...form, address: e.target.value})}}
                           // value={}
                           // onChange={}
                         />
@@ -198,6 +248,8 @@ function Profile() {
                           id="email"
                           label="Email"
                           fullWidth
+                          value={form?.email}
+                          onChange={(e)=>{setForm({...form, email: e.target.value})}}
                           // value={}
                           // onChange={}
                         />
@@ -212,6 +264,8 @@ function Profile() {
                             maxLength: 10,
                             pattern: '[0-9]*', // Allow only digits
                           }}
+                          value={form?.contact}
+                          onChange={(e)=>{setForm({...form, contact: e.target.value})}}
                         />
                       </Grid>
                       
@@ -224,6 +278,8 @@ function Profile() {
                           label="Sex"
                           required
                           name="sex"
+                          defaultValue={form?.sex}
+                          onChange={(e)=>{setForm({...form, sex: e.target.value})}}
                           // value={form.sex}
                           // onChange={handleChange}
                         >
@@ -241,7 +297,7 @@ function Profile() {
                             <DatePicker
                               slotProps={{ textField: { fullWidth: true } }}
                               label="Birthday"
-                              // value={dayjs(form.birthday)}
+                              value={dayjs(form?.birthday)}
                               // onChange={handleChangeBirthday}
                             />
                           </DemoContainer>
@@ -253,6 +309,7 @@ function Profile() {
                           id="contact"
                           fullWidth
                           type='file'
+                          onChange={(e:any)=>{uploadProfile(e.target.files[0])}}
                         />
                       </Grid>
                       <Grid item xs={12} mt={2}>
@@ -264,8 +321,7 @@ function Profile() {
                       </Grid>
                       <Grid item sm={8} xs={12}>
                           <Button variant="contained" fullWidth color="primary"
-                            onClick={() => {
-                            }}
+                            type='submit'
                           >
                             Update
                           </Button>

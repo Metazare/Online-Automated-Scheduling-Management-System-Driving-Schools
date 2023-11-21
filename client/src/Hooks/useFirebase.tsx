@@ -36,6 +36,8 @@ function useFirebase(): Data {
   
       // Display a success message
       alert('File Uploaded!');
+
+      return url;
     } catch (error) {
       // Handle the error
       console.error('Error uploading file:', error);
