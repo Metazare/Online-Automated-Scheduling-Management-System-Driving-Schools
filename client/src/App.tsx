@@ -28,6 +28,7 @@ import TestNotification from './Test/TestNotification';
 import TestChat from './Test/TestChat';
 import TestStudentUpdate from './Test/TestStudentUpdate';
 import SendEmails from './Test/SendEmail';
+import TestSchoolUpdate from './Test/TestSchoolUpdate';
 
 const theme = createTheme({
   palette:{
@@ -83,6 +84,7 @@ function App() {
 
         {/* test */}
         <Route path="/test/update" element={<TestStudentUpdate/>} />
+        <Route path="/test/school" element={<TestSchoolUpdate/>} />
         <Route path="/sendEmail" element={<SendEmails/>} />
       </Routes>
     </ThemeProvider>

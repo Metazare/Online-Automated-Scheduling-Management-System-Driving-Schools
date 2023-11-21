@@ -6,10 +6,22 @@ interface Data {
   loading: boolean;
   error: Error | null;
   getSchool: (data: GetSchoolData) => void;
+  editSchool: (data: EditSchoolData) => void;
 }
 
 interface GetSchoolData {
   schoolId?: string | null;
+}
+
+interface EditSchoolData {
+  schoolId: string;
+  name: string;
+  address: string;
+  contact: string;
+  email: string;
+  profile: string;
+  about: string;
+
 }
 
 function useReqSchool(): Data {
@@ -43,12 +55,36 @@ function useReqSchool(): Data {
       setLoading(false);
     }
   }
+
+  const editSchool = async (data: EditSchoolData) => {
+    setLoading(true);
+    try {
+      await axios.patch(`/schools`, {
+        schoolId: data.schoolId,
+        name: data.name,
+        about: data.about,
+        address: data.address,
+        contact: data.contact,
+        email: data.email,
+        profile: data.profile
+      })
+      .then((response:any)=>{
+        console.log(response.data)
+      });
+    } catch (error: any) {
+      console.log(error)
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
     
   return {
     data,
     loading,
     error,
-    getSchool
+    getSchool,
+    editSchool
   }
 }
 
