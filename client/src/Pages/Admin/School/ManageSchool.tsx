@@ -128,7 +128,6 @@ function ManageSchool() {
                         onClose={handleClose}
                       >
                         <MenuItem onClick={()=>{handleClose(); setOpen("infoUpdate")}}>Update Information</MenuItem>
-                        <MenuItem onClick={()=>{handleClose(); setOpen("passUpdate")}}>Update Password</MenuItem>
                       </Menu>
                     </>
                     :""}
@@ -254,56 +253,6 @@ function ManageSchool() {
                           type='file'
                         />
                       </Grid>
-                      <Grid item xs={12} mt={2}>
-                      </Grid>
-                      <Grid item sm={4} xs={12}>
-                          <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
-                              cancel
-                          </Button>
-                      </Grid>
-                      <Grid item sm={8} xs={12}>
-                          <Button variant="contained" fullWidth color="primary"
-                            onClick={() => {
-                            }}
-                          >
-                            Update
-                          </Button>
-                      </Grid>
-                    </Grid>
-                  </form>
-              </>:""}
-              {(open === "passUpdate")?<>
-                  <form action="">
-                    <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
-                      Update Password
-                    </Typography>
-                    <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
-                      Change your password  
-                    </Typography>
-                    <Grid container spacing={1} mt={2}>
-                      <Grid item xs={12}>
-                        <TextField
-                          id="currentPass"
-                          label="Current Password"
-                          fullWidth
-                          type='password'
-                          required
-                          // value={}
-                          // onChange={}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          id="newPass"
-                          label="New Password"
-                          fullWidth
-                          type='password'
-                          required
-                          // value={}
-                          // onChange={}
-                        />
-                      </Grid>
-                      
                       <Grid item xs={12} mt={2}>
                       </Grid>
                       <Grid item sm={4} xs={12}>
