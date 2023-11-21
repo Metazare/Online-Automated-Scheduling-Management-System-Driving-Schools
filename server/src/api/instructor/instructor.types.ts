@@ -18,6 +18,7 @@ export interface Instructor {
     };
     address: string;
     contact: string;
+    profile: string;
     credentials: {
         email: string;
         password: string;
@@ -45,6 +46,7 @@ export type CreateInstructor = {
     suffix?: string;
     address: string;
     contact: string;
+    profile: string;
     email: string;
 }
 
@@ -56,4 +58,16 @@ export type GetInstructors = {
 export type UpdateInstructorStatus = {
     instructorId: string;
     status: InstructorStatus;
+}
+
+export type UpdateInstructor = {
+  instructorId: string;
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+  suffix?: string;
+  address: string;
+  contact: string;
+  profile: string;
+  email: string;
 }
