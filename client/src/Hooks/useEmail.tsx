@@ -15,8 +15,9 @@ function useEmail(): Data {
   const sendEmail = async (data: SendEmailData) => {
     try {
       await axios
-      .post('/otp', {
-        email: data.email,
+      .post('/email', {
+        to: data.email,
+        subject: "OASMS OTP",
         content: data.content
       })
       .then((response:any)=>{
