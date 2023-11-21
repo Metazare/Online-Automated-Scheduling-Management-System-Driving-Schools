@@ -224,146 +224,146 @@ function Requests() {
                 />
             </>:""}
             <div>
-                <Modal
-                    open={open.length > 0}
-                    onClose={()=>{setOpen("")}}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style}>
-                        {/* Enrollment Request  */}
-                        {(open === "AcceptEnrollment")?<>
-                            <form action="">
-                                <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
-                                    Admit Student
-                                </Typography>
-                                <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
-                                    Are you sure you want enroll this student?
-                                </Typography>
+              <Modal
+                  open={open.length > 0}
+                  onClose={()=>{setOpen("")}}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+              >
+                  <Box sx={style}>
+                      {/* Enrollment Request  */}
+                      {(open === "AcceptEnrollment")?<>
+                          <form action="">
+                              <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
+                                  Admit Student
+                              </Typography>
+                              <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
+                                  Are you sure you want enroll this student?
+                              </Typography>
 
 
-                            <Grid container spacing={1} mt={3}>
-                                <Grid item sm={4} xs={12}>
-                                    <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                          <Grid container spacing={1} mt={3}>
+                              <Grid item sm={4} xs={12}>
+                                  <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                                      cancel
+                                  </Button>
+                              </Grid>
+                              <Grid item sm={8} xs={12}>
+                                  <Button variant="contained" fullWidth color="primary"
+                                    onClick={() => {
+                                      updateEnrollments({enrollmentId: selected, status: 'accepted', reason: null});
+                                      setOpen("");
+                                      getEnrollments(form);
+                                      getEnrollments(form);
+                                    }}
+                                  >
+                                      Admit
+                                  </Button>
+                              </Grid>
+                          </Grid>
+                          </form>
+                      </>:""}
+
+                      {open === "DeclineEnrollment"?<>
+                          <form action="">
+                              <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
+                                  Decline Student
+                              </Typography>
+                              <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
+                                  Are you sure you want decline this student? 
+                              </Typography>
+
+                              <TextField
+                                  fullWidth
+                                  required
+                                  id="reason"
+                                  label="Reason"
+                                  value={reason}
+                                  onChange={(event)=>{setReason(event.target.value)}}
+                              />
+
+                              <Grid container spacing={1} mt={3}>
+                                  <Grid item sm={4} xs={12}>
+                                      <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
                                         cancel
-                                    </Button>
-                                </Grid>
-                                <Grid item sm={8} xs={12}>
-                                    <Button variant="contained" fullWidth color="primary"
-                                      onClick={() => {
-                                        updateEnrollments({enrollmentId: selected, status: 'accepted', reason: null});
-                                        setOpen("");
-                                        getEnrollments(form);
-                                        getEnrollments(form);
-                                      }}
-                                    >
-                                        Admit
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                            </form>
-                        </>:""}
+                                      </Button>
+                                  </Grid>
+                                  <Grid item sm={8} xs={12}>
+                                      <Button variant="contained" fullWidth color="primary"
+                                        onClick={() => {
+                                          updateEnrollments({enrollmentId: selected, status: 'declined', reason: reason});
+                                          setOpen("");
+                                          getEnrollments(form);
+                                          getEnrollments(form);
+                                        }}
+                                      >
+                                        Decline
+                                      </Button>
+                                  </Grid>
+                              </Grid>
+                          </form>
+                      </>:""}
 
-                        {open === "DeclineEnrollment"?<>
-                            <form action="">
-                                <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
-                                    Decline Student
-                                </Typography>
-                                <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
-                                    Are you sure you want decline this student? 
-                                </Typography>
+                      {open === "AcceptReschedule"?<>
+                          <form action="">
+                              <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
+                                  Accept Reschedule
+                              </Typography>
+                              <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
+                                  This will update the set schedule to this appointment
+                              </Typography>
 
-                                <TextField
-                                    fullWidth
-                                    required
-                                    id="reason"
-                                    label="Reason"
-                                    value={reason}
-                                    onChange={(event)=>{setReason(event.target.value)}}
-                                />
 
-                                <Grid container spacing={1} mt={3}>
-                                    <Grid item sm={4} xs={12}>
-                                        <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                              <Grid container spacing={1} mt={3}>
+                                  <Grid item sm={4} xs={12}>
+                                      <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
                                           cancel
-                                        </Button>
-                                    </Grid>
-                                    <Grid item sm={8} xs={12}>
-                                        <Button variant="contained" fullWidth color="primary"
-                                          onClick={() => {
-                                            updateEnrollments({enrollmentId: selected, status: 'declined', reason: reason});
-                                            setOpen("");
-                                            getEnrollments(form);
-                                            getEnrollments(form);
-                                          }}
-                                        >
+                                      </Button>
+                                  </Grid>
+                                  <Grid item sm={8} xs={12}>
+                                      <Button variant="contained" fullWidth color="primary" 
+                                        
+                                      >
+                                          Proceed
+                                      </Button>
+                                  </Grid>
+                              </Grid>
+                          </form>
+                      </>:""}
+                      {open === "DeclineReschedule"?<>
+                          <form action="">
+                              <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
+                                  Decline Reschedule 
+                              </Typography>
+                              <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
+                                  Are you sure you want decline this Reschedule Request? 
+                              </Typography>
+
+                              <TextField
+                                  fullWidth
+                                  required
+                                  id="reason"
+                                  label="Reason"
+                                  value={reason}
+                                  onChange={(event)=>{setReason(event.target.value)}}
+                              />
+
+                              <Grid container spacing={1} mt={3}>
+                                  <Grid item sm={4} xs={12}>
+                                      <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                                          cancel
+                                      </Button>
+                                  </Grid>
+                                  <Grid item sm={8} xs={12}>
+                                      <Button variant="contained" fullWidth color="primary">
                                           Decline
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            </form>
-                        </>:""}
-
-                        {open === "AcceptReschedule"?<>
-                            <form action="">
-                                <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
-                                    Accept Reschedule
-                                </Typography>
-                                <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
-                                    This will update the set schedule to this appointment
-                                </Typography>
-
-
-                                <Grid container spacing={1} mt={3}>
-                                    <Grid item sm={4} xs={12}>
-                                        <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
-                                            cancel
-                                        </Button>
-                                    </Grid>
-                                    <Grid item sm={8} xs={12}>
-                                        <Button variant="contained" fullWidth color="primary" 
-                                          
-                                        >
-                                            Proceed
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            </form>
-                        </>:""}
-                        {open === "DeclineReschedule"?<>
-                            <form action="">
-                                <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
-                                    Decline Reschedule 
-                                </Typography>
-                                <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
-                                    Are you sure you want decline this Reschedule Request? 
-                                </Typography>
-
-                                <TextField
-                                    fullWidth
-                                    required
-                                    id="reason"
-                                    label="Reason"
-                                    value={reason}
-                                    onChange={(event)=>{setReason(event.target.value)}}
-                                />
-
-                                <Grid container spacing={1} mt={3}>
-                                    <Grid item sm={4} xs={12}>
-                                        <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
-                                            cancel
-                                        </Button>
-                                    </Grid>
-                                    <Grid item sm={8} xs={12}>
-                                        <Button variant="contained" fullWidth color="primary">
-                                            Decline
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                            </form>
-                        </>:""}
-                    </Box>
-                </Modal>
+                                      </Button>
+                                  </Grid>
+                              </Grid>
+                          </form>
+                      </>:""}
+                  </Box>
+              </Modal>
             </div>
         </Grid>
     )

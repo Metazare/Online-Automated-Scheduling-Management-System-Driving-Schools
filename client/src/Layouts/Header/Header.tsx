@@ -151,6 +151,12 @@ export default function Header({socket}) {
                 open={Boolean(anchorElUser)}
                 onClose={handleCloseUserMenu}
               >
+                {getUser() === "admin"?"":<>
+                  <MenuItem  onClick={()=>navigate("/profile")}>
+                    <Typography textAlign="center">Profile</Typography>
+                  </MenuItem>
+                </>}
+                
                 <MenuItem onClick={()=>{handleCloseUserMenu();logout()}}>
                   <Typography textAlign="center">Logout</Typography>
                 </MenuItem>

@@ -13,6 +13,7 @@ import School from './Pages/User/School/School'
 import LessonView from './Pages/User/School/LessonView';
 import CoursesList from './Pages/User/School/CourseList'
 
+import Profile from './Pages/Profile/Profile'
 import ManageSchool from './Pages/Admin/School/ManageSchool';
 import Error from './Pages/Error';
 import Chat from './Pages/User/Chat';
@@ -60,10 +61,15 @@ function App() {
             <Route path="" element={<Home/>} />
             <Route path="dashboard" element={<ManageSchool/>} />
           </Route>
+          <Route element={<ProtectedRoute allowedRoles={["instructor"]}/>}>
+          <Route path="/profile" element={<Profile/>} />
+
+          </Route>
 
           {/* student */}
           <Route element={<ProtectedRoute allowedRoles={["student"]}/>}>
             <Route path="/home" element={<Home/>} />
+            <Route path="/profile" element={<Profile/>} />
             <Route path="/school/:id" element={<School/>} />
             <Route path="/course/:id" element={<CoursesList/>} />
           </Route>
