@@ -31,6 +31,9 @@ const schoolSchema = new Schema(
             minLength: 1,
             required: true
         },
+        profile:{
+            type: String
+        },
         courses: [
             {
                 courseId: {

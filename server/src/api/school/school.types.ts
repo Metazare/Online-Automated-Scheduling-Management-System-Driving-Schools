@@ -1,5 +1,5 @@
 import { Course } from '../course/course.types';
-import { Document } from 'mongoose';
+import { Document, StringExpressionOperatorReturningBoolean } from 'mongoose';
 
 /* MODEL */
 
@@ -10,6 +10,7 @@ export interface School {
     address: string;
     contact: string;
     courses: Course[];
+    profile: string;
     credentials: {
         email: string;
         password: string;
@@ -34,4 +35,5 @@ export type CreateSchool = {
     contact: string;
     email: string;
     password: string;
+    profile: string;
 };

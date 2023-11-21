@@ -1,4 +1,4 @@
-import { getSchools } from "./school.controller";
+import { getSchools, editSchool } from "./school.controller";
 import { Router } from "express";
 import asynchronousHandler from "../../middlewares/asynchronousHandler";
 
@@ -15,5 +15,8 @@ const router: Router = Router();
  * schoolId (optional)
  */
 router.get('/', asynchronousHandler(getSchools));
+
+router.patch('/', asynchronousHandler(editSchool));
+
 
 export default router;

@@ -2,7 +2,7 @@ import { CheckData } from '../../utilities/checkData';
 import { CreateSchool, GetSchools } from './school.types';
 import { Payload, Role } from '../auth/auth.types';
 import { QueryRequest, RequestHandler } from 'express';
-import { Unauthorized, UnprocessableEntity } from '../../utilities/errors';
+import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import SchoolModel from './school.model';
 import { InstructorPopulatedDocument } from '../instructor/instructor.types';
 
@@ -44,4 +44,40 @@ export const createSchool = async (body: CreateSchool): Promise<Payload> => {
     });
 
     return { userId: schoolId, role: Role.ADMIN };
+};
+
+export const editSchool: RequestHandler = async (req, res) => {
+  try {
+      if (!req.user) throw new Unauthorized();
+      const { role } = req.user;
+
+      if (role !== Role.ADMIN) throw new Unauthorized('Only admin can edit school details.');
+
+      const { schoolId } = req.body; // Assuming schoolId is part of the URL parameters
+      const updatedData = req.body;
+
+      // Validate the input data
+      const checker = new CheckData();
+      Object.entries(updatedData).forEach(([key, value]) => {
+          checker.checkType(value, 'string', key);
+      });
+
+      if (checker.size()) throw new UnprocessableEntity(checker.errors);
+
+      const updatedSchool = await SchoolModel.findOneAndUpdate(
+          { schoolId },
+          { $set: updatedData },
+          { new: true } // Return the updated document
+      ).exec();
+
+      if (!updatedSchool) {
+          throw new NotFound('School');
+      }
+
+      res.json(updatedSchool);
+  } catch (error) {
+      console.error('Error editing school details:', error);
+      // Handle error and send an appropriate response
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
