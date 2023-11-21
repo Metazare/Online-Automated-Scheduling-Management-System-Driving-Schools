@@ -18,7 +18,9 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import PlaceIcon from '@mui/icons-material/Place';
 
 import useReqStudent from '../../Hooks/useReqStudent';
+import useReqInstructor from '../../Hooks/useReqInstructor';
 import useFirebase from '../../Hooks/useFirebase';
+import {useAuth} from '../../Hooks/useAuth';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -44,10 +46,14 @@ function Profile() {
     setAnchorEl(null);
   };
 
+  const {getUser, User} = useAuth();
+  const {instructors, loading: loadingInstructor, error: errorInstructor, getInstructor, editProfile} = useReqInstructor();
   const {downloadURL, uploading, uploadFile} = useFirebase();
   const {students, loading, error, getStudent, updateStudentProfile} = useReqStudent();
+  const [instructor, setInstructor] = useState<any>(null);
   const [form, setForm] = useState<any>({
     studentId: "",
+    instructorId: "",
     email: "",
     contact: "",
     address: "",
@@ -60,9 +66,17 @@ function Profile() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await getStudent({
-          studentId: null,
-        });
+        if(getUser()==='student'){
+          await getStudent({
+            studentId: null,
+          });
+        }
+        else{
+          await getInstructor({
+            instructorId: null,
+          });
+        }
+        
       } catch (error) {
         // Handle error if needed
         console.error('Error fetching student data: ', error);
@@ -85,7 +99,24 @@ function Profile() {
         password: students.password || "",
       });
     }
-  }, [students]);
+    if (instructors?.length > 0) {
+      setInstructor(filterByInstructorId(instructors, User().instructorId)[0]);
+      let instructor = filterByInstructorId(instructors, User().instructorId)[0];
+      console.log(filterByInstructorId(instructors, User().instructorId)[0])
+      setForm({
+        instructorId: instructor.instructorId || "",
+        email: instructor.email || "",
+        contact: instructor.contact || "",
+        address: instructor.address || "",
+        profile: instructor.profile || "",
+        password: instructor.password || "",
+      });
+    }
+  }, [students, instructors]);
+
+  function filterByInstructorId(data, targetInstructorId) {
+    return data.filter((item) => item.instructorId === targetInstructorId);
+  }
 
   async function uploadProfile(file) {
     const url = await uploadFile(file, 'oasms');
@@ -100,8 +131,15 @@ function Profile() {
     e.preventDefault();
     console.log(form);
     setOpen("");
-    window.location.reload();
-    updateStudentProfile(form);
+    
+    if(getUser()==='student'){
+      updateStudentProfile(form);
+    }
+    else{
+      editProfile(form);
+    }
+    // window.location.reload();
+    
   }
 
   if (loading) {
@@ -115,10 +153,6 @@ function Profile() {
     <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em 1em 0"}}>
       <Container maxWidth="lg">
           <div style={{padding:"3.8rem 0",}}>
-              {/* <a href="/" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
-                  <ArrowBackIcon/>
-                  <Typography variant="subtitle1" color="initial"> Go Back</Typography>
-              </a> */}
               <Box
                   sx={{
                   display: 'flex',
@@ -128,11 +162,19 @@ function Profile() {
               >
                   <Avatar
                   // alt={data?.name}
-                  src={students?.profile}
+                  src={ getUser() === "student" ? students?.profile : instructor?.profile}
                   sx={{ width: 80, height: 80 }}
                   />
                   <div style={{flexGrow:"1"}}>
-                    <Typography variant="h4" fontWeight={500} color="initial">{students?.name?.first} {students?.name?.middle} {students?.name?.last} {students?.name?.suffix}</Typography>
+                    <Typography variant="h4" fontWeight={500} color="initial">
+                      
+                      {getUser() === "student" ? 
+                        <>{students?.name?.first} {students?.name?.middle} {students?.name?.last} {students?.name?.suffix}</>
+                      : 
+                        <>{instructor?.name?.first} {instructor?.name?.middle} {instructor?.name?.last} {instructor?.name?.suffix}</>
+                      }
+
+                    </Typography>
                     <Box
                       sx={{
                         display: 'flex',
@@ -149,7 +191,9 @@ function Profile() {
                         }}
                       >
                         <CallIcon/> 
-                        <Typography variant="body1" fontWeight={500}>{students?.contact}</Typography>
+                        <Typography variant="body1" fontWeight={500}>
+                          {getUser() === "student" ? <>{students?.contact}</> : <>{instructor?.contact}</>}
+                        </Typography>
                       </Box>
                       <Box
                         sx={{
@@ -159,38 +203,49 @@ function Profile() {
                         }}
                       >
                         <EmailIcon/> 
-                        <Typography variant="body1" fontWeight={500}>{students?.email}</Typography>
+                        <Typography variant="body1" fontWeight={500}>
+                          {/* {students?.email} */}
+                          {getUser() === "student" ? <>{students?.email}</> : <>{instructor?.email}</>}
+                          </Typography>
                       </Box>
-                      <Box  
-                        sx={{
-                          display: 'flex',
-                          alignItems:"center",
-                          gap:"5px"
-                        }}
-                      >
-                        <CakeIcon/> 
-                        <Typography variant="body1" fontWeight={500}>{students?.birthday}</Typography>
-                      </Box>
-                      <Box  
-                        sx={{
-                          display: 'flex',
-                          alignItems:"center",
-                          gap:"5px"
-                        }}
-                      >
-                        {students?.sex==='male'?<MaleIcon/> :<FemaleIcon/> }
-                        <Typography variant="body1" fontWeight={500}>{students?.sex}</Typography>
-                      </Box>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems:"center",
-                          gap:"5px",
-                        }}
-                      >
-                        <PlaceIcon/> 
-                        <Typography variant="body1" fontWeight={500}>{students?.address}</Typography>
-                      </Box>
+
+                      {getUser() === "student" ?
+                      <>
+                        <Box  
+                          sx={{
+                            display: 'flex',
+                            alignItems:"center",
+                            gap:"5px"
+                          }}
+                        >
+                          <CakeIcon/> 
+                          <Typography variant="body1" fontWeight={500}>
+                            {getUser() === "student" ? <>{students?.birthday}</> : <></>}
+                          </Typography>
+                        </Box>
+
+                        <Box  
+                          sx={{
+                            display: 'flex',
+                            alignItems:"center",
+                            gap:"5px"
+                          }}
+                        >
+                          {students?.sex==='male'?<MaleIcon/> :<FemaleIcon/> }
+                          <Typography variant="body1" fontWeight={500}>{students?.sex}</Typography>
+                        </Box>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems:"center",
+                            gap:"5px",
+                          }}
+                        >
+                          <PlaceIcon/> 
+                          <Typography variant="body1" fontWeight={500}>{students?.address}</Typography>
+                        </Box>
+                      </>
+                      :<></>}
                     </Box>
                   </div>
                   <IconButton aria-label="" onClick={handleClick}>
@@ -234,8 +289,6 @@ function Profile() {
                           fullWidth
                           value={form?.address}
                           onChange={(e)=>{setForm({...form, address: e.target.value})}}
-                          // value={}
-                          // onChange={}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -245,8 +298,6 @@ function Profile() {
                           fullWidth
                           value={form?.email}
                           onChange={(e)=>{setForm({...form, email: e.target.value})}}
-                          // value={}
-                          // onChange={}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -263,41 +314,42 @@ function Profile() {
                           onChange={(e)=>{setForm({...form, contact: e.target.value})}}
                         />
                       </Grid>
-                      
-                      <Grid item xs={6} >
-                        <TextField
-                        sx={{paddingTop:"8px"}}
-                          fullWidth
-                          id="outlined-select-currency"
-                          select
-                          label="Sex"
-                          required
-                          name="sex"
-                          defaultValue={form?.sex}
-                          onChange={(e)=>{setForm({...form, sex: e.target.value})}}
-                          // value={form.sex}
-                          // onChange={handleChange}
-                        >
-                          <MenuItem  value={"male"}>
-                            Male
-                          </MenuItem>
-                          <MenuItem  value={"female"}>
-                            Female
-                          </MenuItem>
-                        </TextField>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <LocalizationProvider dateAdapter={AdapterDayjs}>
-                          <DemoContainer components={['DatePicker', 'DatePicker']}>
-                            <DatePicker
-                              slotProps={{ textField: { fullWidth: true } }}
-                              label="Birthday"
-                              value={dayjs(form?.birthday)}
-                              // onChange={handleChangeBirthday}
-                            />
-                          </DemoContainer>
-                        </LocalizationProvider>
-                      </Grid>
+                      {getUser() === "student" ? <>
+                        <Grid item xs={6} >
+                          <TextField
+                          sx={{paddingTop:"8px"}}
+                            fullWidth
+                            id="outlined-select-currency"
+                            select
+                            label="Sex"
+                            required
+                            name="sex"
+                            defaultValue={form?.sex}
+                            onChange={(e)=>{setForm({...form, sex: e.target.value})}}
+                            // value={form.sex}
+                            // onChange={handleChange}
+                          >
+                            <MenuItem  value={"male"}>
+                              Male
+                            </MenuItem>
+                            <MenuItem  value={"female"}>
+                              Female
+                            </MenuItem>
+                          </TextField>
+                        </Grid>
+                        <Grid item xs={6}>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={['DatePicker', 'DatePicker']}>
+                              <DatePicker
+                                slotProps={{ textField: { fullWidth: true } }}
+                                label="Birthday"
+                                value={dayjs(form?.birthday)}
+                                // onChange={handleChangeBirthday}
+                              />
+                            </DemoContainer>
+                          </LocalizationProvider>
+                        </Grid>
+                      </> : <></>}
                       <Grid item xs={12}>
                         <Typography variant="body1" color="initial" mb={"5px"}>Profile Picture</Typography>
                         <TextField
