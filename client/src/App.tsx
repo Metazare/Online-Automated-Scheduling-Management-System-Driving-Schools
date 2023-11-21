@@ -61,15 +61,14 @@ function App() {
             <Route path="" element={<Home/>} />
             <Route path="dashboard" element={<ManageSchool/>} />
           </Route>
-          <Route element={<ProtectedRoute allowedRoles={["instructor"]}/>}>
-          <Route path="/profile" element={<Profile/>} />
-
+          {/* Instructor and Student can access profile */}
+          <Route element={<ProtectedRoute allowedRoles={["instructor","student"]}/>}>
+            <Route path="/profile" element={<Profile/>} />
           </Route>
 
           {/* student */}
           <Route element={<ProtectedRoute allowedRoles={["student"]}/>}>
             <Route path="/home" element={<Home/>} />
-            <Route path="/profile" element={<Profile/>} />
             <Route path="/school/:id" element={<School/>} />
             <Route path="/course/:id" element={<CoursesList/>} />
           </Route>
