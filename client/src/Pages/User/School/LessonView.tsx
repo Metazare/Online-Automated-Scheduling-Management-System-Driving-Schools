@@ -151,9 +151,8 @@ function LessonView() {
                                     <Typography variant="body1"  mt={"-5px"} color="initial" >Instructor</Typography>
                                 </div>
                             </div> */}
-                            <Typography variant="subtitle1" color="initial" fontWeight={500} >Feedback:</Typography>
+                            <Typography variant="subtitle1" color="primary" fontWeight={500} >Feedback:</Typography>
                             <Typography variant="body1" color="initial"  textAlign={"justify"}>
-                              
                                 {JSON.stringify(getData(enrolls?.progress)?.feedback)}
                             </Typography>
                         </Paper>
