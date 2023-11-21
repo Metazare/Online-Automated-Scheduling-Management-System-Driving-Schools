@@ -54,6 +54,7 @@ function Requests() {
     };
     // TODO End of Pagination
     const [selected,setSelected] = useState("")
+    const [selectedStudent, setSelectedStudent] = useState("");
 
     const { data, loading, getEnrollments, updateEnrollments } = useReqEnroll();
     const [form, setForm] = useState({
@@ -141,10 +142,10 @@ function Requests() {
                                 {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({request?.availability?.time?.start + ":00"} to {request?.availability?.time?.end +":00"})
                             </TableCell>
                             <TableCell align="right">
-                                <IconButton aria-label=""  onClick={()=>{setOpen("DeclineEnrollment"); setSelected(request.enrollmentId)}}>
+                                <IconButton aria-label=""  onClick={()=>{setOpen("DeclineEnrollment"); setSelected(request.enrollmentId); setSelectedStudent(request?.student.studentId)}}>
                                     <ClearIcon/>
                                 </IconButton>
-                                <IconButton aria-label="" onClick={()=>{setOpen("AcceptEnrollment"); setSelected(request.enrollmentId)}}>
+                                <IconButton aria-label="" onClick={()=>{setOpen("AcceptEnrollment"); setSelected(request.enrollmentId); setSelectedStudent(request?.student.studentId)}}>
                                     <CheckIcon/>
                                 </IconButton>
                             </TableCell>
@@ -251,7 +252,7 @@ function Requests() {
                               <Grid item sm={8} xs={12}>
                                   <Button variant="contained" fullWidth color="primary"
                                     onClick={() => {
-                                      updateEnrollments({enrollmentId: selected, status: 'accepted', reason: null});
+                                      updateEnrollments({enrollmentId: selected, status: 'accepted', reason: null, studentId: selectedStudent});
                                       setOpen("");
                                       getEnrollments(form);
                                       getEnrollments(form);
@@ -291,7 +292,7 @@ function Requests() {
                                   <Grid item sm={8} xs={12}>
                                       <Button variant="contained" fullWidth color="primary"
                                         onClick={() => {
-                                          updateEnrollments({enrollmentId: selected, status: 'declined', reason: reason});
+                                          updateEnrollments({enrollmentId: selected, status: 'declined', reason: reason, studentId: selectedStudent});
                                           setOpen("");
                                           getEnrollments(form);
                                           getEnrollments(form);

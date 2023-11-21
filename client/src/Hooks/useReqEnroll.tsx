@@ -33,6 +33,7 @@ interface UpdateEnrollmentData {
   enrollmentId: string;
   status: string;
   reason: string | null;
+  studentId: string;
 }
 
 function useReqEnroll(): Data {
@@ -70,7 +71,7 @@ function useReqEnroll(): Data {
                 role: 'admin'
               }
             ],
-            content: 'New Enrollment Request from' + data.courseId
+            content: 'New Enrollment Request!'
           })
           navigate("/home");
         });
@@ -126,6 +127,16 @@ function useReqEnroll(): Data {
       })
       .then((response:any)=>{
         console.log(response.data);
+        sendNotification({
+          sender: User().schoolId,
+          targets: [
+            {
+              user: data.studentId,
+              role: 'student'
+            }
+          ],
+          content: 'Your enroll request is ' + data.status
+        })
       });
     } catch (error: any) {
       console.log(error)
