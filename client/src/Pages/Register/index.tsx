@@ -20,6 +20,7 @@ import schoolImg from '../../Images/Resources/school.png';
 // Hooks
 import { useAuth } from '../../Hooks/useAuth';
 import { SnackbarContext } from '../../Context/SnackbarContext';
+import useEmail from '../../Hooks/useEmail';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -41,6 +42,7 @@ function Index() {
   const{setOpenSnackBar} = useContext(SnackbarContext)
 
   const { register } = useAuth();
+  const { sendEmail } = useEmail();
 
   const styleContainer = {
     minHeight:"100vh",
@@ -49,9 +51,10 @@ function Index() {
 
   };
 
+  let otp = '';
+
   const [role, setRole] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [otp, setOtp] = useState('');
   const [form, setForm] = useState({
     name: '',
     first: '',
@@ -70,13 +73,14 @@ function Index() {
 
 
   const [verificationCode, setVerificationCode] = useState('');
+  const [otpCode, setOtpCode] = useState('');
 
   const handleChangeVerify = (event) => {
     // Ensure that the entered value contains only numbers
-    const sanitizedValue = event.target.value.replace(/[^0-9]/g, '');
+    // const sanitizedValue = event.target.value.replace(/[^0-9]/g, '');
 
     // Set the value, considering the maximum length of 6
-    setVerificationCode(sanitizedValue.substring(0, 6));
+    setVerificationCode(event.target.value.substring(0, 6));
   };
 
   
@@ -104,7 +108,7 @@ function Index() {
       otp += characters.charAt(randomIndex);
     }
   
-    setOtp(otp);
+    return otp;
   }
 
   async function submit(e: React.FormEvent<HTMLFormElement>){
@@ -120,6 +124,53 @@ function Index() {
       })); 
     }
   };
+
+  const verifyEmail = () => {
+    let otp = generateOTP();
+    sendEmail({
+      email: form.email,
+      content: `Your One Time Password is: ${otp}`
+    })
+  }
+
+  async function submitRegister(e: React.FormEvent<HTMLFormElement>){
+    e.preventDefault();
+    if (form.password === confirmPassword) {
+      otp = generateOTP();
+      setOtpCode(otp);
+      sendEmail({
+        email: form.email,
+        content: `Your One Time Password is: ${otp}`
+      });
+      setOpen("verify");
+      console.log(otp);
+    } 
+    else {
+      setOpenSnackBar(openSnackBar => ({
+        ...openSnackBar,
+        severity:'error',
+        note:"Passwords do not match",
+      })); 
+    }
+  };
+
+  async function verifyOTP(e: React.FormEvent<HTMLFormElement>){
+    e.preventDefault();
+    console.log(otpCode)
+    console.log(verificationCode);
+    console.log(otpCode===verificationCode);
+    if (otpCode === verificationCode) {
+      setOpen("");
+      register(form);
+    } 
+    else {
+      setOpenSnackBar(openSnackBar => ({
+        ...openSnackBar,
+        severity:'error',
+        note:"Invalid OTP",
+      })); 
+    }
+  }
 
   return (
     <div style={styleContainer}>
@@ -202,7 +253,7 @@ function Index() {
           {/* School Register Form */}
           
           {(role === "school")? 
-            <form onSubmit={submit}>
+            <form onSubmit={submitRegister}>
               <Grid container spacing={2} width={"100%"} mt="20px" mb={"20px"}>
                 <Grid item  xs={12}>
                   <TextField
@@ -240,9 +291,9 @@ function Index() {
                     onChange={handleChange}
                   />
                 </Grid>
-                <Grid item  md={2} xs={3} >
-                  <Button fullWidth variant="contained" sx={{background:"#414141",height:"100%"}} onClick={()=>{setOpen("verify")}}>verify</Button>
-                </Grid>
+                {/* <Grid item  md={2} xs={3} >
+                  <Button fullWidth variant="contained" sx={{background:"#414141",height:"100%"}} onClick={()=>{setOpen("verify"); verifyEmail()}}>verify</Button>
+                </Grid> */}
                 <Grid item  md={5} xs={12}>
                   <TextField
                     fullWidth
@@ -450,36 +501,35 @@ function Index() {
           <Box sx={style}>
               {/* Enrollment Request  */}
               {(open === "verify")?<>
-                  <form action="">
+                  <form onSubmit={verifyOTP}>
                     <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
                       Email verification
                     </Typography>
                     <Typography id="modal-modal-title"  variant="body2" fontWeight={400} component="h2">
-                      We already email you a 6 digit code, Please check your email and enter the code to complete the verification
+                      We emailed you a 6 digit code. Please check your email and enter the code to complete the registration.
                     </Typography>
                     <Grid container spacing={1} mt={2}>
                       <Grid item xs={12}>
                         <TextField
+                          required
                           fullWidth
                           id="verify"
-                          value={verificationCode}
                           onChange={handleChangeVerify}
                           inputProps={{
-                            maxLength: 6,
-                            pattern: '[0-9]*', // Allow only numbers
+                            maxLength: 6 // Allow only numbers
                           }}
                         />
                       </Grid>
                       <Grid item xs={12} mt={1} mb={1}>
                       </Grid>
-                      <Grid item sm={4} xs={12}>
+                      {/* <Grid item sm={4} xs={12}>
                           <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
                               cancel
                           </Button>
-                      </Grid>
+                      </Grid> */}
                       <Grid item sm={8} xs={12}>
                           <Button variant="contained" fullWidth color="primary"
-                            onClick={() => {}}
+                            type='submit'
                           >
                               Verify
                           </Button>

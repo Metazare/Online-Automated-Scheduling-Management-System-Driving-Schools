@@ -9,7 +9,7 @@ const { RESEND_KEY } = envs;
 const resend = new Resend(RESEND_KEY);
 
 export const createOTP: RequestHandler = async (req: BodyRequest<OTP>, res) => {
-    const { email, code } = req.body;
+    const { email, content } = req.body;
 
     const checker = new CheckData();
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
@@ -18,7 +18,7 @@ export const createOTP: RequestHandler = async (req: BodyRequest<OTP>, res) => {
         from: 'onboarding@resend.dev',
         to: email,
         subject: 'Email Verification',
-        html: `Your One Time Password (OTP) is: <b>${code}</b>`
+        html: content
     })
 
     res.sendStatus(201);

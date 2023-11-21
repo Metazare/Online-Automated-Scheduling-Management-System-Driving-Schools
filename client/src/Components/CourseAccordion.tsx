@@ -315,11 +315,11 @@ function CourseAccordion({variant,title, courseId, progress}:Props) {
                             </Grid>
                             <Grid item xs={12}>
                               <TextField
-                                  fullWidth
-                                  id="file-upload-input"
-                                  type='file'
-                                  inputProps={{ accept: '.pdf' }}
-                                  onChange={(e:any)=>{uploadImage(e.target.files[0])}}
+                                fullWidth
+                                id="file-upload-input"
+                                type='file'
+                                inputProps={{ accept: '.pdf' }}
+                                onChange={(e:any)=>{uploadImage(e.target.files[0])}}
                               />
                             </Grid>
                             
