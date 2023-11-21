@@ -143,7 +143,6 @@ function Index() {
         content: `Your One Time Password is: ${otp}`
       });
       setOpen("verify");
-      console.log(otp);
     } 
     else {
       setOpenSnackBar(openSnackBar => ({
@@ -156,9 +155,6 @@ function Index() {
 
   async function verifyOTP(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault();
-    console.log(otpCode)
-    console.log(verificationCode);
-    console.log(otpCode===verificationCode);
     if (otpCode === verificationCode) {
       setOpen("");
       register(form);
@@ -349,7 +345,7 @@ function Index() {
           {/* Student Register Form */}
 
           {(role === "student")? 
-            <form onSubmit={submit}>
+            <form onSubmit={submitRegister}>
               <Grid container spacing={2} width={"100%"} mt="20px" mb={"20px"}>
                 <Grid item lg={4} md={8} xs={12}>
                   <TextField
@@ -445,9 +441,6 @@ function Index() {
                     value={form.email}
                     onChange={handleChange}
                   />
-                </Grid>
-                <Grid item  xs={3} >
-                  <Button fullWidth variant="contained" sx={{background:"#414141",height:"100%"}} onClick={()=>{setOpen("verify")}}>verify</Button>
                 </Grid>
 
 

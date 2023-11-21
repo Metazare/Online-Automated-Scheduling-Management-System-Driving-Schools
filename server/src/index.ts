@@ -19,7 +19,7 @@ import courseRoute from './api/course/course.route';
 import enrollmentRoute from './api/enrollment/enrollment.route';
 import instructorRoute from './api/instructor/instructor.route';
 import lessonRoute from './api/lesson/lesson.route';
-import notificationRoute from './api/notification/notification.route';
+import notificationRoute from './api/notification/notification.route'; 
 import schoolRoute from './api/school/school.route';
 import studentRoute from './api/student/student.route';
 import emailRoute from './api/email/email.route';
