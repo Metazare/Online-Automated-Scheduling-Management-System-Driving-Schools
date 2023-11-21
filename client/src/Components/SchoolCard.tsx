@@ -13,10 +13,11 @@ type Props = {
     schoolId?: string,
     courseId?: string,
     courses?: any,
-    variant:"enrolled" | ""
+    variant:"enrolled" | "",
+    profile: string,
 }
 
-function SchoolCard({schoolName,about, schoolId, courses, variant, courseId}:Props) {
+function SchoolCard({schoolName,about, schoolId, courses, variant, courseId, profile}:Props) {
   const navigate = useNavigate();
     return (
         <div >
@@ -33,7 +34,7 @@ function SchoolCard({schoolName,about, schoolId, courses, variant, courseId}:Pro
             <Paper variant="elevation" elevation={3} sx={{padding:"3em 1em 1em"}}>
                 <Avatar
                     alt={schoolName}
-                    src="/static/images/avatar/1.jpg"
+                    src={profile}
                     sx={{ width: 86, height: 86,margin:"auto" }}
                 />
                 <Typography variant="h6" mt={4} color="initial" >{schoolName}</Typography>

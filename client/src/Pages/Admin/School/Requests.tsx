@@ -130,7 +130,7 @@ function Requests() {
                     {data?.map((request) => ( 
                         <TableRow  hover role="checkbox" >
                             <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
-                                <Avatar alt={request?.student?.name?.first.toUpperCase()} src="/static/images/avatar/1.jpg" />
+                                <Avatar alt={request?.student?.name?.first.toUpperCase()} src={request?.student?.profile} />
                                 <div>
                                     <Typography variant="subtitle1" color="initial" fontWeight={500}>{request?.student?.name?.first.charAt(0).toUpperCase() + request?.student?.name?.first.slice(1)} {request?.student?.name?.last.charAt(0).toUpperCase() + request?.student?.name?.last.slice(1)}</Typography>
                                     <Typography variant="body2" color="#424242" sx={{marginTop:"-4px"}}>{moment(request?.createdAt).format('LLL')}</Typography>

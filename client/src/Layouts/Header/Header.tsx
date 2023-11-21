@@ -130,7 +130,7 @@ export default function Header({socket}) {
                         User().name.last.charAt(0).toUpperCase() +
                         User().name.last.slice(1)}
                   </Typography>
-                  <Avatar alt={!User().name.first ? User().name : User().name.first + " " + User().name.last } />
+                  <Avatar src={User().profile} />
                   
                 </IconButton>
               </Tooltip>

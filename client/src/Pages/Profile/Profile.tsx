@@ -307,7 +307,7 @@ function Profile() {
                           fullWidth
                           type=''
                           inputProps={{
-                            maxLength: 10,
+                            maxLength: 11,
                             pattern: '[0-9]*', // Allow only digits
                           }}
                           value={form?.contact}

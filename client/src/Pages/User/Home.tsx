@@ -100,7 +100,7 @@ function Home({}: Props)  {
             <Grid container spacing={2}>
               {filteredData.map((school) => (
                 <Grid item md={3} sm={4} xs={12}>
-                  <SchoolCard schoolName={school.name} about={school.about} schoolId={school.schoolId} variant=""/>
+                  <SchoolCard schoolName={school.name} about={school.about} schoolId={school.schoolId} variant="" profile={school.profile}/>
                 </Grid>
               ))}
             </Grid>
@@ -123,6 +123,7 @@ function Home({}: Props)  {
                   variant="enrolled"
                   courses={enrollment.school.courses}
                   schoolId={enrollment.school.schoolId}
+                  profile={enrollment.school.profile}
                 />
               </Grid>
             ))}
@@ -153,6 +154,7 @@ function Home({}: Props)  {
                   about={school.about}
                   schoolId={school.schoolId}
                   variant=""
+                  profile={school.profile}
                 />
               </Grid>
             ))}
