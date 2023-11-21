@@ -18,7 +18,6 @@ import { useAuth } from '../../../Hooks/useAuth';
 
 
 function LessonView() {
-    const [feedback,setFeedback] = useState(false);
     const {cid, lid} = useParams();
     const {datum, loading, getLesson} = useReqLesson();
     const {data: enrolls, getEnrollments} = useReqEnroll();
@@ -119,7 +118,7 @@ function LessonView() {
         </div>
         <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
             <Grid container spacing={2}>
-                <Grid item md={feedback ? 8 : 12} xs={12}>
+                <Grid item md={ getData(enrolls?.progress)?.feedback ? 8 : 12} xs={12}>
                     <div style={{display:"flex", alignItems:"start"}}>
                         <div style={{flexGrow:"1"}}>
                             <Typography variant="h6" color="primary">{getUser()!=='student' ? datum?.title : getData(enrolls?.progress)?.lesson.title}</Typography>
@@ -144,7 +143,7 @@ function LessonView() {
                                 <ThumbUpAltIcon sx={{fill:"#ffffff", fontSize:"60px"}}/>
                             </div>
 
-                            <Typography variant="h5"  color="primary" textAlign={"center"} fontWeight={500} mt={3}>Feedback</Typography>
+                            <Typography variant="h5"  color="primary" textAlign={"center"} fontWeight={500} mt={3}>Well Done!</Typography>
                             {/* <div style={{margin:" 35px 0 15px",display:"flex",gap:'10px', alignItems:"center"}}>
                                 <Avatar variant="circular"  alt="Harold James Castillo" sx={{ width: '40px', height: '40px' }} />
                                 <div>
@@ -152,7 +151,9 @@ function LessonView() {
                                     <Typography variant="body1"  mt={"-5px"} color="initial" >Instructor</Typography>
                                 </div>
                             </div> */}
+                            <Typography variant="subtitle1" color="initial" fontWeight={500} >Feedback:</Typography>
                             <Typography variant="body1" color="initial"  textAlign={"justify"}>
+                              
                                 {JSON.stringify(getData(enrolls?.progress)?.feedback)}
                             </Typography>
                         </Paper>
