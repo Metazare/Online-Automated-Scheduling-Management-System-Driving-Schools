@@ -57,13 +57,6 @@ function Profile() {
     password: "",
   })
 
-  // useEffect(()=>{
-  //   getStudent({
-  //     studentId: null,
-  //   });
-  //   setForm(students)
-  // },[])
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -106,6 +99,8 @@ function Profile() {
   const updateProfile = (e: React.FormEvent) => {
     e.preventDefault();
     console.log(form);
+    setOpen("");
+    window.location.reload();
     updateStudentProfile(form);
   }
 
