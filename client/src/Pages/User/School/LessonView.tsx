@@ -62,56 +62,59 @@ function LessonView() {
     return <>
         <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em"}}>
             <Container maxWidth="lg">
-                <div style={{padding:"3.8rem 0",}}>
-                    <a href={getUser()!=='student' ? 'dashboard' : `/course/${enrolls?.school?.schoolId}`} style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
-                        <ArrowBackIcon/>
-                        <Typography variant="subtitle1" color="initial"> Go Back</Typography>
-                    </a>
-                    <Box
-                        sx={{ 
-                        display: 'flex',
-                        gap:"25px",
-                        alignItems:"center"
-                        }}
-                    >
-                        <Avatar
-                        alt="Remy Sharp"
-                        src="/static/images/avatar/1.jpg"
-                        sx={{ width: 80, height: 80 }}
-                        />
-                        <div style={{flexGrow:"1"}}>
-                        <Typography variant="h4" fontWeight={500} color="initial">{getUser()!=='student' ? school?.name : enrolls?.school?.name}</Typography>
-                        <Box
-                            sx={{
-                            display: 'flex',
-                            gap:"10px"
-                            }}
-                        >
-                            <Box
-                            sx={{
-                            display: 'flex',
-                            gap:"5px"
-                            }}
-                            >
-                            <CallIcon/> 
-                            <Typography variant="body1" fontWeight={500}>{getUser()!=='student' ? school?.contact :  enrolls?.school?.contact}</Typography>
-                            </Box>
-                            <Box
-                            sx={{
-                            display: 'flex',
-                            gap:"5px"
-                            }}
-                            >
-                            <EmailIcon/> 
-                            <Typography variant="body1" fontWeight={500}>{getUser()!=='student' ?  school?.email :  enrolls?.school?.email}</Typography>
-                            </Box>
-                        </Box>
-                        </div>
-                        {/* <IconButton aria-label="" onClick={()=>alert}>
-                        <MoreVertIcon/>
-                        </IconButton> */}
-                    </Box>
-                </div>
+              <div style={{padding:"3.8rem 0",}}>
+                <a
+                  href={getUser() !== 'student' ? '/dashboard' : (enrolls?.school?.schoolId ? `/course/${enrolls.school.schoolId}` : 'REd')}
+                  style={{ display: "flex", gap: "5px", alignItems: "center", marginBottom: "30px" }}
+                >
+                  <ArrowBackIcon />
+                  <Typography variant="subtitle1" color="initial"> Go Back</Typography>
+                </a>
+                  <Box
+                      sx={{ 
+                      display: 'flex',
+                      gap:"25px",
+                      alignItems:"center"
+                      }}
+                  >
+                      <Avatar
+                      alt="Remy Sharp"
+                      src="/static/images/avatar/1.jpg"
+                      sx={{ width: 80, height: 80 }}
+                      />
+                      <div style={{flexGrow:"1"}}>
+                      <Typography variant="h4" fontWeight={500} color="initial">{getUser()!=='student' ? school?.name : enrolls?.school?.name}</Typography>
+                      <Box
+                          sx={{
+                          display: 'flex',
+                          gap:"10px"
+                          }}
+                      >
+                          <Box
+                          sx={{
+                          display: 'flex',
+                          gap:"5px"
+                          }}
+                          >
+                          <CallIcon/> 
+                          <Typography variant="body1" fontWeight={500}>{getUser()!=='student' ? school?.contact :  enrolls?.school?.contact}</Typography>
+                          </Box>
+                          <Box
+                          sx={{
+                          display: 'flex',
+                          gap:"5px"
+                          }}
+                          >
+                          <EmailIcon/> 
+                          <Typography variant="body1" fontWeight={500}>{getUser()!=='student' ?  school?.email :  enrolls?.school?.email}</Typography>
+                          </Box>
+                      </Box>
+                      </div>
+                      {/* <IconButton aria-label="" onClick={()=>alert}>
+                      <MoreVertIcon/>
+                      </IconButton> */}
+                  </Box>
+              </div>
             </Container>
         </div>
         <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
@@ -128,7 +131,7 @@ function LessonView() {
                         title="PDF Viewer" 
                         src={getUser()!=='student' ? datum?.file : getData(enrolls?.progress)?.lesson.file}
                         width="100%"
-                        height="500px" // You can adjust the height based on your preference
+                        height="1000px" // You can adjust the height based on your preference
                         frameBorder="0"
                       />
                     </div>
