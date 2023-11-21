@@ -1,5 +1,5 @@
 import { Course } from '../course/course.types';
-import { Document, StringExpressionOperatorReturningBoolean } from 'mongoose';
+import { Document } from 'mongoose';
 
 /* MODEL */
 
