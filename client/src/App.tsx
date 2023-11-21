@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import io from 'socket.io-client';
@@ -12,16 +11,13 @@ import BaseLayout from './Layouts/BaseLayout/BaseLayout';
 import School from './Pages/User/School/School'
 import LessonView from './Pages/User/School/LessonView';
 import CoursesList from './Pages/User/School/CourseList'
-
 import Profile from './Pages/Profile/Profile'
 import ManageSchool from './Pages/Admin/School/ManageSchool';
 import Error from './Pages/Error';
 import Chat from './Pages/User/Chat';
-import MuiAlert, { AlertProps, AlertColor } from '@mui/material/Alert';
 
 // Hooks
 import { ProtectedRoute } from './Hooks/useAuth';
-import { type } from 'os';
 
 const theme = createTheme({
   palette:{
@@ -48,8 +44,6 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<LandingPage/>} />
             
-          
-          
           {/* admin */}
           <Route element={<ProtectedRoute allowedRoles={["admin", "instructor"]}/>}>
             <Route path="" element={<Home/>} />
