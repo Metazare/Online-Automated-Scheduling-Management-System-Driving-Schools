@@ -1,10 +1,10 @@
 import { BodyRequest, RequestHandler } from 'express';
 import { CheckData } from '../../utilities/checkData';
-import { CreateInstructor, InstructorDocument, UpdateInstructorStatus } from './instructor.types';
+import { CreateInstructor, InstructorDocument, UpdateInstructor, UpdateInstructorStatus } from './instructor.types';
 import { password } from '../../utilities/ids';
 import { Role } from '../auth/auth.types';
 import { SchoolDocument } from '../school/school.types';
-import { Unauthorized, UnprocessableEntity } from '../../utilities/errors';
+import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import InstructorModel from './instructor.model';
 
 export const getInstructors: RequestHandler = async (req, res) => {
@@ -73,4 +73,36 @@ export const updateInstructorStatus: RequestHandler = async (req: BodyRequest<Up
     if (!instructor) throw new Unauthorized();
 
     res.sendStatus(204);
+};
+
+export const updateInstructor: RequestHandler = async (req: BodyRequest<UpdateInstructor>, res) => {
+  try {
+      
+      const { instructorId } = req.body;
+      const updatedData = req.body;
+      
+      // Validate the input data
+      const checker = new CheckData();
+      Object.entries(updatedData).forEach(([key, value]) => {
+          checker.checkType(value, 'string', key);
+      });
+
+      if (checker.size()) throw new UnprocessableEntity(checker.errors);
+
+      const updatedInstructor = await InstructorModel.findOneAndUpdate(
+          { instructorId },
+          { $set: updatedData },
+          { new: true } // Return the updated document
+      ).exec();
+
+      if (!updatedInstructor) {
+          throw new NotFound('Instructor');
+      }
+
+      res.json(updatedInstructor);
+  } catch (error) {
+      console.error('Error updating instructor details:', error);
+      // Handle error and send an appropriate response
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
