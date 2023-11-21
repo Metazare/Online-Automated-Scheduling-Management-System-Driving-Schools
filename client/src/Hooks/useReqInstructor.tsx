@@ -8,8 +8,9 @@ interface Data {
   error: Error | null;
   credentials: any;
   createInstructor: (data: CreateInstructorData) => void;
-  getInstructor: (data: GetInstructorData) => void,
-  updateInstructor: (data: UpdateInstructorData) => void
+  getInstructor: (data: GetInstructorData) => void;
+  updateInstructor: (data: UpdateInstructorData) => void;
+  editProfile: (data: EditInstructorData) => void;
 }
 
 interface CreateInstructorData {
@@ -20,6 +21,18 @@ interface CreateInstructorData {
   address: string,
   contact: string,
   email: string
+}
+
+interface EditInstructorData{
+  instructorId: string,
+  firstName: string,
+  middleName?: string | null,
+  lastName: string,
+  suffix?: string | null,
+  address: string,
+  contact: string,
+  email: string,
+  profile: string
 }
 
 interface GetInstructorData {
@@ -112,6 +125,38 @@ function useReqInstructor(): Data {
     }
   }
 
+  const editProfile = async (data: EditInstructorData) => {
+    setLoading(true);
+    console.log(data);
+    try {
+      await axios
+      .patch('/instructors/profile', {
+        instructorId: data.instructorId,
+        firstName: data.firstName,
+        middleName: data.middleName,
+        lastName: data.lastName,
+        suffix: data.suffix,
+        address: data.address,
+        contact: data.contact,
+        email: data.email,
+        profile: data.profile
+      })
+      .then((response:any)=>{
+        console.log(response.data);
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'success',
+          note:"Profile Updated!",
+        })); 
+      });
+    } catch (error: any) {
+      console.log(error)
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return {
     instructors,
     loading,
@@ -119,7 +164,8 @@ function useReqInstructor(): Data {
     credentials,
     createInstructor,
     getInstructor,
-    updateInstructor
+    updateInstructor,
+    editProfile
   }
 }
 
