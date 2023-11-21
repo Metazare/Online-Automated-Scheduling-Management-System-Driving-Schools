@@ -9,7 +9,7 @@ type Props = {}
 export default function TestSchoolUpdate({}: Props) {
 
 
-  const {downloadURL, uploading, uploadFile} = useFirebase();
+  const {uploadFile} = useFirebase();
   const {data, getSchool, loading, error, editSchool} = useReqSchool();
 
   const [form, setForm] = useState<any>({

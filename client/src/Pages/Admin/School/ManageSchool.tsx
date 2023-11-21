@@ -21,6 +21,7 @@ import Students from './Students';
 import Instructors from './Instructors';
 
 import useReqSchool from '../../../Hooks/useReqSchool';
+import useFirebase from '../../../Hooks/useFirebase';
 import { useAuth } from '../../../Hooks/useAuth';
 
 
@@ -48,18 +49,68 @@ function ManageSchool() {
   };
   
   const {getUser} = useAuth();
+  const {uploadFile} = useFirebase();
+  const {data, loading, getSchool, error, editSchool} = useReqSchool();
 
-  const {data, loading, getSchool} = useReqSchool();
   const [value, setValue] = React.useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
-  useEffect (()=> {
-    getSchool({
-        schoolId: null
+  const [form, setForm] = useState<any>({
+    schoolId: '',
+    name: '',
+    email: '',
+    about: '',
+    address: '',
+    contact: '',
+    profile: '',
+  })
+
+  useEffect(() => {
+    const fetchSchoolData = async () => {
+      try {
+        await getSchool({
+          schoolId: null,
+        });
+      } catch (error) {
+        // Handle error if needed
+        console.error('Error fetching school data: ', error);
+      }
+    };
+  
+    fetchSchoolData();
+  }, []);
+  
+  useEffect(() => {
+    if (data) {
+      setForm({
+        schoolId: data.schoolId || "",
+        name: data.name || "",
+        email: data.email || "",
+        about: data.about || "",
+        address: data.address || "",
+        contact: data.contact || "",
+        profile: data.profile || "",
+      });
+    }
+  }, [data]);
+
+  const updateProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(form)
+    editSchool(form);
+    window.location.reload();
+  }
+  
+  async function uploadProfile(file) {
+    const url = await uploadFile(file, 'oasms');
+    setForm({
+      ...form,
+      profile: url
     })
-  },[])
+    console.log( url)
+  }
 
   if (loading) {
       return <div>Loading...</div>
@@ -82,7 +133,7 @@ function ManageSchool() {
                 >
                     <Avatar
                     alt={data?.name}
-                    src="/static/images/avatar/1.jpg"
+                    src={data?.profile}
                     sx={{ width: 80, height: 80 }}
                     />
                     <div style={{flexGrow:"1"}}>
@@ -206,7 +257,7 @@ function ManageSchool() {
           <Box sx={style}>
               {/* Enrollment Request  */}
               {(open === "infoUpdate")?<>
-                  <form action="">
+                  <form onSubmit={updateProfile}>
                     <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
                       Update Profile
                     </Typography>
@@ -220,8 +271,8 @@ function ManageSchool() {
                           label="About"
                           fullWidth
                           multiline
-                          // value={}
-                          // onChange={}
+                          defaultValue={data?.about}
+                          onChange={(e)=>{setForm({...form, about: e.target.value})}}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -229,8 +280,8 @@ function ManageSchool() {
                           id="email"
                           label="Email"
                           fullWidth
-                          // value={}
-                          // onChange={}
+                          defaultValue={data?.email}
+                          onChange={(e)=>{setForm({...form, email: e.target.value})}}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -243,6 +294,8 @@ function ManageSchool() {
                             maxLength: 10,
                             pattern: '[0-9]*', // Allow only digits
                           }}
+                          defaultValue={data?.contact}
+                          onChange={(e)=>{setForm({...form, contact: e.target.value})}}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -251,6 +304,7 @@ function ManageSchool() {
                           id="contact"
                           fullWidth
                           type='file'
+                          onChange={(e:any)=>{uploadProfile(e.target.files[0])}}
                         />
                       </Grid>
                       <Grid item xs={12} mt={2}>
@@ -262,8 +316,7 @@ function ManageSchool() {
                       </Grid>
                       <Grid item sm={8} xs={12}>
                           <Button variant="contained" fullWidth color="primary"
-                            onClick={() => {
-                            }}
+                            type='submit'
                           >
                             Update
                           </Button>
