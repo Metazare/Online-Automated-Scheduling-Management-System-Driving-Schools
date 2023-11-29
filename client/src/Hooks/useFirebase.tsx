@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState,useContext } from 'react';
 import { storage } from '../firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { v4 } from 'uuid';
+import { SnackbarContext } from '../Context/SnackbarContext';
 
 interface Data {
   downloadURL: string;
@@ -10,6 +11,7 @@ interface Data {
 }
 
 function useFirebase(): Data {
+  const{setOpenSnackBar} = useContext(SnackbarContext)
   const [downloadURL, setDownloadURL] = useState<string>('');
   const [uploading, setUploading] = useState<boolean>(false);
 
@@ -35,7 +37,11 @@ function useFirebase(): Data {
       setDownloadURL(url);
   
       // Display a success message
-      alert('File Uploaded!');
+      setOpenSnackBar(openSnackBar => ({
+        ...openSnackBar,
+        severity:'success',
+        note:"File Uploaded!",
+      })); 
 
       return url;
     } catch (error) {
@@ -43,7 +49,11 @@ function useFirebase(): Data {
       console.error('Error uploading file:', error);
   
       // Display an error message
-      alert('Error uploading file. Please try again.');
+      setOpenSnackBar(openSnackBar => ({
+        ...openSnackBar,
+        severity:'error',
+        note:"Error uploading file. Please try again.",
+      })); 
     } finally {
       // Set loading state to false when the upload is done (whether successful or not)
       setUploading(false);
@@ -53,7 +63,11 @@ function useFirebase(): Data {
   const uploadImage = (file: File, folderName: string) => {
     if (file == null) return;
 
-    alert("Uploading image...")
+    setOpenSnackBar(openSnackBar => ({
+      ...openSnackBar,
+      severity:'info',
+      note:"Uploading image...",
+    })); 
     const imageRef = ref(storage, `${folderName}/${file.name}-${v4()}`);
 
     uploadBytes(imageRef, file).then(async () => {

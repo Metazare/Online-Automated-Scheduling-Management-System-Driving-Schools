@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState,useContext } from 'react';
 import axios from './useAxios'
+import { SnackbarContext } from '../Context/SnackbarContext';
 
 interface Data {
   sendEmail: (data: SendEmailData ) => void;
@@ -11,6 +12,7 @@ interface SendEmailData{
 }
 
 function useEmail(): Data {
+  const{setOpenSnackBar} = useContext(SnackbarContext)
 
   const sendEmail = async (data: SendEmailData) => {
     try {
@@ -22,10 +24,19 @@ function useEmail(): Data {
       })
       .then((response:any)=>{
         console.log(response.data);
-        alert("OTP Sent!");
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'info',
+          note:"OTP Sent!",
+        }));
       });
     } catch (error: any) {
       console.log(error);
+      setOpenSnackBar(openSnackBar => ({
+        ...openSnackBar,
+        severity:'error',
+        note:"OTP Doesn't match",
+      }));
     }
   }
 
