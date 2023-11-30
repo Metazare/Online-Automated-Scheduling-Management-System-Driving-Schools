@@ -59,23 +59,6 @@ function useFirebase(): Data {
       setUploading(false);
     }
   };
-  
-  const uploadImage = (file: File, folderName: string) => {
-    if (file == null) return;
-
-    setOpenSnackBar(openSnackBar => ({
-      ...openSnackBar,
-      severity:'info',
-      note:"Uploading image...",
-    })); 
-    const imageRef = ref(storage, `${folderName}/${file.name}-${v4()}`);
-
-    uploadBytes(imageRef, file).then(async () => {
-      const url = await getDownloadURL(imageRef);
-      setDownloadURL(url);
-    })
-
-  }
 
   return { 
     downloadURL, 
