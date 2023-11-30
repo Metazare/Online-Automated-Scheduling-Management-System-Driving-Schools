@@ -61,15 +61,15 @@ function LandingPage() {
                 
             </div>
         </div>
-        <Container maxWidth="lg" sx={{paddingTop:"8em"}}>
-            <Typography variant="h5" color="primary" textAlign={"center"} mb={"2rem"} fontWeight={600}>ABOUT US</Typography>
+        <Container maxWidth="lg" sx={{paddingTop:"8em"}} id='aboutUs' >
+            <Typography  variant="h5" color="primary" textAlign={"center"} mb={"2rem"} fontWeight={600}>ABOUT US</Typography>
             <Typography variant="body1" color="initial" lineHeight={"2em"} sx={{textIndent:"5%"}} textAlign={"justify"}>   A driving school is an institution that provides driving lessons to individuals who want to learn how to drive. It is a place where students can learn the rules of the road, how to operate a vehicle, and how to be a safe and responsible driver. The curriculum typically includes both classroom instruction and practical driving experience, with the goal of preparing students to pass their driving test and obtain a driver's license.</Typography>
-            <Typography variant="h5" color="primary" mt={"8rem"} textAlign={"center"} mb={"2rem"} fontWeight={600}>COURSES</Typography>
-            <div style={{display:"flex",gap:"25px",flexWrap:"wrap",justifyContent:"center"}}>
+            <Typography  id="courses" variant="h5" color="primary" mt={"8rem"} textAlign={"center"} mb={"2rem"} fontWeight={600}>COURSES</Typography>
+            <div  style={{display:"flex",gap:"25px",flexWrap:"wrap",justifyContent:"center"}}>
                 <CourseCard variant={"theoretical"} title={"Theoretical Driving"} display={true} description={"A theoretical driving course imparts essential knowledge about traffic laws, road safety, and vehicle operation through classroom-based instruction. It is a prerequisite for obtaining a learner's permit and helps individuals understand the rules of the road."}/>
                 <CourseCard variant={"practical"} title={"Practical Driving"} display={true} description={"A practical driving course provides hands-on, on-road experience with a certified instructor to develop driving skills and confidence. It's a crucial step in preparing for a driver's license, teaching students how to safely operate a vehicle in real-world traffic situations."}/>
             </div>
-            <Typography variant="h5" color="primary" mt={"8rem"} textAlign={"center"} mb={"2rem"} fontWeight={600}>FREQUENTLY ASK QUESTIONS</Typography>
+            <Typography id="faq" variant="h5" color="primary" mt={"8rem"} textAlign={"center"} mb={"2rem"} fontWeight={600}>FREQUENTLY ASK QUESTIONS</Typography>
             <Accordion>
                 <AccordionSummary
                     expandIcon={<ExpandMore />}

@@ -4,6 +4,7 @@ import axios from './useAxios'
 import { useAuth } from './useAuth';
 import useNotif from './useNotif'
 import { SnackbarContext } from '../Context/SnackbarContext';
+import moment from 'moment';
 interface Data {
   appointments: any;
   loading: boolean;
@@ -69,7 +70,7 @@ function useReqAppointment(): Data {
               role: 'student'
             }
           ],
-          content: 'New appointment is set ' + ' on ' + data.schedule + ' at ' + User().name
+          content: 'New appointment is set ' + ' on ' + moment(data.schedule).format('lll')  + ' at ' + User().name
         })
         setOpenSnackBar(openSnackBar => ({
           ...openSnackBar,

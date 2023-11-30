@@ -95,7 +95,6 @@ export default function Header({socket}) {
   console.log("User")
   console.log(user)
   return (
-    
     <AppBar position="static" color='secondary'>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
@@ -162,9 +161,9 @@ export default function Header({socket}) {
                 </MenuItem>
               </Menu>
               </>:<>
-              <Button variant="text" sx={{color:"white"}}>About Us</Button>
-              <Button variant="text" sx={{color:"white"}}>Courses</Button>
-              <Button variant="text" sx={{color:"white"}}>FAQ</Button>
+              <Button variant="text" href='/#aboutUs' sx={{color:"white"}}>About Us</Button>
+              <Button variant="text" href='/#courses' sx={{color:"white"}}>Courses</Button>
+              <Button variant="text" href='/#faq' sx={{color:"white"}}>FAQ</Button>
               <Button variant="outlined" sx={{color:"white",borderRadius:"20px",borderColor:"white"}} onClick={()=>navigate("/login")}>login</Button>
               <Button variant="contained" color="primary" sx={{borderRadius:"20px"}} onClick={()=>navigate("/register")}>Signup</Button>
             </>}
