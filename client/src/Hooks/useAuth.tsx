@@ -124,9 +124,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const logout = async () => {
+      try{
         await axios.post(`/auth/logout`)
+      } 
+      catch(error) {
+        console.log(error)
+      } 
+      finally {
         localStorage.clear();
         navigate("/");
+      }
     };
 
     const isAuth = (id:any) => {
