@@ -275,7 +275,7 @@ function Index() {
                     onChange={handleChange}
                   />
                 </Grid>
-                <Grid item  md={5} xs={9}>
+                <Grid item  md={6} xs={9}>
                   <TextField
                     fullWidth
                     id="email"
@@ -290,7 +290,7 @@ function Index() {
                 {/* <Grid item  md={2} xs={3} >
                   <Button fullWidth variant="contained" sx={{background:"#414141",height:"100%"}} onClick={()=>{setOpen("verify"); verifyEmail()}}>verify</Button>
                 </Grid> */}
-                <Grid item  md={5} xs={12}>
+                <Grid item  md={6} xs={12}>
                   <TextField
                     fullWidth
                     id="contactNo"
@@ -429,7 +429,7 @@ function Index() {
                 </Grid>
 
 
-                <Grid item xs={9}>
+                <Grid item xs={12}>
                   <TextField
                     fullWidth
                     id="email"
@@ -520,7 +520,7 @@ function Index() {
                               cancel
                           </Button>
                       </Grid> */}
-                      <Grid item sm={8} xs={12}>
+                      <Grid item  xs={12}>
                           <Button variant="contained" fullWidth color="primary"
                             type='submit'
                           >

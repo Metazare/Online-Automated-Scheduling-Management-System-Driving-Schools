@@ -16,6 +16,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import PlaceIcon from '@mui/icons-material/Place';
+import moment from 'moment';
 
 import useReqStudent from '../../Hooks/useReqStudent';
 import useReqInstructor from '../../Hooks/useReqInstructor';
@@ -183,18 +184,37 @@ function Profile() {
                         flexWrap:"wrap"
                       }}
                     >
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems:"center",
-                          gap:"5px",
-                        }}
-                      >
-                        <CallIcon/> 
-                        <Typography variant="body1" fontWeight={500}>
-                          {getUser() === "student" ? <>{students?.contact}</> : <>{instructor?.contact}</>}
-                        </Typography>
-                      </Box>
+                      {getUser() === "student" ? <>
+                        {students?.contact === " "?"":
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems:"center",
+                            gap:"5px",
+                          }}
+                        >
+                          <CallIcon/> 
+                          <Typography variant="body1" fontWeight={500}>
+                            {students?.contact}
+                          </Typography>
+                        </Box>
+                        }
+                      </>:<>
+                        {students?.contact === " "?"":
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems:"center",
+                              gap:"5px",
+                            }}
+                          >
+                            <CallIcon/> 
+                            <Typography variant="body1" fontWeight={500}>
+                              {instructor?.contact}
+                            </Typography>
+                          </Box>
+                        }
+                      </>}
                       <Box
                         sx={{
                           display: 'flex',
@@ -220,7 +240,7 @@ function Profile() {
                         >
                           <CakeIcon/> 
                           <Typography variant="body1" fontWeight={500}>
-                            {getUser() === "student" ? <>{students?.birthday}</> : <></>}
+                            {getUser() === "student" ? <>{moment(students?.birthday).format('ll')}</> : <></>}
                           </Typography>
                         </Box>
 
@@ -234,16 +254,19 @@ function Profile() {
                           {students?.sex==='male'?<MaleIcon/> :<FemaleIcon/> }
                           <Typography variant="body1" fontWeight={500}>{students?.sex}</Typography>
                         </Box>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            alignItems:"center",
-                            gap:"5px",
-                          }}
-                        >
-                          <PlaceIcon/> 
-                          <Typography variant="body1" fontWeight={500}>{students?.address}</Typography>
-                        </Box>
+                        {students?.address === " "?"":
+                          <Box
+                            sx={{
+                              display: 'flex',
+                              alignItems:"center",
+                              gap:"5px",
+                            }}
+                          >
+                            <PlaceIcon/> 
+                            <Typography variant="body1" fontWeight={500}>{students?.address}</Typography>
+                          </Box>
+                        }
+                        
                       </>
                       :<></>}
                     </Box>
@@ -306,10 +329,7 @@ function Profile() {
                           label="Contact"
                           fullWidth
                           type=''
-                          inputProps={{
-                            maxLength: 11,
-                            pattern: '[0-9]*', // Allow only digits
-                          }}
+                          
                           value={form?.contact}
                           onChange={(e)=>{setForm({...form, contact: e.target.value})}}
                         />
