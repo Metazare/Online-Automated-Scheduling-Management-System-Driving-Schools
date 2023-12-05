@@ -5,17 +5,7 @@ import { io } from 'socket.io-client'
 import { Grid, Paper , Modal, TextField } from '@mui/material'
 
 import Avatar from '@mui/material/Avatar';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
-import PersonIcon from '@mui/icons-material/Person';
-import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
-import { blue } from '@mui/material/colors';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -27,17 +17,24 @@ import MenuItem from '@mui/material/MenuItem';
 import ChatIcon from '@mui/icons-material/Chat';
 import Button from '@mui/material/Button'
 import { useNavigate } from 'react-router-dom';
-
+import MenuIcon from '@mui/icons-material/Menu';
 import { useAuth } from '../../Hooks/useAuth';
 import { Link } from 'react-router-dom';
-
+import Drawer from '@mui/material/Drawer';
 import NotificationDropdown from '../../Components/NotificationDropdown';
+import List from '@mui/material/List';
+import Divider from '@mui/material/Divider';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
 
 type Props = {}
 
 // Connection to the server with port 5000
 // const socket = io('http://localhost:5000')
-
+type Anchor = 'top' | 'right' | 'bottom' | 'right';
 
 export default function Header({socket}) {
   const navigate = useNavigate();
@@ -94,6 +91,61 @@ export default function Header({socket}) {
   };
   console.log("User")
   console.log(user)
+
+  const [state, setState] = useState({
+    right: false,
+  });
+
+  const toggleDrawer =
+  (anchor: Anchor, open: boolean) =>
+  (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' ||
+        (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+
+    setState({ ...state, [anchor]: open });
+  };
+
+
+  const list = (anchor: Anchor) => (
+    <Box
+      sx={{ width: anchor === 'top' || anchor === 'bottom' ? 'auto' : 250 }}
+      role="presentation"
+      onClick={toggleDrawer(anchor, false)}
+      onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+      <Divider />
+      <List>
+        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+          <ListItem key={text} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+              </ListItemIcon>
+              <ListItemText primary={text} />
+            </ListItemButton>
+          </ListItem>
+        ))}
+      </List>
+    </Box>
+  );
+
   return (
     <AppBar position="static" color='secondary'>
       <Container maxWidth="xl">
@@ -130,7 +182,6 @@ export default function Header({socket}) {
                         User().name.last.slice(1)}
                   </Typography>
                   <Avatar src={User().profile} />
-                  
                 </IconButton>
               </Tooltip>
               
@@ -161,11 +212,57 @@ export default function Header({socket}) {
                 </MenuItem>
               </Menu>
               </>:<>
-              <Button variant="text" href='/#aboutUs' sx={{color:"white"}}>About Us</Button>
-              <Button variant="text" href='/#courses' sx={{color:"white"}}>Courses</Button>
-              <Button variant="text" href='/#faq' sx={{color:"white"}}>FAQ</Button>
-              <Button variant="outlined" sx={{color:"white",borderRadius:"20px",borderColor:"white"}} onClick={()=>navigate("/login")}>login</Button>
-              <Button variant="contained" color="primary" sx={{borderRadius:"20px"}} onClick={()=>navigate("/register")}>Signup</Button>
+              <Button variant="text" href='/#aboutUs' sx={{color:"white",display:{md:"block",xs:"none"}}}>About Us</Button>
+              <Button variant="text" href='/#courses' sx={{color:"white",display:{md:"block",xs:"none"}}}>Courses</Button>
+              <Button variant="text" href='/#faq' sx={{color:"white",display:{md:"block",xs:"none"}}}>FAQ</Button>
+              <Button variant="outlined" sx={{color:"white",borderRadius:"20px",borderColor:"white",display:{md:"block",xs:"none"}}} onClick={()=>navigate("/login")}>login</Button>
+              <Button variant="contained" color="primary" sx={{borderRadius:"20px",display:{md:"block",xs:"none"}}} onClick={()=>navigate("/register")}>Signup</Button>
+              <IconButton  onClick={toggleDrawer("right", true)} sx={{display:{md:"none",xs:"block"}}}>
+                <MenuIcon sx={{color:"white"}}/>
+              </IconButton>
+              
+              <Drawer
+                anchor={"right"}
+                open={state["right"]}      
+                onClose={toggleDrawer("right", false)}
+              >
+                <Box
+                  role="presentation"
+                  onClick={toggleDrawer("right", false)}
+                  onKeyDown={toggleDrawer("right", false)}
+                >
+                  <List>
+                    <ListItem  disablePadding component={Link} to={"/#aboutUs"} >
+                      <ListItemButton>
+                        
+                        <ListItemText primary={"About Us"} />
+                      </ListItemButton>
+                    </ListItem>
+                    <ListItem  disablePadding component={Link} to={"/#courses"} >
+                      <ListItemButton>
+                        
+                        <ListItemText primary={"Courses"} />
+                      </ListItemButton>
+                    </ListItem>
+                    <ListItem  disablePadding component={Link} to={"/#faq"} >
+                      <ListItemButton>
+                        
+                        <ListItemText primary={"FAQ"} />
+                      </ListItemButton>
+                    </ListItem>
+                    <ListItem  disablePadding component={Link} to={"/login"} >
+                      <ListItemButton>
+                        <Typography fontWeight={700} variant="body1" color="primary"><ListItemText primary={"Login"} /></Typography>
+                      </ListItemButton>
+                    </ListItem>
+                    <ListItem  disablePadding component={Link} to={"/Register"} >
+                      <ListItemButton>
+                        <Typography fontWeight={700} variant="body1" color="primary"><ListItemText primary={"Register"} /></Typography>
+                      </ListItemButton>
+                    </ListItem>
+                  </List>
+                </Box>
+              </Drawer>
             </>}
           </Box>
         </Toolbar>
