@@ -1,4 +1,4 @@
-import React,{useState,useContext} from 'react'
+import React,{useState,useContext, useEffect} from 'react'
 
 // mui utilities
 import Button from '@mui/material/Button';
@@ -70,7 +70,7 @@ function Index() {
     role: '',
   });
 
-
+  const [passwordSeverity,setPasswordSeverity] = useState(false)
   const [verificationCode, setVerificationCode] = useState('');
   const [otpCode, setOtpCode] = useState('');
 
@@ -167,6 +167,34 @@ function Index() {
     }
   }
 
+  function isStrongPassword(password) {
+    // Check for at least one uppercase letter
+    const hasUppercase = /[A-Z]/.test(password);
+  
+    // Check for at least one lowercase letter
+    const hasLowercase = /[a-z]/.test(password);
+  
+    // Check for at least one number
+    const hasNumber = /\d/.test(password);
+  
+    // Check for at least one special character
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  
+    // Check for minimum length of 8 characters
+    const hasMinLength = password.length >= 8;
+  
+    // Combine all criteria
+    const isStrong =
+      hasUppercase && hasLowercase && hasNumber && hasSpecialChar && hasMinLength;
+  
+    return isStrong;
+  }
+
+  useEffect(()=>{
+    if(form.password){
+      setPasswordSeverity(isStrongPassword(form.password))
+    }
+  },[form.password])
   return (
     <Box sx={styleContainer}>
       <Box sx={{backgroundColor:"#2F2E5A",minHeight:"100%", display:{md:"flex",xs:"none"},alignItems:"end", justifyContent:"start",padding:"4% 5%", position:"relative",overflow:"hidden"}}>
@@ -274,7 +302,7 @@ function Index() {
                     onChange={handleChange}
                   />
                 </Grid>
-                <Grid item  md={6} xs={9}>
+                <Grid item  md={6} xs={12}>
                   <TextField
                     fullWidth
                     id="email"
@@ -314,6 +342,14 @@ function Index() {
                     value={form.password}
                     onChange={handleChange}
                   />
+                  {form.password && !passwordSeverity?<>
+                    <Typography variant="subtitle1" color="error" mt={2}>Your password must have a:</Typography>
+                    <Typography variant="body2" color="initial">- Number</Typography>
+                    <Typography variant="body2" color="initial">- Uppercase and Lowercase Letter</Typography>
+                    <Typography variant="body2" color="initial">- Special Character</Typography>
+                    <Typography variant="body2" color="initial" mb={3}>- Minimum of 8 characters</Typography>
+                    
+                  </>:""}
                 </Grid>
                 <Grid item  md={6} xs={12}>
                   <TextField
@@ -332,7 +368,7 @@ function Index() {
                 
               </Grid>
               
-              <Button fullWidth variant="contained" color="primary" type="submit">
+              <Button fullWidth variant="contained"  disabled={(!(passwordSeverity))?true:false}  color="primary" type="submit">
                 Sign Up
               </Button>
               <Button href='login' fullWidth variant="text" color="primary" style={{marginTop:"10px"}}>
@@ -446,8 +482,8 @@ function Index() {
 
                 <Grid item md={6} xs={12}>
                   <TextField
-                    type='password'
                     fullWidth
+                    type='password'
                     id="password"
                     label="Password"
                     variant="outlined"
@@ -456,6 +492,14 @@ function Index() {
                     value={form.password}
                     onChange={handleChange}
                   />
+                  {form.password && !passwordSeverity?<>
+                    <Typography variant="subtitle1" color="error" mt={2}>Your password must have a:</Typography>
+                    <Typography variant="body2" color="initial">- Number</Typography>
+                    <Typography variant="body2" color="initial">- Uppercase and Lowercase Letter</Typography>
+                    <Typography variant="body2" color="initial">- Special Character</Typography>
+                    <Typography variant="body2" color="initial" mb={3}>- Minimum of 8 characters</Typography>
+                    
+                  </>:""}
                 </Grid>
                 <Grid item md={6} xs={12}>
                   <TextField
@@ -473,7 +517,7 @@ function Index() {
                 </Grid>
               </Grid>
             
-              <Button fullWidth variant="contained" color="primary" type="submit">
+              <Button fullWidth variant="contained" color="primary"  disabled={(!(passwordSeverity))?true:false} type="submit">
                 Sign Up
               </Button>
               <Button href='login' fullWidth variant="text" color="primary" style={{marginTop:"10px"}}>
