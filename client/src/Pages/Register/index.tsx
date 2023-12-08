@@ -61,7 +61,7 @@ function Index() {
     last: '',
     extension: '',
     sex: '',
-    birthday: new Date(),
+    birthday: new Date(dayjs().subtract(15, 'year').toDate()),
     address: '',
     contact: '',
     about: '',
@@ -422,6 +422,7 @@ function Index() {
                         label="Birthday"
                         value={dayjs(form.birthday)}
                         onChange={handleChangeBirthday}
+                        maxDate={ dayjs().subtract(15, 'year')}
                       />
                     </DemoContainer>
                   </LocalizationProvider>
