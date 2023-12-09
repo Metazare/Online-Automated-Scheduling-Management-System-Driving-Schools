@@ -119,14 +119,14 @@ function School() {
 
     async function submit(e: any) {
       e.preventDefault();
-      if ((appendSelectedDays(form).length === 0) || !form.startTime || !form.endTime) {
-        setOpenSnackBar(openSnackBar => ({
-          ...openSnackBar,
-          severity:'warning',
-          note:"Please select at least one day",
-        })); 
-        return;
-      }
+      // if ((appendSelectedDays(form).length === 0) || !form.startTime || !form.endTime) {
+      //   setOpenSnackBar(openSnackBar => ({
+      //     ...openSnackBar,
+      //     severity:'warning',
+      //     note:"Please select at least one day",
+      //   })); 
+      //   return;
+      // }
       enroll({
         courseId: form.course,
         // days: [0,1,2,3,4,5,6],
@@ -271,106 +271,6 @@ function School() {
                                         ))} */}
 
                                     </TextField>
-                                </Grid>
-                                
-                                <Grid item xs={12}>
-                                    <Typography fontWeight={500}>Set Availability</Typography>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <Grid container spacing={2}>
-                                        <Grid item >
-                                            <div
-                                                className={form.sunday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, sunday: !form.sunday });
-                                                }}
-                                            >
-                                                <p>Su</p>
-                                            </div>
-                                        </Grid>
-                                        <Grid item >
-                                            <div
-                                                className={form.monday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, monday: !form.monday });
-                                                }}
-                                            >
-                                                <p>Mo</p>
-                                            </div>
-                                        </Grid>
-                                        <Grid item >
-                                            <div
-                                                className={form.tuesday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, tuesday: !form.tuesday });
-                                                }}
-                                            >
-                                                <p>Tu</p>
-                                            </div>
-                                        </Grid>
-                                        <Grid item >
-                                            <div
-                                                className={form.wednesday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, wednesday: !form.wednesday });
-                                                }}
-                                            >
-                                                <p>We</p>
-                                            </div>
-                                        </Grid>
-                                        <Grid item >
-                                            <div
-                                                className={form.thursday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, thursday: !form.thursday });
-                                                }}
-                                            >
-                                                <p>Th</p>
-                                            </div>
-                                        </Grid>
-                                        <Grid item >
-                                            <div
-                                                className={form.friday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, friday: !form.friday });
-                                                }}
-                                            >
-                                                <p>Fr</p>
-                                            </div>
-                                        </Grid>
-                                        <Grid item >
-                                            <div
-                                                className={form.saturday ? "selectSwitch selectSwitchActive" : "selectSwitch"}
-                                                onClick={() => {
-                                                    setForm({ ...form, saturday: !form.saturday });
-                                                }}
-                                            >
-                                                <p>St</p>
-                                            </div>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                                {/* 
-                                  // TODO Update text field to much better component
-                                */}
-                                <Grid item md={6} sm={12}>
-                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <TimePicker
-                                        label="Start Time"
-                                        onChange={handleChangeStart}
-                                    />
-                                  </LocalizationProvider>
-                                </Grid>
-                                {/* 
-                                    // TODO Update text field to much better component
-                                */}
-                                <Grid item md={6} sm={12}>
-                                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                    <TimePicker
-                                        label="End Time"
-                                        onChange={handleChangeEnd}
-                                    />
-                                  </LocalizationProvider>
                                 </Grid>
                                 <Grid item xs={12} mt="15px">
                                     <Button type='submit' fullWidth variant="contained" color="primary">
