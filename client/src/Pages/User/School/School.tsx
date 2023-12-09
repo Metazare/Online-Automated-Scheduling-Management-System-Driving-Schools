@@ -134,12 +134,18 @@ function School() {
         // endTime: 24,
         schoolId: id || "undefined"
       });
-      setOpenSnackBar(openSnackBar => ({
-        ...openSnackBar,
-        severity:'error',
-        note:enrollError,
-      })); 
-      console.log(enrollError)
+
+      if (enrollError) {
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'error',
+          note:enrollError,
+        })); 
+        console.log(enrollError)
+      }
+
+      console.log(enrolls)
+
     }
 
 
