@@ -38,8 +38,7 @@ function SchoolCard({schoolName,about, schoolId, courses, variant, courseId, pro
                     sx={{ width: 86, height: 86,margin:"auto" }}
                 />
                 <Typography variant="h6" mt={4} color="initial" >{schoolName}</Typography>
-                <Typography variant="body2" mt={1} color="initial">{about}</Typography>
-                <Button variant="contained" sx={{mt:"30px",width:"100%"}} color="primary" onClick={()=>navigate(`/school/${schoolId}`)}>
+                <Button variant="contained" sx={{mt:"15px",width:"100%"}} color="primary" onClick={()=>navigate(`/school/${schoolId}`)}>
                   view
                 </Button>
             </Paper>
