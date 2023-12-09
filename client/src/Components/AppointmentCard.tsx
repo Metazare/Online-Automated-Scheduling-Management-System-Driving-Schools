@@ -58,10 +58,9 @@ function AppointmentCard(props:Props) {
               </div>
               {!!studentName?"":
                 <IconButton aria-label="" href={`/chat/instructor/${instructorID}`}>
-              <ChatIcon/>
-            </IconButton>
+                  <ChatIcon/>
+                </IconButton>
               }
-              
             </div>
 
         </Paper>

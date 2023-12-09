@@ -99,8 +99,6 @@ function Home() {
                   ))}
                 </>
               )}
-
-              
             </Box>
         </Grid>
         <Grid item xs={4}>
