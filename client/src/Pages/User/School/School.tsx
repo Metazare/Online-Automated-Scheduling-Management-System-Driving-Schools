@@ -129,9 +129,9 @@ function School() {
       }
       enroll({
         courseId: form.course,
-        days: appendSelectedDays(form),
-        startTime: form.startTime,
-        endTime: form.endTime,
+        // days: [0,1,2,3,4,5,6],
+        // startTime: 0,
+        // endTime: 24,
         schoolId: id || "undefined"
       });
       setOpenSnackBar(openSnackBar => ({

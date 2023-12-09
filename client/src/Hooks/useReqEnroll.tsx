@@ -15,9 +15,9 @@ interface Data {
 
 interface CreateEnrollmentData {
   courseId: string;
-  days: number[];
-  startTime: Date;
-  endTime: Date;
+  days?: number[];
+  startTime?: Date;
+  endTime?: Date;
   schoolId: string;
 }
 
@@ -52,9 +52,9 @@ function useReqEnroll(): Data {
         await axios
         .post('/enrollments', {
           courseId: data.courseId,
-          days: data.days,
-          startTime: new Date(data.startTime).getHours(),
-          endTime: new Date(data.endTime).getHours()
+          days: [0,1,2,3,4,5,6],
+          startTime: 0,
+          endTime: 24
         })
         .then((response:any)=>{
           console.log(response.data);
