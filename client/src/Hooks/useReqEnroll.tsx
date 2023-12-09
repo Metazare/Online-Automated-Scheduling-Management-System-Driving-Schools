@@ -46,17 +46,18 @@ function useReqEnroll(): Data {
   const {sendNotification} = useNotif();
 
   const enroll = async (data:CreateEnrollmentData) => {
+    console.log(data)
     setLoading(true);
-    if (data.endTime && data.startTime) {
       try {
         await axios
         .post('/enrollments', {
           courseId: data.courseId,
           days: [0,1,2,3,4,5,6],
           startTime: 0,
-          endTime: 24
+          endTime: 23
         })
         .then((response:any)=>{
+          console.log(response)
           console.log(response.data);
           setOpenSnackBar(openSnackBar => ({
             ...openSnackBar,
@@ -81,7 +82,6 @@ function useReqEnroll(): Data {
       } finally {
         setLoading(false);
       }
-    }
   };
 
   const getEnrollments = async (data: GetEnrollmentData) => {
