@@ -8,8 +8,8 @@ import {
     GetEnrollment,
     UpdateEnrollmentStatus
 } from './enrollment.types';
-import { LessonDocument, ProgressStatus  } from '../lesson/lesson.types';
-import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
+import { LessonDocument, ProgressStatus } from '../lesson/lesson.types';
+import { Conflict, NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import { Role } from '../auth/auth.types';
 import { SchoolDocument } from '../school/school.types';
 import { StudentDocument } from '../student/student.types';
@@ -99,6 +99,13 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
         status: status === EnrollmentStatus.FINISHED ? EnrollmentStatus.ACCEPTED : EnrollmentStatus.PENDING
     }).exec();
     if (!enrollment) throw new NotFound('Enrollment');
+
+    // Check if the student has any active enrollment
+    const activeEnrollment = await EnrollmentModel.findOne({
+        student: user._id,
+        status: EnrollmentStatus.ACCEPTED
+    }).exec();
+    if (activeEnrollment) throw new Conflict('Student has an active enrollment');
 
     if (status === EnrollmentStatus.DECLINED) {
         const { reason } = req.body;
