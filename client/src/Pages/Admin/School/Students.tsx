@@ -193,9 +193,9 @@ function Students() {
                         <TableCell >
                             Course
                         </TableCell>
-                        <TableCell >
+                        {/* <TableCell >
                             Available Schedule
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell >
                             Progress
                         </TableCell>
@@ -224,7 +224,7 @@ function Students() {
                           </Box>
                           
                         </TableCell>
-                        <TableCell >
+                        {/* <TableCell >
                           <Box display="flex" flexDirection={"column"} gap={"2em"}>
                             {student.enrollments?.map((enrollment) => ( 
                               <>{enrollment.status === "accepted" && 
@@ -234,7 +234,7 @@ function Students() {
                               }</>
                             ))}   
                           </Box>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell  >
                           <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
                             {student.enrollments?.map((enrollment) => ( 

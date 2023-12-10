@@ -120,9 +120,9 @@ function Requests() {
                         <TableCell >
                             Course
                         </TableCell>
-                        <TableCell >
+                        {/* <TableCell >
                             Available Schedule
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell >
                         </TableCell>
                     </TableRow>
@@ -138,9 +138,9 @@ function Requests() {
                                 </div>
                             </TableCell>
                             <TableCell >{getCourseType(request)}</TableCell>
-                            <TableCell >
+                            {/* <TableCell >
                                 {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({request?.availability?.time?.start + ":00"} to {request?.availability?.time?.end +":00"})
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell align="right">
                                 <IconButton aria-label=""  onClick={()=>{setOpen("DeclineEnrollment"); setSelected(request.enrollmentId); setSelectedStudent(request?.student.studentId)}}>
                                     <ClearIcon/>
