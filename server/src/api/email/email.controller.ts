@@ -26,7 +26,6 @@ export const sendEmail: RequestHandler = async (req: BodyRequest<Email>, res) =>
       html: content // HTML body
     });
 
-    console.log('Email sent: ', info.messageId);
     res.json(info);
   } catch (error: any) {
     console.error('Error sending email: ', error.message);

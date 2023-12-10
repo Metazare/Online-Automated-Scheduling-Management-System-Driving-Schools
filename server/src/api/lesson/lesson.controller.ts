@@ -18,15 +18,12 @@ import LessonModel from './lesson.model';
 import { EnrollmentPopulatedDocument } from '../enrollment/enrollment.types';
 
 export const getLessons: RequestHandler = async (req: QueryRequest<GetLessons>, res) => {
-    console.log(req.user)
-  
+
     if (!req.user) throw new Unauthorized();
     const { document: user, role } = req.user;
 
     let school: SchoolDocument = <SchoolDocument>user;
     if (role === Role.INSTRUCTOR) school = (<InstructorDocument>user).school;
-
-    console.log(user)
 
     const { courseId } = req.query;
 
@@ -56,8 +53,6 @@ export const createLesson: RequestHandler = async (req: BodyRequest<CreateLesson
 
     const { courseId, title, description } = req.body;
     let { file } = req.body;
-
-    console.log(req.body)
 
     const checker = new CheckData();
 
@@ -111,6 +106,7 @@ export const deleteLesson: RequestHandler = async (req: BodyRequest<DeleteLesson
     const user = <SchoolDocument>req.user.document;
 
     const { lessonId } = req.body;
+    console.log(lessonId)
     const checker = new CheckData();
 
     checker.checkType(lessonId, 'string', 'lessonId');

@@ -142,9 +142,11 @@ function CourseAccordion({variant,title, courseId, progress}:Props) {
 
     async function delLesson(e: React.FormEvent<HTMLFormElement>){
       e.preventDefault();
+      console.log(selectedLesson)
       deleteLesson({
         lessonId: selectedLesson
       });
+      window.location.reload();
     };
 
     async function editLesson(e: React.FormEvent<HTMLFormElement>){
@@ -192,7 +194,7 @@ function CourseAccordion({variant,title, courseId, progress}:Props) {
                     <Typography variant="h6" color="primary">{title}</Typography>
                     <div style={{display:"flex",gap:"15px"}}>
                         {variant === "manage"?<>
-                                <Typography variant="body2" color="#F0F0F0">{lessons?.length} Total Lessons</Typography>
+                                <Typography variant="body2" color="#F0F0F0">{lessons?.filter(lesson => lesson.status !== 'inactive').length} Total Lessons</Typography>
                             </>:<>
                                 {/* <Typography variant="body2" color="#F0F0F0"> 4 Done</Typography>
                                 <Typography variant="body2" color="#F0F0F0"> 3 Remaining</Typography> */}
@@ -218,34 +220,37 @@ function CourseAccordion({variant,title, courseId, progress}:Props) {
               
                 {lessons?.map((lesson)=>(
                   <Paper variant="elevation" elevation={2} sx={{background:"white",display:"flex",gap:"5px",alignItems:"center",cursor:"pointer",paddingRight:"1em"}}>
-                      <div style={{flexGrow:"1"}}>
-                          <a href={`/course/${courseId}/${lesson.lessonId}`} >
-                              <div style={{padding:"1em"}}>
-                                  <Typography variant="body1" color="initial">{lesson.title}</Typography>
-                              </div>
-                          </a>
-                      </div>
-                      {variant === "manage"?<>
-                          <IconButton 
-                            aria-label="add" 
-                            onClick={()=>{
-                              setOpen('edit'); 
-                              setSelectedLesson(lesson.lessonId); 
-                              getLesson({courseId: courseId, lessonId: lesson.lessonId});
-                              setEditForm({
-                                title: lesson.title, 
-                                description: lesson.description, 
-                                file: lesson.file
-                              })
-                            }}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                          <IconButton aria-label="add" onClick={()=>{setOpen('delete');setSelectedLesson(lesson.lessonId)}}>
-                              <DeleteIcon />
-                          </IconButton>
-                      </>:<>
-                          <VerifiedIcon sx={{fill:"#E24B5B"}}/>
+                      {lesson?.status === "inactive" ? <></> : <>
+                        <div style={{flexGrow:"1"}}>
+                            <a href={`/course/${courseId}/${lesson.lessonId}`} >
+                                <div style={{padding:"1em"}}>
+                                    <Typography variant="body1" color="initial">{lesson.title}</Typography>
+                                </div>
+                            </a>
+                        </div>
+                        {variant === "manage"?<>
+                            <IconButton 
+                              aria-label="add" 
+                              onClick={()=>{
+                                setOpen('edit'); 
+                                setSelectedLesson(lesson.lessonId); 
+                                getLesson({courseId: courseId, lessonId: lesson.lessonId});
+                                setEditForm({
+                                  title: lesson.title, 
+                                  description: lesson.description, 
+                                  file: lesson.file
+                                })
+                              }}
+                            >
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton aria-label="add" onClick={()=>{setOpen('delete');setSelectedLesson(lesson.lessonId)}}>
+                                <DeleteIcon />
+                            </IconButton>
+                        </>:<>
+                            <VerifiedIcon sx={{fill:"#E24B5B"}}/>
+                        </>}
+
                       </>}
                   </Paper>
                 ))}
