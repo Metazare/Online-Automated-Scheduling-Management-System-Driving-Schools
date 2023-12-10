@@ -130,7 +130,7 @@ function CourseList() {
                     >
                         <Avatar
                         alt={data?.name}
-                        src="/static/images/avatar/1.jpg"
+                        src={data?.profile}
                         sx={{ width: 80, height: 80 }}
                         />
                         <div style={{flexGrow:"1"}}>

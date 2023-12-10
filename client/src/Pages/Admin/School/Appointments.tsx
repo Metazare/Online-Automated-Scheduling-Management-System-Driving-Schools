@@ -347,7 +347,7 @@ function Appointments() {
                                   </TextField>
                               </Grid>
                             </>}
-                            {form.enrollmentId ? 
+                            {/* {form.enrollmentId ? 
                             <Grid item xs={12}>
                               <Paper variant="elevation" elevation={3} sx={{padding:"1em",background:"#D9D9D9"}}>
                                 <Typography variant="subtitle1" fontWeight={500} color="initial">Availability</Typography>
@@ -360,7 +360,7 @@ function Appointments() {
                                 </Typography>
                               </Paper>
                             </Grid>
-                            : ""}
+                            : ""} */}
                             <Grid item xs={12}>
                                 <TextField
                                     fullWidth
