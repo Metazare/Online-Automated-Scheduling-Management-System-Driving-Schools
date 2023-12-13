@@ -77,10 +77,10 @@ function LandingPage() {
                     aria-controls="-content"
                     id="-header"
                 >
-                    <Typography variant='h6'>Question #1</Typography>
+                    <Typography variant='h6'>What is the purpose of the online automated scheduling management system for driving schools?</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Typography variant='body2' >is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</Typography>
+                    <Typography variant='body2' >The online automated scheduling management system for driving schools aims to streamline the scheduling process for driving lessons, enhancing efficiency for both instructors and students.</Typography>
                 </AccordionDetails>
             </Accordion>
             <Accordion>
@@ -90,10 +90,10 @@ function LandingPage() {
                     aria-controls="-content"
                     id="-header"
                 >
-                    <Typography variant='h6'>Question #3</Typography>
+                    <Typography variant='h6'>Is the online scheduling system user-friendly for both driving instructors and students?</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Typography variant='body2' >is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</Typography>
+                    <Typography variant='body2' >The system is designed to be user-friendly, with an intuitive interface for both instructors and students. This ensures that users can navigate the platform easily and efficiently manage their schedules.</Typography>
                 </AccordionDetails>
             </Accordion>
             <Accordion>
@@ -103,10 +103,23 @@ function LandingPage() {
                     aria-controls="-content"
                     id="-header"
                 >
-                    <Typography variant='h6'>Question #2</Typography>
+                    <Typography variant='h6'>How does the system handle cancellations and rescheduling of driving lessons?</Typography>
                 </AccordionSummary>
                 <AccordionDetails>
-                    <Typography variant='body2' >is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</Typography>
+                    <Typography variant='body2' >The system effectively manages cancellations and rescheduling of driving lessons, allowing instructors and students to make adjustments within a reasonable timeframe, minimizing disruptions and ensuring a smooth scheduling process.</Typography>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion>
+                <AccordionSummary
+                    expandIcon={<ExpandMore />}
+                    aria-label="Expand"
+                    aria-controls="-content"
+                    id="-header"
+                >
+                    <Typography variant='h6'>Can students track their progress and access their lesson history through the system?</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <Typography variant='body2' >The system may enable students to track their progress, access lesson history, and receive feedback from instructors, providing a comprehensive overview of their learning journey.</Typography>
                 </AccordionDetails>
             </Accordion>
         </Container>
