@@ -20,6 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import useReqInstructor from '../../../Hooks/useReqInstructor';
 import moment from 'moment';
 
+import useEmail from '../../../Hooks/useEmail';
 import { SnackbarContext } from '../../../Context/SnackbarContext';
 const style = {
     position: 'absolute' as 'absolute',
@@ -35,13 +36,37 @@ const style = {
 function Instructors() {
 
     const {instructors, loading, credentials, getInstructor, createInstructor, updateInstructor} = useReqInstructor();
-
+    const { sendEmailInstructor } = useEmail();
     // TODO Pagination
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
     };
+    async function createInstructorFunc(e: React.FormEvent) {
+      e.preventDefault();
+      createInstructor(form);
+      // Assuming getInstructor returns a promise
+      getInstructor(instructorinstructors);
+      setForm({
+        firstName: "",
+        middleName: "",
+        lastName: "",
+        suffix: "",
+        address: "",
+        contact: "",
+        email: "",
+      });
+      setOpen("");
+    }
+    useEffect(()=>{
+      if(credentials){
+        sendEmailInstructor({
+          email: credentials?.email,
+          content: `You are added as an instructor in oasms. Here is your password: ${credentials?.password}`,
+        });
+      }
+    },[credentials])
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
@@ -138,14 +163,14 @@ function Instructors() {
             
             <div>
                 <Modal
-                    open={open.length > 0}
-                    onClose={()=>{setOpen("")}}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
+                  open={open.length > 0}
+                  onClose={()=>{setOpen("")}}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
                 >
                     <Box sx={style}>
                         {open === "addInstuctor"?<>
-                            <form action="">
+                            <form onSubmit={createInstructorFunc}>
                                 <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
                                     Add New Instructor
                                 </Typography>
@@ -238,20 +263,7 @@ function Instructors() {
                                             variant="contained" 
                                             fullWidth 
                                             color="primary" 
-                                            onClick={()=>{
-                                                setOpen("credential");
-                                                createInstructor(form);
-                                                setForm({
-                                                  firstName:"",
-                                                  middleName:"",
-                                                  lastName:"",
-                                                  suffix:"",
-                                                  address:"",
-                                                  contact:"",
-                                                  email:"",
-                                                })
-                                                getInstructor(instructorinstructors);
-                                            }}
+                                            type='submit'
                                         >
                                             Create
                                         </Button>

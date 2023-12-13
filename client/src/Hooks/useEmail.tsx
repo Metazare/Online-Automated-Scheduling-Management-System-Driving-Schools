@@ -4,7 +4,9 @@ import { SnackbarContext } from '../Context/SnackbarContext';
 
 interface Data {
   sendEmail: (data: SendEmailData ) => void;
+  sendEmailInstructor : (data: SendEmailData ) => void;
 }
+
 
 interface SendEmailData{
   email: string,
@@ -39,9 +41,34 @@ function useEmail(): Data {
       }));
     }
   }
+  const sendEmailInstructor = async (data: SendEmailData) => {
+    try {
+      await axios
+      .post('/email', {
+        to: data.email,
+        subject: "Welcome to OASMS",
+        content: data.content
+      })
+      .then((response:any)=>{
+        console.log(response.data);
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'info',
+          note:"OTP Sent!",
+        }));
+      });
+    } catch (error: any) {
+      console.log(error);
+      setOpenSnackBar(openSnackBar => ({
+        ...openSnackBar,
+        severity:'error',
+        note:"Encountered some error in sending email",
+      }));
+    }
+  }
 
   return { 
-    sendEmail 
+    sendEmail,sendEmailInstructor
   };
 }
 
