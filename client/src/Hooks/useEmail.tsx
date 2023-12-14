@@ -26,6 +26,7 @@ function useEmail(): Data {
       })
       .then((response:any)=>{
         console.log(response.data);
+        console.log(data.content)
         setOpenSnackBar(openSnackBar => ({
           ...openSnackBar,
           severity:'info',
@@ -54,7 +55,7 @@ function useEmail(): Data {
         setOpenSnackBar(openSnackBar => ({
           ...openSnackBar,
           severity:'info',
-          note:"OTP Sent!",
+          note:"Account Credential Send to the new Instructor",
         }));
       });
     } catch (error: any) {
