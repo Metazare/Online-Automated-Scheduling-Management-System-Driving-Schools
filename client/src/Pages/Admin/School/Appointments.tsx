@@ -8,7 +8,7 @@ import TESTCalendar from '../../../Components/TESTCalendar';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import useReqStudent from '../../../Hooks/useReqStudent';
 import useReqInstructor from '../../../Hooks/useReqInstructor';
@@ -347,20 +347,19 @@ function Appointments() {
                                   </TextField>
                               </Grid>
                             </>}
-                            {/* {form.enrollmentId ? 
-                            <Grid item xs={12}>
-                              <Paper variant="elevation" elevation={3} sx={{padding:"1em",background:"#D9D9D9"}}>
-                                <Typography variant="subtitle1" fontWeight={500} color="initial">Availability</Typography>
-                                <Typography variant="body2" color="initial">
-                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.days.map(dayNumber =>  daysOfWeek[dayNumber].substring(0, 2)+", ")} at (  
-                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.start +":00"}
-                                  - 
-                                  {findValue(selectedStudent.enrollments, 'enrollmentId', form.enrollmentId)?.availability?.time?.end + ":00"}
-                                  )
-                                </Typography>
-                              </Paper>
-                            </Grid>
-                            : ""} */}
+                            {/* //TODO START - Shift */}
+                            {form.enrollmentId ? 
+                            
+                              <Grid item xs={12}>
+                                <Paper variant="elevation" elevation={3} sx={{padding:"1em",background:"#D9D9D9"}}>
+                                  <Typography variant="subtitle1" fontWeight={500} color="primary">Availability</Typography>
+                                  <Typography variant="body2" color="initial">
+                                    Morning Shift 8:00 AM to 11: 00 AM
+                                  </Typography>
+                                </Paper>
+                              </Grid>
+                            : ""}
+                            {/* //TODO END - Shift */}
                             <Grid item xs={12}>
                                 <TextField
                                     fullWidth
@@ -400,9 +399,9 @@ function Appointments() {
                                                 setForm({...form, dateTime: dayjs(newValue)});
                                             }}
                                         /> */}
-                                        <DateTimePicker
+                                        <DatePicker
                                             slotProps={{ textField: { fullWidth: true } }}
-                                            label="Date and Time"
+                                            label="Date"
                                             value={dayjs(form.schedule)}
                                             onChange={handleChangeDateTime}
                                         />
@@ -445,9 +444,9 @@ function Appointments() {
                                               setForm({...form, dateTime: dayjs(newValue)});
                                           }}
                                       /> */}
-                                      <DateTimePicker
+                                      <DatePicker
                                         slotProps={{ textField: { fullWidth: true } }}
-                                        label="Date and Time"
+                                        label="Date"
                                         value={dayjs(formResched.schedule)}
                                         onChange={handleReschedChangeDateTime}
                                       />

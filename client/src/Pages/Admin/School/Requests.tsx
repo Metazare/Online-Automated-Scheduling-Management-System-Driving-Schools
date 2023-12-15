@@ -14,9 +14,6 @@ import CheckIcon from '@mui/icons-material/Check';
 import Box from '@mui/material/Box';
 import moment from 'moment';
 
-
-import { io } from 'socket.io-client'
-
 import useReqEnroll from '../../../Hooks/useReqEnroll';
 
 const style = {
@@ -94,35 +91,20 @@ function Requests() {
 
     return (
         <Grid item xs={12} sx={{padding:"40px"}}>
-          {/* <FormControl fullWidth sx={{minWidth:"200px",maxWidth:"30%",marginBottom:"25px"}}>
-                <Select
-                    sx={{background:"#363636",color:"white",fill:"white", 
-                        '& .MuiSelect-icon': {color: 'white'},
-                    }}
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={requestType}
-                    onChange={(event: SelectChangeEvent)=>{setRequestType(event.target.value as string);}}
-                >
-                    <MenuItem value={"Enrollment"}>Enrollment Requests</MenuItem>
-                    <MenuItem value={"Reschedule"}>Reschedule Requests</MenuItem>
-                </Select>
-            </FormControl> */}
-
             {(requestType === "Enrollment")? <>
             <TableContainer>
                 <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                     <TableRow>
                         <TableCell >
-                            Name
+                          Name
                         </TableCell>
                         <TableCell >
-                            Course
+                          Course
                         </TableCell>
-                        {/* <TableCell >
-                            Available Schedule
-                        </TableCell> */}
+                        <TableCell >
+                          Selected Shift
+                        </TableCell>
                         <TableCell >
                         </TableCell>
                     </TableRow>
@@ -138,9 +120,11 @@ function Requests() {
                                 </div>
                             </TableCell>
                             <TableCell >{getCourseType(request)}</TableCell>
-                            {/* <TableCell >
-                                {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({request?.availability?.time?.start + ":00"} to {request?.availability?.time?.end +":00"})
-                            </TableCell> */}
+                            {/* //TODO START - Shift */}
+                            <TableCell >
+                              Morning Shift 8:00 AM to 11: 00 AM
+                            </TableCell>
+                            {/* //TODO END - Shift */}
                             <TableCell align="right">
                                 <IconButton aria-label=""  onClick={()=>{setOpen("DeclineEnrollment"); setSelected(request.enrollmentId); setSelectedStudent(request?.student.studentId)}}>
                                     <ClearIcon/>
