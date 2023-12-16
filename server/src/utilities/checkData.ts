@@ -5,9 +5,9 @@ export interface Data {
 
 export interface CheckData {
     errors: Data[];
-    checkType(value: any, target: string, key: string): void;
-    checkDate(value: any, key: string): void;
-    checkValue(value: any, target: string, key: string): void;
+    checkType(value: unknown, target: string, key: string): void;
+    checkArray(value: unknown, min: number, key: string): void;
+    checkValue(value: unknown, target: string, key: string): void;
     addError(path: string, message: string): void;
     size(): number;
     list(): Data[];
@@ -19,46 +19,40 @@ export class CheckData {
     /**
      * Checks the type of a value and adds an error to the errors array if the type doesn't match the target type.
      *
-     * @param {any} value - The value to check the type of.
+     * @param {unknown} value - The value to check the type of.
      * @param {string} target - The target type to compare against.
      * @param {string} key - The key or path of the value being checked.
      */
-    checkType(value: any, target: string, key: string) {
+    checkType(value: unknown, target: string, key: string) {
         if (typeof value !== target) this.errors.push({ path: key, message: `${key} is ${typeof value}` });
+    }
+
+    /**
+     * Checks if the given value is an array and performs necessary validations.
+     *
+     * @param {unknown} value - The value to be checked.
+     * @param {string} key - The key associated with the value.
+     */
+    checkArray(value: unknown, min: number, key: string) {
+        if (Array.isArray(value)) {
+            if (value.length < min) {
+                this.errors.push({ path: key, message: `Must have at least one ${key}` });
+            }
+        }
+        else {
+            this.errors.push({ path: key, message: `${key} is ${typeof value}` });
+        }
     }
 
     /**
      * Checks the type of a value and adds an error to the errors array if the type doesn't match the target type.
      *
-     * @param {any} value - The value to check the type of.
+     * @param {unknown} value - The value to check the type of.
      * @param {string} target - The target type to compare against.
      * @param {string} key - The key or path of the value being checked.
      */
-    checkValue(value: any, target: string, key: string) {
+    checkValue(value: unknown, target: string, key: string) {
         if (value === target) this.errors.push({ path: key, message: `${key} is must not be ${target}` });
-    }
-
-    /**
-     * Checks if the given value is an array and performs various validations on it.
-     *
-     * @param {any} value - The value to be checked.
-     * @param {string} target - The expected type of each item in the array.
-     * @param {string} key - The key or path of the value being checked.
-     * @param {boolean} [canEmpty=false] - Indicates whether an empty array is allowed.
-     */
-    checkArray(value: any, target: string, key: string, canEmpty = false) {
-        if (!Array.isArray(value)) {
-            this.errors.push({ path: key, message: `${key} is not array` });
-            return;
-        }
-
-        if (canEmpty && value.length === 0) {
-            this.errors.push({ path: key, message: `${key} is empty` });
-            return;
-        }
-
-        if (value.some((item) => typeof item !== target))
-            this.errors.push({ path: key, message: `${key} has item that isn't ${target}` });
     }
 
     /**
@@ -76,16 +70,7 @@ export class CheckData {
      *
      * @return {number} The size of the errors array.
      */
-    size() {
+    size(): number {
         return this.errors.length;
-    }
-
-    /**
-     * Retrieves the list of errors.
-     *
-     * @return {Array} The list of errors.
-     */
-    list() {
-        return this.errors;
     }
 }
