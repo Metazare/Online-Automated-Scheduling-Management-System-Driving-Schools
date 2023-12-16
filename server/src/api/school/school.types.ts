@@ -1,6 +1,12 @@
 import { Course } from '../course/course.types';
 import { Document } from 'mongoose';
 
+export interface Schedule {
+    name: string;
+    from: number;
+    to: number;
+}
+
 /* MODEL */
 
 export interface School {
@@ -11,6 +17,7 @@ export interface School {
     contact: string;
     courses: Course[];
     profile: string;
+    schedules: Schedule[];
     credentials: {
         email: string;
         password: string;
@@ -36,4 +43,5 @@ export type CreateSchool = {
     email: string;
     password: string;
     profile: string;
+    schedules: Schedule[];
 };

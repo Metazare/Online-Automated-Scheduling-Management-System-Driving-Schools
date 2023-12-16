@@ -24,7 +24,7 @@ export const getSchools: RequestHandler = async (req: QueryRequest<GetSchools>, 
 };
 
 export const createSchool = async (body: CreateSchool): Promise<Payload> => {
-    const { name, about, address, contact, email, password } = body;
+    const { name, about, address, contact, email, password, schedules } = body;
     const checker = new CheckData();
 
     checker.checkType(name, 'string', 'name');
@@ -33,6 +33,15 @@ export const createSchool = async (body: CreateSchool): Promise<Payload> => {
     checker.checkType(contact, 'string', 'contact');
     checker.checkType(email, 'string', 'email');
     checker.checkType(password, 'string', 'password');
+    checker.checkArray(schedules, 1, 'schedules');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
+
+    for (let i = 0; i < schedules.length; i++) {
+        const { name, from, to } = schedules[i];
+        checker.checkType(name, 'string', 'name');
+        checker.checkType(from, 'number', 'from');
+        checker.checkType(to, 'number', 'to');
+    }
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const { schoolId } = await SchoolModel.create({
@@ -40,6 +49,7 @@ export const createSchool = async (body: CreateSchool): Promise<Payload> => {
         about,
         address,
         contact,
+        schedules,
         credentials: { email, password }
     });
 

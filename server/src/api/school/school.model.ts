@@ -31,7 +31,7 @@ const schoolSchema = new Schema(
             minLength: 1,
             required: true
         },
-        profile:{
+        profile: {
             type: String
         },
         courses: [
@@ -47,6 +47,22 @@ const schoolSchema = new Schema(
                         values: Object.values(CourseType),
                         message: '"{VALUE}" is not supported'
                     },
+                    required: true
+                }
+            }
+        ],
+        schedules: [
+            {
+                name: {
+                    type: String,
+                    required: true
+                },
+                from: {
+                    type: Number,
+                    required: true
+                },
+                to: {
+                    type: Number,
                     required: true
                 }
             }
@@ -73,11 +89,18 @@ const schoolSchema = new Schema(
         versionKey: false,
         toJSON: {
             transform(_doc, ret) {
-                const { _id, courses, credentials: { email }, ...rest } = ret as SchoolDocument;
+                const {
+                    _id,
+                    courses,
+                    schedules,
+                    credentials: { email },
+                    ...rest
+                } = ret as SchoolDocument;
                 return {
                     ...rest,
                     email,
-                    courses: courses.map(({ courseId, type }) => ({ courseId, type }))
+                    courses: courses.map(({ courseId, type }) => ({ courseId, type })),
+                    schedules: schedules.map(({ name, from, to }) => ({ name, from, to }))
                 };
             }
         }
