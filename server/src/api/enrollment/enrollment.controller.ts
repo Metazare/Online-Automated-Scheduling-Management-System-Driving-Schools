@@ -54,13 +54,17 @@ export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEn
     if (!req.user) throw new Unauthorized();
     const user = <StudentDocument>req.user.document;
 
-    const { courseId, days, startTime, endTime } = req.body;
+    const { courseId, schedule } = req.body;
     const checker = new CheckData();
 
     checker.checkType(courseId, 'string', 'courseId');
-    checker.checkArray(days, 'number', 'days');
-    checker.checkType(startTime, 'number', 'startTime');
-    checker.checkType(endTime, 'number', 'endTime');
+    checker.checkType(schedule, 'object', 'schedule');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
+
+    const { name, from, to } = schedule;
+    checker.checkType(name, 'string', 'name');
+    checker.checkType(from, 'number', 'from');
+    checker.checkType(to, 'number', 'to');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const school = await SchoolModel.findOne({ 'courses.courseId': courseId }).exec();
@@ -70,13 +74,7 @@ export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEn
         school: school._id,
         student: user._id,
         courseId,
-        availability: {
-            days: [...new Set(days)],
-            time: {
-                start: startTime,
-                end: endTime
-            }
-        }
+        schedule
     });
 
     res.sendStatus(201);

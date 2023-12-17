@@ -1,7 +1,7 @@
 import { CourseType } from '../course/course.types';
 import { Document, Types } from 'mongoose';
 import { LessonDocument, ProgressStatus } from '../lesson/lesson.types';
-import { SchoolDocument } from '../school/school.types';
+import { Schedule, SchoolDocument } from '../school/school.types';
 import { Student, StudentDocument } from '../student/student.types';
 
 export enum EnrollmentStatus {
@@ -18,13 +18,7 @@ export interface Enrollment {
     school: Types.ObjectId | Record<string, unknown>;
     student: Types.ObjectId | Record<string, unknown>;
     courseId: string;
-    availability: {
-        days: number[];
-        time: {
-            start: number;
-            end: number;
-        };
-    };
+    schedule: Schedule;
     progress: {
         lesson: Types.ObjectId | Record<string, unknown>;
         status: ProgressStatus;
@@ -65,9 +59,7 @@ export type GetEnrollment = {
 
 export type CreateEnrollment = {
     courseId: string;
-    days: number[];
-    startTime: number;
-    endTime: number;
+    schedule: Schedule;
 };
 
 export type UpdateEnrollmentStatus = {

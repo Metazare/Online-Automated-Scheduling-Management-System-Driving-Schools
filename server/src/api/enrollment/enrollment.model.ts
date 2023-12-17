@@ -1,4 +1,4 @@
-import { Enrollment, EnrollmentDocument, EnrollmentStatus } from './enrollment.types';
+import { EnrollmentDocument, EnrollmentStatus } from './enrollment.types';
 import { id } from '../../utilities/ids';
 import { ProgressStatus } from '../lesson/lesson.types';
 import { Schema, Types, model } from 'mongoose';
@@ -24,39 +24,18 @@ const enrollmentSchema = new Schema(
             type: String,
             required: true
         },
-        availability: {
+        schedule: {
             type: {
-                days: {
-                    type: [
-                        {
-                            type: Number,
-                            min: [0, 'Invalid day'],
-                            max: [6, 'Invalid day']
-                        }
-                    ],
+                name: {
+                    type: String,
                     required: true
                 },
-                time: {
-                    type: {
-                        start: {
-                            type: Number,
-                            min: [0, 'Invalid start time'],
-                            max: [23, 'Invalid start time'],
-                            required: true
-                        },
-                        end: {
-                            type: Number,
-                            min: [0, 'Invalid end time'],
-                            max: [23, 'Invalid end time'],
-                            required: true
-                        }
-                    },
-                    validate: {
-                        validator: function ({ start, end }: Enrollment['availability']['time']) {
-                            return start < end;
-                        },
-                        message: 'Invalid time'
-                    },
+                from: {
+                    type: Number,
+                    required: true
+                },
+                to: {
+                    type: Number,
                     required: true
                 }
             },
@@ -99,23 +78,14 @@ const enrollmentSchema = new Schema(
             transform: (_doc, ret) => {
                 const {
                     _id: id,
-                    availability: {
-                        days,
-                        time: { start, end }
-                    },
+                    schedule: { _id, ...schedule },
                     progress,
                     ...rest
                 } = ret;
 
                 return {
                     ...rest,
-                    availability: {
-                        days,
-                        time: {
-                            start,
-                            end
-                        }
-                    },
+                    schedule,
                     progress: (<Record<string, unknown>[]>progress).map(({ _id, ...rest }) => rest)
                 };
             }
