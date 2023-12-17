@@ -6,6 +6,7 @@ import { Role } from '../auth/auth.types';
 import { SchoolDocument } from '../school/school.types';
 import { NotFound, Unauthorized, UnprocessableEntity } from '../../utilities/errors';
 import InstructorModel from './instructor.model';
+import { createEmail } from '../email/email.controller';
 
 export const getInstructors: RequestHandler = async (req, res) => {
     if (!req.user) throw new Unauthorized();
@@ -56,7 +57,9 @@ export const createInstructor: RequestHandler = async (req: BodyRequest<CreateIn
         school: user._id
     });
 
-    res.status(201).json(credentials);
+    await createEmail(email, 'Instructor Credentials', `Here is your account credentials<br><strong>Email</strong>: ${email}<br><strong>Password</strong>: ${credentials.password}`);
+
+    res.sendStatus(204);
 };
 
 export const updateInstructorStatus: RequestHandler = async (req: BodyRequest<UpdateInstructorStatus>, res) => {

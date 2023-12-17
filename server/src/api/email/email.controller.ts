@@ -4,28 +4,28 @@ import envs from '../../utilities/envs';
 
 const nodemailer = require('nodemailer');
 const { NODEMAILER_EMAIL, NODEMAILER_PASSWORD } = envs;
+const transporter = nodemailer.createTransport({
+    service: 'outlook',
+    auth: {
+        user: NODEMAILER_EMAIL,
+        pass: NODEMAILER_PASSWORD
+    }
+});
+
+export const createEmail = (to: string, subject: string, content: string): Promise<unknown> =>
+    transporter.sendMail({
+        from: NODEMAILER_EMAIL, // Sender address
+        to: to, // Recipient address
+        subject: subject, // Subject line
+        html: content // HTML body
+    });
 
 export const sendEmail: RequestHandler = async (req: BodyRequest<Email>, res) => {
     const { to, subject, content } = req.body;
 
-    const transporter = nodemailer.createTransport({
-        service: 'outlook',
-        auth: {
-            user: NODEMAILER_EMAIL,
-            pass: NODEMAILER_PASSWORD
-        }
-    });
-
     try {
         // Send email
-        const info = await transporter.sendMail({
-            from: NODEMAILER_EMAIL, // Sender address
-            to: to, // Recipient address
-            subject: subject, // Subject line
-            html: content // HTML body
-        });
-
-        res.json(info);
+        res.json(await createEmail(to, subject, content));
     } catch (error: any) {
         console.error('Error sending email: ', error.message);
         // General error response
