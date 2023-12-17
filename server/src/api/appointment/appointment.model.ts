@@ -1,4 +1,4 @@
-import { AppointmentDocument, AppointmentStatus } from './appointment.types';
+import { AppointmentDocument } from './appointment.types';
 import { id } from '../../utilities/ids';
 import { model } from 'mongoose';
 import { Schema, Types } from 'mongoose';
@@ -29,16 +29,21 @@ const appointmentSchema = new Schema(
             type: String
         },
         schedule: {
-            type: Date,
-            required: true
-        },
-        status: {
-            type: String,
-            enum: {
-                values: Object.values(AppointmentStatus),
-                message: '"{VALUE}" is not supported'
+            type: {
+                name: {
+                    type: String,
+                    required: true
+                },
+                from: {
+                    type: Number,
+                    required: true
+                },
+                to: {
+                    type: Number,
+                    required: true
+                }
             },
-            default: AppointmentStatus.PENDING
+            required: true
         }
     },
     {

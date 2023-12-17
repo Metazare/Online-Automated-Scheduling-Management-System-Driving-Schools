@@ -14,13 +14,15 @@ const router: Router = Router();
  */
 router.get('/', asynchronousHandler(getAppointments));
 
+router.use(limitUsers(Role.ADMIN));
+
 /**
  * enrollmentId
  * instructorId
  * vehicle
  * schedule
  */
-router.post('/', limitUsers(Role.ADMIN), asynchronousHandler(createAppointment));
+router.post('/', asynchronousHandler(createAppointment));
 
 /**
  * ADMIN (change schedule date)
@@ -30,6 +32,6 @@ router.post('/', limitUsers(Role.ADMIN), asynchronousHandler(createAppointment))
  * STUDENT (request to reschedule)
  * appointmentId
  */
-router.patch('/', limitUsers(Role.ADMIN, Role.STUDENT), asynchronousHandler(updateAppointment));
+router.patch('/', asynchronousHandler(updateAppointment));
 
 export default router;

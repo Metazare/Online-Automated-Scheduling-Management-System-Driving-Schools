@@ -1,13 +1,7 @@
 import { Document, Types } from 'mongoose';
 import { EnrollmentDocument, EnrollmentPopulatedDocument } from '../enrollment/enrollment.types';
 import { InstructorDocument, InstructorPopulatedDocument } from '../instructor/instructor.types';
-import { SchoolDocument } from '../school/school.types';
-
-export enum AppointmentStatus {
-    PENDING = 'pending',
-    ACCEPTED = 'accepted',
-    RESCHEDULE = 'reschedule'
-}
+import { Schedule, SchoolDocument } from '../school/school.types';
 
 /* MODEL */
 
@@ -17,8 +11,7 @@ export interface Appointment {
     instructor: Types.ObjectId | Record<string, unknown>;
     school: Types.ObjectId | Record<string, unknown>;
     vehicle: string;
-    schedule: Date;
-    status: AppointmentStatus;
+    schedule: Schedule;
 }
 
 export interface AppointmentDocument extends Appointment, Document {
@@ -41,18 +34,16 @@ export type GetAppointments = {
     appointmentId?: string;
     instructorId?: string;
     enrollmentId?: string;
-    status?: AppointmentStatus;
 };
 
 export type CreateAppointment = {
     enrollmentId: string;
     instructorId: string;
     vehicle: string;
-    schedule: number;
+    schedule: Schedule;
 };
 
 export type UpdateAppointment = {
     appointmentId: string;
-    status?: AppointmentStatus;
-    schedule?: number;
+    schedule: Schedule;
 };
