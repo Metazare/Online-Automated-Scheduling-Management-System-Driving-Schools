@@ -17,7 +17,6 @@ import EnrollmentModel from './enrollment.model';
 import LessonModel from '../lesson/lesson.model';
 import SchoolModel from '../school/school.model';
 
-
 export const getEnrollments: RequestHandler = async (req: QueryRequest<GetEnrollment>, res) => {
     if (!req.user) throw new Unauthorized();
     const { document: user, role } = req.user;
@@ -62,6 +61,13 @@ export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEn
 
     const school = await SchoolModel.findOne({ 'courses.courseId': courseId }).exec();
     if (!school) throw new NotFound('Course');
+
+    const activeEnrollment = await EnrollmentModel.findOne({
+        school: school._id,
+        student: user._id,
+        status: EnrollmentStatus.ACCEPTED
+    });
+    if (activeEnrollment) throw new Conflict('Student has an active enrollment');
 
     await EnrollmentModel.create({
         school: school._id,
@@ -109,7 +115,6 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
     if (status === EnrollmentStatus.ACCEPTED) {
         const lessons: LessonDocument[] = await LessonModel.find({ courseId: enrollment.courseId }).exec();
         enrollment.progress = lessons.map((lesson) => ({ lesson: lesson._id, status: ProgressStatus.INCOMPLETE }));
-
     }
 
     enrollment.status = status;
