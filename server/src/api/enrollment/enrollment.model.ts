@@ -24,23 +24,6 @@ const enrollmentSchema = new Schema(
             type: String,
             required: true
         },
-        schedule: {
-            type: {
-                name: {
-                    type: String,
-                    required: true
-                },
-                from: {
-                    type: Number,
-                    required: true
-                },
-                to: {
-                    type: Number,
-                    required: true
-                }
-            },
-            required: true
-        },
         progress: [
             {
                 lesson: {
