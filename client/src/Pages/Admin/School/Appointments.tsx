@@ -90,7 +90,6 @@ function Appointments() {
     };
 
     function findValue(array, key, valueToFind) {
-      console.log(array)
       for (let i = 0; i < array.length; i++) {
         const element = array[i];
         console.log(element)
@@ -339,7 +338,7 @@ function Appointments() {
                                       }}
                                   >
                                       {selectedStudent?.enrollments?.map((course) => ( 
-                                          <MenuItem  value={course.enrollmentId} key={course.enrollmentId}>
+                                          <MenuItem value={course.enrollmentId} key={course.enrollmentId}>
                                               {/* {course.courseId} */}
                                               {getCourseName(course.courseId)}
                                           </MenuItem>
@@ -349,12 +348,13 @@ function Appointments() {
                             </>}
                             {/* //TODO START - Shift */}
                             {form.enrollmentId ? 
-                            
                               <Grid item xs={12}>
                                 <Paper variant="elevation" elevation={3} sx={{padding:"1em",background:"#D9D9D9"}}>
                                   <Typography variant="subtitle1" fontWeight={500} color="primary">Availability</Typography>
                                   <Typography variant="body2" color="initial">
-                                    Morning Shift 8:00 AM to 11: 00 AM
+                                    {findValue(selectedStudent?.enrollments, "enrollmentId", form?.enrollmentId).schedule.name} Shift {" "}
+                                    {findValue(selectedStudent?.enrollments, "enrollmentId", form?.enrollmentId).schedule.from}:00 to {" "}
+                                    {findValue(selectedStudent?.enrollments, "enrollmentId", form?.enrollmentId).schedule.to}:00
                                   </Typography>
                                 </Paper>
                               </Grid>
