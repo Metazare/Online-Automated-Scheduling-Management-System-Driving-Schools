@@ -16,6 +16,8 @@ import ManageSchool from './Pages/Admin/School/ManageSchool';
 import Error from './Pages/Error';
 import Chat from './Pages/User/Chat';
 
+import TestSchool from './Test/TestSchool';
+
 // Hooks
 import { ProtectedRoute } from './Hooks/useAuth';
 
@@ -67,6 +69,8 @@ function App() {
             <Route path="/chat/:type/:id" element={<Chat socket={socket}/>} />
             <Route path="/chat" element={<Chat socket={socket}/>} />
           </Route>
+
+          <Route path="/test" element={<TestSchool/>} />
         </Route>
 
       </Routes>
