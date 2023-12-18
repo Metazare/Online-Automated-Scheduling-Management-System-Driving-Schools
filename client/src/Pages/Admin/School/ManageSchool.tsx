@@ -24,7 +24,11 @@ import useReqSchool from '../../../Hooks/useReqSchool';
 import useFirebase from '../../../Hooks/useFirebase';
 import { useAuth } from '../../../Hooks/useAuth';
 
-
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import dayjs from 'dayjs';
 const style = {
   position: 'absolute' as 'absolute',
   top: '50%',
@@ -274,7 +278,7 @@ function ManageSchool() {
                     <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
                       Input you want to udpate
                     </Typography>
-                    <Grid container spacing={1} mt={2}>
+                    <Grid container spacing={2} mt={2}>
                       <Grid item xs={12}>
                         <TextField
                           id="About"
@@ -317,84 +321,114 @@ function ManageSchool() {
                           onChange={(e:any)=>{uploadProfile(e.target.files[0])}}
                         />
                       </Grid>
-                      <Typography variant="body1" color="initial" mb={"5px"}>Morning</Typography>
-                        <Grid item xs={12}>
-                          <Typography variant="body1" color="initial" mb={"5px"}>From</Typography>
-                          <TextField
-                            label="From"
-                            id="contact"
-                            fullWidth
-                            defaultValue={data?.schedules?.find(schedule => schedule.name === "Morning")?.from || ''}
-                            onChange={(e) => {
-                              const morningSchedule = form.schedules.find(schedule => schedule.name === "Morning") || { name: "Morning", from: 0, to: 0 };
-                              setForm({
-                                ...form,
-                                schedules: [
-                                  ...form.schedules.filter(schedule => schedule.name !== "Morning"),
-                                  { ...morningSchedule, from: parseInt(e.target.value, 10) },
-                                ],
-                              });
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="body1" color="initial" mb={"5px"}>To</Typography>
-                          <TextField
-                            label="To"
-                            id="contact"
-                            fullWidth
-                            defaultValue={data?.schedules?.find(schedule => schedule.name === "Morning")?.to || ''}
-                            onChange={(e) => {
-                              const morningSchedule = form.schedules.find(schedule => schedule.name === "Morning") || { name: "Morning", from: 0, to: 0 };
-                              setForm({
-                                ...form,
-                                schedules: [
-                                  ...form.schedules.filter(schedule => schedule.name !== "Morning"),
-                                  { ...morningSchedule, to: parseInt(e.target.value, 10) },
-                                ],
-                              });
-                            }}
-                          />
-                        </Grid>
-                        <Typography variant="body1" color="initial" mb={"5px"}>Afternoon</Typography>
-                        <Grid item xs={12}>
-                          <Typography variant="body1" color="initial" mb={"5px"}>From</Typography>
-                          <TextField
-                            label="From"
-                            id="contact"
-                            fullWidth
-                            defaultValue={data?.schedules?.find(schedule => schedule.name === "Afternoon")?.from || ''}
-                            onChange={(e) => {
-                              const morningSchedule = form.schedules.find(schedule => schedule.name === "Afternoon") || { name: "Afternoon", from: 0, to: 0 };
-                              setForm({
-                                ...form,
-                                schedules: [
-                                  ...form.schedules.filter(schedule => schedule.name !== "Afternoon"),
-                                  { ...morningSchedule, from: parseInt(e.target.value, 10) },
-                                ],
-                              });
-                            }}
-                          />
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="body1" color="initial" mb={"5px"}>To</Typography>
-                          <TextField
-                            label="To"
-                            id="contact"
-                            fullWidth
-                            defaultValue={data?.schedules?.find(schedule => schedule.name === "Afternoon")?.to || ''}
-                            onChange={(e) => {
-                              const afternoonSchedule = form.schedules.find(schedule => schedule.name === "Afternoon") || { name: "Afternoon", from: 0, to: 0 };
-                              setForm({
-                                ...form,
-                                schedules: [
-                                  ...form.schedules.filter(schedule => schedule.name !== "Afternoon"),
-                                  { ...afternoonSchedule, to: parseInt(e.target.value, 10) },
-                                ],
-                              });
-                            }}
-                          />
-                        </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="h6" color="primary" mb={"5px"}>Morning</Typography>
+                      </Grid>
+                      <Grid item md={6} xs={12}>
+                        <Typography variant="body1" mb={"5px"}>From</Typography>
+                        {data?.schedules?.find(schedule => schedule.name === "Morning")?.from === undefined? "undefined":<>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={['TimePicker']}>
+                              <TimePicker 
+                                sx={{ width: '100%' }} 
+                                defaultValue={
+                                  dayjs().hour(data?.schedules?.find(schedule => schedule.name === "Morning")?.from ).minute(0)
+                                }
+                                onChange={(newValue) => {
+                                  const morningSchedule = form.schedules.find(schedule => schedule.name === "Morning") || { name: "Morning", from: 0, to: 0 };
+                                  setForm({
+                                    ...form,
+                                    schedules: [
+                                      ...form.schedules.filter(schedule => schedule.name !== "Morning"),
+                                      { ...morningSchedule, from: parseInt(dayjs(newValue).format(`HH`), 10) },
+                                    ],
+                                  });
+                                }}
+                              />
+                            </DemoContainer>
+                          </LocalizationProvider>
+                        </>}
+
+                        
+                      </Grid>
+                      <Grid item md={6} xs={12}>
+                        <Typography variant="body1" color="initial" mb={"5px"}>To</Typography>
+                        {data?.schedules?.find(schedule => schedule.name === "Morning")?.to === undefined? "undefined":<>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={['TimePicker']}>
+                              <TimePicker 
+                                sx={{ width: '100%' }} 
+                                defaultValue={
+                                  dayjs().hour(data?.schedules?.find(schedule => schedule.name === "Morning")?.to).minute(0)
+                                }
+                                onChange={(newValue) => {
+                                  const morningSchedule = form.schedules.find(schedule => schedule.name === "Morning") || { name: "Morning", from: 0, to: 0 };
+                                  setForm({
+                                    ...form,
+                                    schedules: [
+                                      ...form.schedules.filter(schedule => schedule.name !== "Morning"),
+                                      { ...morningSchedule, to: parseInt(dayjs(newValue).format(`HH`), 10) },
+                                    ],
+                                  });
+                                }}
+                              />
+                            </DemoContainer>
+                          </LocalizationProvider>
+                        </>}
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Typography variant="h6" color="primary"  mb={"5px"}>Afternoon</Typography>
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="body1" color="initial" mb={"5px"}>From</Typography>
+                        {data?.schedules?.find(schedule => schedule.name === "Afternoon")?.from === undefined? "undefined":<>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={['TimePicker']}>
+                              <TimePicker 
+                                sx={{ width: '100%' }} 
+                                defaultValue={
+                                  dayjs().hour(data?.schedules?.find(schedule => schedule.name === "Afternoon")?.from).minute(0)
+                                }
+                                onChange={(newValue) => {
+                                  const morningSchedule = form.schedules.find(schedule => schedule.name === "Afternoon") || { name: "Afternoon", from: 0, to: 0 };
+                                  setForm({
+                                    ...form,
+                                    schedules: [
+                                      ...form.schedules.filter(schedule => schedule.name !== "Afternoon"),
+                                      { ...morningSchedule, from: parseInt(dayjs(newValue).format(`HH`), 10) },
+                                    ],
+                                  });
+                                }}
+                              />
+                            </DemoContainer>
+                          </LocalizationProvider>
+                        </>}
+                      </Grid>
+                      <Grid item xs={12} md={6}>
+                        <Typography variant="body1" color="initial" mb={"5px"}>To</Typography>
+                        {data?.schedules?.find(schedule => schedule.name === "Afternoon")?.to === undefined? "undefined":<>
+                          <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DemoContainer components={['TimePicker']}>
+                              <TimePicker 
+                                sx={{ width: '100%' }} 
+                                defaultValue={
+                                  dayjs().hour(data?.schedules?.find(schedule => schedule.name === "Afternoon")?.to).minute(0)
+                                }
+                                onChange={(newValue) => {
+                                  const morningSchedule = form.schedules.find(schedule => schedule.name === "Afternoon") || { name: "Afternoon", from: 0, to: 0 };
+                                  setForm({
+                                    ...form,
+                                    schedules: [
+                                      ...form.schedules.filter(schedule => schedule.name !== "Afternoon"),
+                                      { ...morningSchedule, to: parseInt(dayjs(newValue).format(`HH`), 10) },
+                                    ],
+                                  });
+                                }}
+                              />
+                            </DemoContainer>
+                          </LocalizationProvider>
+                        </>}
+                      </Grid>
                       <Grid item xs={12} mt={2}>
                       </Grid>
                       <Grid item sm={4} xs={12}>
