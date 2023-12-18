@@ -101,10 +101,8 @@ function School() {
       // }
       enroll({
         courseId: form.course,
-        // days: [0,1,2,3,4,5,6],
-        // startTime: 0,
-        // endTime: 24,
-        schoolId: id || "undefined"
+        schoolId: id || "undefined",
+        schedules: form.schedules
       });
 
       if (enrollError) {
