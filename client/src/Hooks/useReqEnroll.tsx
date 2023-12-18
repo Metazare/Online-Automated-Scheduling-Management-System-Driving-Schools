@@ -98,6 +98,7 @@ function useReqEnroll(): Data {
         params: params
       })
       .then((response:any)=>{
+        console.log(response);
         if (data.lessonView) {
           setData(response.data[0]);
           console.log(response.data[0]);
@@ -109,6 +110,7 @@ function useReqEnroll(): Data {
         
       });
     } catch (error: any) {
+      console.error(error)
       setError(error);
     } finally {
       setLoading(false);
