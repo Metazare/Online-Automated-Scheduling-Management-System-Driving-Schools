@@ -59,6 +59,7 @@ export type GetEnrollment = {
 
 export type CreateEnrollment = {
     courseId: string;
+    schedule: Schedule;
 };
 
 export type UpdateEnrollmentStatus = {
