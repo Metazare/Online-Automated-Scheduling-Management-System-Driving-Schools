@@ -53,7 +53,8 @@ function School() {
         saturday:false,
         startTime: new Date(),
         endTime: new Date(),
-        schoolId: ""
+        schoolId: "",
+        schedules: {}
     });
 
     const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
@@ -236,14 +237,20 @@ function School() {
                                   <Typography variant="subtitle1" sx={{fontWeight:"600"}} color="primary">Select Shift</Typography>
                                 </Grid>
                                 <Grid item md={6} xs={12}>
-                                  <Paper variant="elevation" elevation={3} sx={{padding:"1em",border:"1px solid #C9C9C9",width:"100%",cursor:"pointer"}} onClick={()=>{setSelectedShift("morning")}} >
+                                  <Paper variant="elevation" elevation={3} sx={{padding:"1em",border:"1px solid #C9C9C9",width:"100%",cursor:"pointer"}} 
+                                    onClick={()=>{
+                                      setSelectedShift("morning");
+                                      setForm({...form, schedules: data?.schedules?.find(schedule => schedule.name === "Morning" )});
+                                      console.log(form);
+                                    }} 
+                                  >
                                     <Box display="flex" alignItems={"center"} gap={1} >
                                       <Box flexGrow={"1"}>
                                         <Typography variant="subtitle2" color={selectedShift === "morning"? "primary":"initial"} sx={{fontSize:"13px"}}>
-                                          Morning 
+                                          {data?.schedules?.find(schedule => schedule.name === "Morning")?.name || ''} 
                                         </Typography>
                                         <Typography variant="subtitle1" color="initial" sx={{opacity:".6",fontSize:"13px"}}>
-                                          8:00 AM - 11:00 AM 
+                                        {data?.schedules?.find(schedule => schedule.name === "Morning")?.from || ''}:00  - {data?.schedules?.find(schedule => schedule.name === "Morning")?.to || ''}:00
                                         </Typography>
                                       </Box>
                                       <CheckCircleIcon color='primary' sx={selectedShift === "morning"?{opacity:"1"}:{opacity:"0"}}/>
@@ -255,10 +262,10 @@ function School() {
                                     <Box display="flex" alignItems={"center"} gap={1} >
                                       <Box flexGrow={"1"}>
                                         <Typography variant="subtitle2" color={selectedShift === "afternoon"? "primary":"initial"} sx={{fontSize:"13px"}}>
-                                          Afternoon 
+                                          {data?.schedules?.find(schedule => schedule.name === "Afternoon")?.name || ''} 
                                         </Typography>
                                         <Typography variant="subtitle1" color="initial" sx={{opacity:".6",fontSize:"13px"}}>
-                                          1:00 PM - 4:00 PM 
+                                          {data?.schedules?.find(schedule => schedule.name === "Afternoon")?.from || ''}:00 - {data?.schedules?.find(schedule => schedule.name === "Afternoon")?.to || ''}:00
                                         </Typography>
                                       </Box>
                                       <CheckCircleIcon color='primary' sx={selectedShift === "afternoon"?{opacity:"1"}:{opacity:"0"}}/>
