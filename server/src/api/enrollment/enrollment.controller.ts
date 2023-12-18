@@ -53,10 +53,16 @@ export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEn
     if (!req.user) throw new Unauthorized();
     const user = <StudentDocument>req.user.document;
 
-    const { courseId } = req.body;
+    const { courseId, schedule } = req.body;
     const checker = new CheckData();
 
     checker.checkType(courseId, 'string', 'courseId');
+    checker.checkType(schedule, 'object', 'schedule');
+    if (checker.size()) throw new UnprocessableEntity(checker.errors);
+
+    checker.checkType(schedule.name, 'string', 'schedule.name');
+    checker.checkType(schedule.from, 'number', 'schedule.from');
+    checker.checkType(schedule.to, 'number', 'schedule.to');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const school = await SchoolModel.findOne({ 'courses.courseId': courseId }).exec();
@@ -72,7 +78,8 @@ export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEn
     await EnrollmentModel.create({
         school: school._id,
         student: user._id,
-        courseId
+        courseId,
+        schedule
     });
 
     res.sendStatus(201);

@@ -58,18 +58,13 @@ export const createAppointment: RequestHandler = async (req: BodyRequest<CreateA
     if (!req.user) throw new Unauthorized();
     const user = <SchoolDocument>req.user.document;
 
-    const { enrollmentId, instructorId, vehicle, schedule } = req.body;
+    const { enrollmentId, instructorId, vehicle, date } = req.body;
     const checker = new CheckData();
 
     checker.checkType(enrollmentId, 'string', 'enrollmentId');
     checker.checkType(instructorId, 'string', 'instructorId');
     checker.checkType(vehicle, 'string', 'vehicle');
-    checker.checkType(schedule, 'object', 'schedule');
-    if (checker.size()) throw new UnprocessableEntity(checker.errors);
-
-    checker.checkType(schedule.name, 'string', 'schedule.name');
-    checker.checkType(schedule.from, 'number', 'schedule.from');
-    checker.checkType(schedule.to, 'number', 'schedule.to');
+    checker.checkType(date, 'number', 'date');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const instructor = await InstructorModel.findOne({ instructorId, school: user._id }).exec();
@@ -87,7 +82,7 @@ export const createAppointment: RequestHandler = async (req: BodyRequest<CreateA
         instructor: instructor._id,
         school: user._id,
         vehicle,
-        schedule
+        date: new Date(date).setHours(0, 0, 0, 0)
     });
 
     res.sendStatus(201);
