@@ -13,15 +13,10 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import {Link} from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 
-// 
-import moment from 'moment';
 import { SnackbarContext } from '../../../Context/SnackbarContext';
 // * Components
 import CourseCard from '../../../Components/CourseCard'
@@ -33,6 +28,7 @@ import useReqLesson from '../../../Hooks/useReqLesson';
 
 import { useParams } from 'react-router-dom';
 
+
 // const socket = io('http://localhost:5000');
 
 function School() {
@@ -42,7 +38,9 @@ function School() {
   const {data:lessons, loading:lessonLoading, getLessons} = useReqLesson();
   const {data: enrolls, loading: enrollLoading, error: enrollError, getEnrollments, enroll} = useReqEnroll();
   const {id} = useParams();
-
+  {/* //Todo Start of new Design state */}
+  const [selectedShift,setSelectedShift] = useState("morning")
+  {/* //Todo end of new Design state*/}
   const [enrolled,setEnrolled] = useState(false)
     const [form, setForm] = useState({
         course:'',
@@ -90,33 +88,6 @@ function School() {
       return populatedObject2;
     }
 
-    const appendSelectedDays = (form): number[] => {
-      const days = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-      const selectedDays: number[] = [];
-    
-      days.forEach((day, index) => {
-        if (form[day]) {
-          selectedDays.push(index);
-        }
-      });
-    
-      return selectedDays;
-    };
-
-    const handleChangeStart = (time: any) => {
-      setForm({
-        ...form,
-        startTime: time,
-      });
-    };
-  
-    const handleChangeEnd = (time: any) => {
-      setForm({
-        ...form,
-        endTime: time,
-      });
-    };
-
     async function submit(e: any) {
       e.preventDefault();
       // if ((appendSelectedDays(form).length === 0) || !form.startTime || !form.endTime) {
@@ -149,24 +120,6 @@ function School() {
     }
 
 
-    function getCourses(school, enrollments){
-
-      console.log(school)
-      console.log(enrollments)
-      
-      // Extract courseIds from enrollments
-      const enrolledCourseIds = enrollments.map((enrollment) => enrollment.courseId);
-
-      // Filter courses in the school that are not in the enrolledCourseIds
-      const availableCourses = school.courses.filter(
-        (course) => !enrolledCourseIds.includes(course.courseId)
-      );
-
-      console.log(availableCourses)
-
-      return availableCourses
-    }
-    
     if (loading && enrollLoading) {
         return <p>Loading...</p>
     }
@@ -235,7 +188,7 @@ function School() {
             <Grid container spacing={2}>
                 <Grid item md={8} sm={8} xs={12} sx={{padding:"40px"}}>
                   <Typography variant="h6" color="primary" mb={1}>About</Typography>
-                  <Typography variant="body2" align='justify'>{data?.about}</Typography>
+                  <Typography variant="body2" align='justify' minHeight={"200px"}>{data?.about}</Typography>
                   <Typography variant="h6" color="primary" mt={2} mb={1}>Courses</Typography>
                   <Box sx={{display:'flex', gap:"25px",flexWrap:"wrap"}}>
                     {data?.courses?.map((course)=>(
@@ -250,7 +203,7 @@ function School() {
                     <Paper sx={{padding:"1em"}}  elevation={3}>
                         <Typography variant="h6" color="primary">Enroll Now</Typography>
                         <form onSubmit={submit}>
-                            <Grid container spacing={2} width={"100%"} mt="20px" mb={"40px"}>
+                            <Grid container spacing={2} width={"100%"} mt="10px" >
                                 <Grid item xs={12}>
                                     <TextField
                                         fullWidth
@@ -278,6 +231,45 @@ function School() {
 
                                     </TextField>
                                 </Grid>
+                                {/* //Todo Start of new Design  */}
+                                <Grid item xs={12}>
+                                  <Typography variant="subtitle1" sx={{fontWeight:"600"}} color="primary">Select Shift</Typography>
+                                </Grid>
+                                <Grid item md={6} xs={12}>
+                                  <Paper variant="elevation" elevation={3} sx={{padding:"1em",border:"1px solid #C9C9C9",width:"100%",cursor:"pointer"}} onClick={()=>{setSelectedShift("morning")}} >
+                                    <Box display="flex" alignItems={"center"} gap={1} >
+                                      <Box flexGrow={"1"}>
+                                        <Typography variant="subtitle2" color={selectedShift === "morning"? "primary":"initial"} sx={{fontSize:"13px"}}>
+                                          Morning 
+                                        </Typography>
+                                        <Typography variant="subtitle1" color="initial" sx={{opacity:".6",fontSize:"13px"}}>
+                                          8:00 AM - 11:00 AM 
+                                        </Typography>
+                                      </Box>
+                                      <CheckCircleIcon color='primary' sx={selectedShift === "morning"?{opacity:"1"}:{opacity:"0"}}/>
+                                    </Box>
+                                  </Paper>
+                                </Grid>
+                                <Grid item md={6} xs={12}>
+                                  <Paper variant="elevation" elevation={3} sx={{padding:"1em",border:"1px solid #C9C9C9",width:"100%",cursor:"pointer"}} onClick={()=>{setSelectedShift("afternoon")}}>
+                                    <Box display="flex" alignItems={"center"} gap={1} >
+                                      <Box flexGrow={"1"}>
+                                        <Typography variant="subtitle2" color={selectedShift === "afternoon"? "primary":"initial"} sx={{fontSize:"13px"}}>
+                                          Afternoon 
+                                        </Typography>
+                                        <Typography variant="subtitle1" color="initial" sx={{opacity:".6",fontSize:"13px"}}>
+                                          1:00 PM - 4:00 PM 
+                                        </Typography>
+                                      </Box>
+                                      <CheckCircleIcon color='primary' sx={selectedShift === "afternoon"?{opacity:"1"}:{opacity:"0"}}/>
+                                    </Box>
+                                  </Paper>
+                                </Grid>
+
+
+
+                                
+                                {/* //Todo End of new Design  */}
                                 <Grid item xs={12} mt="15px">
                                     <Button type='submit' fullWidth variant="contained" color="primary">
                                         Enroll
@@ -289,27 +281,6 @@ function School() {
                     :
                     ''
                 }
-                {/* {data && enrolls && populateObject2(data.courses, getSchoolDataById(enrolls))?.map((request)=>(
-                  <Paper sx={{padding:"1em"}} elevation={3}>
-                    <Typography variant="h6" color="primary">Your Enrolled Cources is {request.status}</Typography>
-                    <Typography variant="subtitle2" mt={2} mb={1} color="initial">Selected Course</Typography>
-                    <Typography variant="body2" color="initial">{request.type}</Typography>
-                    <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
-                    <Typography variant="body2" color="initial">
-                      {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber])} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
-                    </Typography>
-                  </Paper>
-                ))} */}
-
-                  {/* <Paper sx={{padding:"1em",background:"#D9D9D9"}} elevation={3}>
-                    <Typography variant="subtitle2"  mb={1} color="initial">Selected Course</Typography>
-                    <Typography variant="body2" color="initial">TDC Face to Face</Typography>
-                    <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
-                    <Typography variant="body2" color="initial">
-                      Mo, Tu, We, Th, Fr, at (8:00 AM to 8:00 AM)
-                    </Typography>
-                  </Paper> */}
-
                   {enrolls && enrolls.length > 0 ? 
                   <Box display={"flex"} gap={"5px"} alignItems={"center"}>
                     <hr style={{flexGrow:'1',borderColor:"#E24B5B"}} />

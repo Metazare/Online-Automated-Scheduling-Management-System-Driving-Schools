@@ -193,9 +193,9 @@ function Students() {
                         <TableCell >
                             Course
                         </TableCell>
-                        {/* <TableCell >
-                            Available Schedule
-                        </TableCell> */}
+                        <TableCell >
+                          Selected Shift
+                        </TableCell>
                         <TableCell >
                             Progress
                         </TableCell>
@@ -224,17 +224,19 @@ function Students() {
                           </Box>
                           
                         </TableCell>
-                        {/* <TableCell >
+                          {/* //TODO START - Shift */}
+                        <TableCell >
                           <Box display="flex" flexDirection={"column"} gap={"2em"}>
                             {student.enrollments?.map((enrollment) => ( 
                               <>{enrollment.status === "accepted" && 
                                 <div>
-                                  {enrollment?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at ({enrollment?.availability?.time?.start+":00"} to {enrollment?.availability?.time?.end +":00"})
+                                  Morning Shift 8:00 AM to 11: 00 AM
                                 </div>
                               }</>
                             ))}   
                           </Box>
-                        </TableCell> */}
+                        </TableCell>
+                        {/* //TODO END - Shift */}
                         <TableCell  >
                           <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
                             {student.enrollments?.map((enrollment) => ( 
