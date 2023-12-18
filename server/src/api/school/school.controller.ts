@@ -67,12 +67,12 @@ export const editSchool: RequestHandler = async (req, res) => {
       const updatedData = req.body;
 
       // Validate the input data
-      const checker = new CheckData();
-      Object.entries(updatedData).forEach(([key, value]) => {
-          checker.checkType(value, 'string', key);
-      });
+      // const checker = new CheckData();
+      // Object.entries(updatedData).forEach(([key, value]) => {
+      //     checker.checkType(value, 'string', key);
+      // });
 
-      if (checker.size()) throw new UnprocessableEntity(checker.errors);
+      // if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
       const updatedSchool = await SchoolModel.findOneAndUpdate(
           { schoolId },
