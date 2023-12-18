@@ -61,14 +61,12 @@ const enrollmentSchema = new Schema(
             transform: (_doc, ret) => {
                 const {
                     _id: id,
-                    schedule: { _id, ...schedule },
                     progress,
                     ...rest
                 } = ret;
 
                 return {
                     ...rest,
-                    schedule,
                     progress: (<Record<string, unknown>[]>progress).map(({ _id, ...rest }) => rest)
                 };
             }
