@@ -11,7 +11,7 @@ export interface Appointment {
     instructor: Types.ObjectId | Record<string, unknown>;
     school: Types.ObjectId | Record<string, unknown>;
     vehicle: string;
-    schedule: Schedule;
+    date: Date;
 }
 
 export interface AppointmentDocument extends Appointment, Document {
@@ -40,7 +40,7 @@ export type CreateAppointment = {
     enrollmentId: string;
     instructorId: string;
     vehicle: string;
-    schedule: Schedule;
+    date: number;
 };
 
 export type UpdateAppointment = {
