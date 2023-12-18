@@ -65,6 +65,15 @@ function ManageSchool() {
     address: '',
     contact: '',
     profile: '',
+    schedules: [{
+      name: "Morning",
+      from: 0,
+      to: 0
+    }, {
+      name: "Afternoon",
+      from: 0,
+      to: 0
+    }]
   })
 
   useEffect(() => {
@@ -92,6 +101,7 @@ function ManageSchool() {
         address: data.address || "",
         contact: data.contact || "",
         profile: data.profile || "",
+        schedules: data.schedules || [{name: "Morning", from: 0, to: 0}, {name: "Afternoon", from: 0, to: 0}]
       });
     }
   }, [data]);
@@ -307,6 +317,84 @@ function ManageSchool() {
                           onChange={(e:any)=>{uploadProfile(e.target.files[0])}}
                         />
                       </Grid>
+                      <Typography variant="body1" color="initial" mb={"5px"}>Morning</Typography>
+                        <Grid item xs={12}>
+                          <Typography variant="body1" color="initial" mb={"5px"}>From</Typography>
+                          <TextField
+                            label="From"
+                            id="contact"
+                            fullWidth
+                            defaultValue={data?.schedules?.find(schedule => schedule.name === "Morning")?.from || ''}
+                            onChange={(e) => {
+                              const morningSchedule = form.schedules.find(schedule => schedule.name === "Morning") || { name: "Morning", from: 0, to: 0 };
+                              setForm({
+                                ...form,
+                                schedules: [
+                                  ...form.schedules.filter(schedule => schedule.name !== "Morning"),
+                                  { ...morningSchedule, from: parseInt(e.target.value, 10) },
+                                ],
+                              });
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography variant="body1" color="initial" mb={"5px"}>To</Typography>
+                          <TextField
+                            label="To"
+                            id="contact"
+                            fullWidth
+                            defaultValue={data?.schedules?.find(schedule => schedule.name === "Morning")?.to || ''}
+                            onChange={(e) => {
+                              const morningSchedule = form.schedules.find(schedule => schedule.name === "Morning") || { name: "Morning", from: 0, to: 0 };
+                              setForm({
+                                ...form,
+                                schedules: [
+                                  ...form.schedules.filter(schedule => schedule.name !== "Morning"),
+                                  { ...morningSchedule, to: parseInt(e.target.value, 10) },
+                                ],
+                              });
+                            }}
+                          />
+                        </Grid>
+                        <Typography variant="body1" color="initial" mb={"5px"}>Afternoon</Typography>
+                        <Grid item xs={12}>
+                          <Typography variant="body1" color="initial" mb={"5px"}>From</Typography>
+                          <TextField
+                            label="From"
+                            id="contact"
+                            fullWidth
+                            defaultValue={data?.schedules?.find(schedule => schedule.name === "Afternoon")?.from || ''}
+                            onChange={(e) => {
+                              const morningSchedule = form.schedules.find(schedule => schedule.name === "Afternoon") || { name: "Afternoon", from: 0, to: 0 };
+                              setForm({
+                                ...form,
+                                schedules: [
+                                  ...form.schedules.filter(schedule => schedule.name !== "Afternoon"),
+                                  { ...morningSchedule, from: parseInt(e.target.value, 10) },
+                                ],
+                              });
+                            }}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography variant="body1" color="initial" mb={"5px"}>To</Typography>
+                          <TextField
+                            label="To"
+                            id="contact"
+                            fullWidth
+                            defaultValue={data?.schedules?.find(schedule => schedule.name === "Afternoon")?.to || ''}
+                            onChange={(e) => {
+                              const afternoonSchedule = form.schedules.find(schedule => schedule.name === "Afternoon") || { name: "Afternoon", from: 0, to: 0 };
+                              setForm({
+                                ...form,
+                                schedules: [
+                                  ...form.schedules.filter(schedule => schedule.name !== "Afternoon"),
+                                  { ...afternoonSchedule, to: parseInt(e.target.value, 10) },
+                                ],
+                              });
+                            }}
+                          />
+                        </Grid>
                       <Grid item xs={12} mt={2}>
                       </Grid>
                       <Grid item sm={4} xs={12}>
