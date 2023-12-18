@@ -13,20 +13,27 @@ interface AuthContextState {
     User: () => any,
 }
 
+interface Schedule {
+    name: string,
+    from: number,
+    to: number
+}
+
 interface RegisterData {
-    name: string;
-    first: string;
-    middle: string;
-    last: string;
-    extension: string;
-    sex: string;
-    birthday: Date;
-    address: string;
-    contact: string;
-    about: string;
-    email: string;
-    password: string;
-    role: string;
+    name?: string;
+    first?: string;
+    middle?: string;
+    last?: string;
+    extension?: string;
+    sex?: string;
+    birthday?: Date;
+    address?: string;
+    contact?: string;
+    about?: string;
+    email?: string;
+    password?: string;
+    role?: string;
+    schedules?: Schedule[];
   }
 
 interface LoginData {
@@ -84,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const register = async (data: RegisterData) => {
-      const { name, first, middle, last, extension, sex, birthday, address, contact, about, email, password, role } = data;
+      const { name, first, middle, last, extension, sex, birthday, address, contact, about, email, password, role, schedules } = data;
 
       try{
           await axios
@@ -95,13 +102,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               lastName: last,
               extensionName: extension,
               sex: sex,
-              birthday: birthday.getTime(),
+              birthday: birthday?.getTime(),
               address: address || ' ',
               contact: contact || ' ',
               about: about || ' ',
               email: email,
               password: password,
               role: role,
+              schedules: schedules
           })
           .then((response: any) => {
               console.log(response.data)
