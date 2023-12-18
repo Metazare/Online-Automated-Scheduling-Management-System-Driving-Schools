@@ -230,7 +230,7 @@ function Students() {
                             {student.enrollments?.map((enrollment) => ( 
                               <>{enrollment.status === "accepted" && 
                                 <div>
-                                  Morning Shift 8:00 AM to 11: 00 AM
+                                  {enrollment?.schedule?.name} Shift {enrollment?.schedule?.from}:00 to {enrollment?.schedule?.to}:00 
                                 </div>
                               }</>
                             ))}   

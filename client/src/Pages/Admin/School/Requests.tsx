@@ -122,7 +122,7 @@ function Requests() {
                             <TableCell >{getCourseType(request)}</TableCell>
                             {/* //TODO START - Shift */}
                             <TableCell >
-                              Morning Shift 8:00 AM to 11: 00 AM
+                              {request?.schedule?.name} Shift {request?.schedule?.from}:00 to {request?.schedule?.to}:00 
                             </TableCell>
                             {/* //TODO END - Shift */}
                             <TableCell align="right">
