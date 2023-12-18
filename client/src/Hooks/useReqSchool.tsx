@@ -13,6 +13,12 @@ interface GetSchoolData {
   schoolId?: string | null;
 }
 
+interface Schedule {
+  name: string,
+  from: number,
+  to: number
+}
+
 interface EditSchoolData {
   schoolId: string;
   name: string;
@@ -21,7 +27,7 @@ interface EditSchoolData {
   email: string;
   profile: string;
   about: string;
-
+  schedules: Schedule[];
 }
 
 function useReqSchool(): Data {
@@ -66,7 +72,8 @@ function useReqSchool(): Data {
         address: data.address,
         contact: data.contact,
         email: data.email,
-        profile: data.profile
+        profile: data.profile,
+        schedules: data.schedules
       })
       .then((response:any)=>{
         console.log(response.data)
