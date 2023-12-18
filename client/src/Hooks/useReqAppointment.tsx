@@ -53,7 +53,7 @@ function useReqAppointment(): Data {
         enrollmentId: data.enrollmentId,
         instructorId: data.instructorId,
         vehicle: data.vehicle,
-        schedule: data.schedule.getTime()
+        date: data.schedule.getTime()
       })
       .then((response:any)=>{
         console.log(response.data);
