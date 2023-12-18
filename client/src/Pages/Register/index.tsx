@@ -68,6 +68,15 @@ function Index() {
     email: '',
     password: '',
     role: '',
+    schedules: [{
+      name: "Morning",
+      from: 0,
+      to: 12
+    },{
+      name: "Afternoon",
+      from: 13,
+      to: 23
+    }]
   });
 
   const [passwordSeverity,setPasswordSeverity] = useState(false)
