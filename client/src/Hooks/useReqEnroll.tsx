@@ -76,6 +76,11 @@ function useReqEnroll(): Data {
           navigate("/home");
         });
       } catch (error: any) {
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'error',
+          note:"You already have an active course",
+        })); 
         setError(error);
         console.log(error);
       } finally {

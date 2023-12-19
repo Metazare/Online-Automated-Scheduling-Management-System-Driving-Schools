@@ -62,7 +62,7 @@ function School() {
     });
 
     const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
-
+    const[toEnroll,setToEnroll]= useState([])
     useEffect(()=>{
       getSchool({
         schoolId: id
@@ -121,7 +121,7 @@ function School() {
       console.log(enrolls)
 
     }
-
+    
 
     if (loading && enrollLoading) {
         return <p>Loading...</p>
@@ -220,10 +220,13 @@ function School() {
                                             
                                         }}
                                     >
-                                        {data?.courses?.map((course) => (
-                                          <MenuItem key={course.courseId} value={course.courseId}>
-                                            {course.type}
-                                          </MenuItem>
+                                        {data?.courses &&
+                                          data.courses
+                                            .filter(course => !enrolls.some(enroll => enroll.courseId === course.courseId))
+                                            .map((course) => (
+                                              <MenuItem key={course.courseId} value={course.courseId}>
+                                                {course.type}
+                                              </MenuItem>
                                         ))}
 
                                         {/* {getCourses(data, enrolls).map((course) => (
