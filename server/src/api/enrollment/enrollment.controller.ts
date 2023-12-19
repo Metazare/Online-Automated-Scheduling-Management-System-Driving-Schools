@@ -71,6 +71,7 @@ export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEn
     const activeEnrollment = await EnrollmentModel.findOne({
         school: school._id,
         student: user._id,
+        courseId,
         status: EnrollmentStatus.ACCEPTED
     });
     if (activeEnrollment) throw new Conflict('Student has an active enrollment');
