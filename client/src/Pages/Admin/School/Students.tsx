@@ -188,16 +188,16 @@ function Students() {
                 <TableHead>
                     <TableRow>
                         <TableCell >
-                            Name
+                          Name
                         </TableCell>
                         <TableCell >
-                            Course
+                          Course
                         </TableCell>
                         <TableCell >
                           Selected Shift
                         </TableCell>
                         <TableCell >
-                            Progress
+                          Progress
                         </TableCell>
                         <TableCell >
                         </TableCell>

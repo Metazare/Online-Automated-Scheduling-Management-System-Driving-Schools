@@ -206,7 +206,7 @@ function Appointments() {
         <Grid item md={8} sm={6} xs={12} sx={{padding:"40px"}}>
             <div style={{display:"flex", alignItems:"center"}}>
                 <div style={{flexGrow:"1"}}>
-                    <Typography variant="h6" color="primary" >My Appointments</Typography>
+                    <Typography variant="h6" color="primary" >My Schedules</Typography>
                     <Typography variant="body2" color="initial" >{appointments?.length} Results</Typography>
                 </div>
                 {getUser()==="admin" ?
@@ -268,7 +268,6 @@ function Appointments() {
                 ))}
               </>
               } */}
-             
             </Grid>
         </Grid>
         {/* //* Calendar  Container */}
@@ -295,10 +294,10 @@ function Appointments() {
                 {open === "add"?<>
                     <form onSubmit={create}>
                         <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
-                            Add Appointment
+                            Add Schedule
                         </Typography>
                         <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
-                            Please fill up appointment form 
+                            Please fill up Schedule form 
                         </Typography>
 
                         <Grid container spacing={2}>
@@ -428,7 +427,7 @@ function Appointments() {
                 {open === "resched"?<>
                     <form onSubmit={resched}>
                         <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
-                            Reschedule Appointment
+                            Reschedule Schedules
                         </Typography>
                         <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
                             Please input your desired date

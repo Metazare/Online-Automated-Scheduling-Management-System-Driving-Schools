@@ -204,7 +204,7 @@ function ManageSchool() {
 
                 <Tabs value={value} onChange={handleChange} >
                   <Tab label="Home" />
-                  <Tab label="Appointments" />
+                  <Tab label="Schedules" />
                   <Tab label="Courses" />
                   <Tab label="Requests" />
                   <Tab label="Students" />
@@ -214,7 +214,7 @@ function ManageSchool() {
               :
                 <Tabs value={value} onChange={handleChange} >
                   <Tab label="Home" />
-                  <Tab label="Appointments" />
+                  <Tab label="Schedules" />
                   <Tab label="Courses" />
                   <Tab label="Students" />
                 </Tabs>

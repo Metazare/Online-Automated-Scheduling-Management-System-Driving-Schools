@@ -278,7 +278,7 @@ function Requests() {
                                   Accept Reschedule
                               </Typography>
                               <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
-                                  This will update the set schedule to this appointment
+                                This will update the set schedule 
                               </Typography>
 
 

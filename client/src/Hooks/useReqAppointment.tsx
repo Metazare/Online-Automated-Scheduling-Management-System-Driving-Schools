@@ -70,12 +70,12 @@ function useReqAppointment(): Data {
               role: 'student'
             }
           ],
-          content: 'New appointment is set ' + ' on ' + moment(data.schedule).format('lll')  + ' at ' + User().name
+          content: 'New schedule is set ' + ' on ' + moment(data.schedule).format('lll')  + ' at ' + User().name
         })
         setOpenSnackBar(openSnackBar => ({
           ...openSnackBar,
           severity:'success',
-          note:"Appointment set!",
+          note:"Schedule set!",
         }));
       });
     } catch (error: any) {

@@ -104,8 +104,8 @@ function Home() {
         <Grid item xs={4}>
             <Paper variant="elevation" elevation={3} sx={{padding:"1em",marginBottom:"25px",opacity:".7"}}>
                 <div style={{display:"flex"}}>
-                    <Typography sx={{flexGrow:"1"}} variant="subtitle1" color="primary" mb={"15px"}>Total Appointments</Typography>
-                    <TodayIcon sx={{fill:"#E24B5B"}}/> 
+                  <Typography sx={{flexGrow:"1"}} variant="subtitle1" color="primary" mb={"15px"}>Total Schedules</Typography>
+                  <TodayIcon sx={{fill:"#E24B5B"}}/> 
                 </div>
                 <Typography  variant="h4" color="initial">{appointments?.length}</Typography>
             </Paper>
