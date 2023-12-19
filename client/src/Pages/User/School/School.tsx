@@ -54,7 +54,11 @@ function School() {
         startTime: new Date(),
         endTime: new Date(),
         schoolId: "",
-        schedules: {}
+        schedules: {
+          from: 1,
+          name:"Morning",
+          to :  14
+        }
     });
 
     const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
@@ -248,7 +252,7 @@ function School() {
                                           {data?.schedules?.find(schedule => schedule.name === "Morning")?.name || ''} 
                                         </Typography>
                                         <Typography variant="subtitle1" color="initial" sx={{opacity:".6",fontSize:"13px"}}>
-                                        {data?.schedules?.find(schedule => schedule.name === "Morning")?.from || ''}:00  - {data?.schedules?.find(schedule => schedule.name === "Morning")?.to || ''}:00
+                                          {data?.schedules?.find(schedule => schedule.name === "Morning")?.from || ''}:00 - {data?.schedules?.find(schedule => schedule.name === "Morning")?.to || ''}:00
                                         </Typography>
                                       </Box>
                                       <CheckCircleIcon color='primary' sx={selectedShift === "morning"?{opacity:"1"}:{opacity:"0"}}/>
@@ -256,7 +260,14 @@ function School() {
                                   </Paper>
                                 </Grid>
                                 <Grid item md={6} xs={12}>
-                                  <Paper variant="elevation" elevation={3} sx={{padding:"1em",border:"1px solid #C9C9C9",width:"100%",cursor:"pointer"}} onClick={()=>{setSelectedShift("afternoon")}}>
+                                  <Paper variant="elevation" elevation={3} sx={{padding:"1em",border:"1px solid #C9C9C9",width:"100%",cursor:"pointer"}} 
+                                  onClick={()=>{
+                                    setSelectedShift("afternoon");
+                                    setForm({...form, schedules: data?.schedules?.find(schedule => schedule.name === "Afternoon" )});
+                                    console.log("form");
+                                    console.log(form);
+                                  }}
+                                  >
                                     <Box display="flex" alignItems={"center"} gap={1} >
                                       <Box flexGrow={"1"}>
                                         <Typography variant="subtitle2" color={selectedShift === "afternoon"? "primary":"initial"} sx={{fontSize:"13px"}}>
@@ -270,13 +281,9 @@ function School() {
                                     </Box>
                                   </Paper>
                                 </Grid>
-
-
-
-                                
                                 {/* //Todo End of new Design  */}
                                 <Grid item xs={12} mt="15px">
-                                    <Button type='submit' fullWidth variant="contained" color="primary">
+                                    <Button type='submit' fullWidth variant="contained" color="primary" disabled={form.schedules?false:true}>
                                         Enroll
                                     </Button>
                                 </Grid>
