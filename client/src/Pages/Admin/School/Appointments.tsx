@@ -170,7 +170,7 @@ function Appointments() {
         if(targetDate){
           console.log("Yes Target Date")
           return objects.filter((object) => {
-            const objectDate = new Date(object.schedule).toLocaleDateString(); // Convert schedule to a string in the format MM/DD/YYYY
+            const objectDate = new Date(object.date).toLocaleDateString(); // Convert schedule to a string in the format MM/DD/YYYY
             const targetDateString = new Date(targetDate).toLocaleDateString(); // Convert target date to a string in the format MM/DD/YYYY
             return objectDate === targetDateString;
           });

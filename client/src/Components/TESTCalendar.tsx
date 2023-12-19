@@ -43,7 +43,7 @@ function TESTCalendar({appointments,setSelectedDay,selectedDay}:Props) {
 
   const initialValue = dayjs();
 
-  const schedules = appointments?.map(item => item.schedule);
+  const schedules = appointments?.map(item => item.date);
 
 
   const formatDateToMonthYear = (dateString) => {
@@ -80,7 +80,6 @@ function TESTCalendar({appointments,setSelectedDay,selectedDay}:Props) {
       ...highlightedDaysMap,
       ...formatSchedulesToHighlightedDaysMap(schedules),
     };
-    
 
     setHighlightedDaysMap(updatedHighlightedDaysMap);
   }, []); // Add dependencies if needed
