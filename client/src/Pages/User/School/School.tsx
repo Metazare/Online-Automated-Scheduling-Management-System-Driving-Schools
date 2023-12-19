@@ -300,8 +300,7 @@ function School() {
                       <Typography variant="body2" color="initial">{request.type}</Typography>
                       <Typography variant="subtitle2" mt={2} mb={1} color="initial">Availability</Typography>
                       <Typography variant="body2" color="initial">
-                        {/* Mo, Tu, We, Th, Fr, at (8:00 AM to 8:00 AM) */}
-                        {request?.availability?.days.map(dayNumber => daysOfWeek[dayNumber].substring(0, 2)+", ")} at {request?.availability?.time?.start}:00 to {request?.availability?.time?.end}:00
+                        {request?.schedule?.name} at {request?.schedule?.from}:00 - {request?.schedule?.to}:00
                       </Typography>
                     </Paper>
                   ))}  
