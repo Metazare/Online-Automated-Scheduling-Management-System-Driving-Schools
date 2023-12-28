@@ -220,14 +220,15 @@ function School() {
                                             
                                         }}
                                     >
-                                        {data?.courses &&
-                                          data.courses
-                                            .filter(course => !enrolls.some(enroll => enroll.courseId === course.courseId))
-                                            .map((course) => (
-                                              <MenuItem key={course.courseId} value={course.courseId}>
-                                                {course.type}
-                                              </MenuItem>
-                                        ))}
+                                      {data?.courses && (
+                                        data.courses
+                                          .filter(course => !enrolls || !enrolls.some(enroll => enroll.courseId === course.courseId))
+                                          .map(course => (
+                                            <MenuItem key={course.courseId} value={course.courseId}>
+                                              {course.type}
+                                            </MenuItem>
+                                          ))
+                                      )}
 
                                         {/* {getCourses(data, enrolls).map((course) => (
                                           <MenuItem key={course.courseId} value={course.courseId}>
