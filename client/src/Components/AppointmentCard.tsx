@@ -13,21 +13,22 @@ type Props= {
     instructorName: string,
     instructorID: string,
     courseName: string,
-    schedule: string,
+    date: string,
     appointmentId?: string
     selectAppointment?: React.Dispatch<React.SetStateAction<any>>,
-    formResched?: any
+    formResched?: any,
+    time: string
 }
 
 function AppointmentCard(props:Props) {
-  const {modalOpen, studentName, instructorName, courseName, schedule,instructorID, appointmentId, selectAppointment, formResched} = props
+  const {modalOpen, studentName, instructorName, courseName, date,instructorID, appointmentId, selectAppointment, formResched,time} = props
   console.log(appointmentId)
     return (
         <Paper variant="elevation" elevation={1} sx={{padding:"1em"}}>
             <div style={{display:"flex"}}>
                 <div style={{flexGrow:'1'}}>
                     <Typography variant="h6" fontWeight={600} color="primary" >{courseName}</Typography>
-                    <Typography variant="body2" mt={"-5px"} color="initial" >{moment(schedule).format('lll')}</Typography>
+                    <Typography variant="body2" mt={"-5px"} color="initial" >{moment(date).format('ll')} {time}</Typography>
                 </div>
                 {!!studentName?<>
                   <IconButton aria-label="resched" size="large" onClick={()=>{

@@ -219,7 +219,8 @@ function CourseList() {
                   instructorName={appointment.instructor.name.first + " " + appointment.instructor.name.last}
                   instructorID={appointment.instructor.instructorId}
                   courseName={getCourseType(appointment.enrollment, appointment.school)}
-                  schedule={appointment.schedule}
+                  date={appointment.date}
+                  time={`${appointment.enrollment.schedule.from}:00 to ${appointment.enrollment.schedule.to}:00 (${appointment.enrollment.schedule.name})`}
                 />
               ))}
 

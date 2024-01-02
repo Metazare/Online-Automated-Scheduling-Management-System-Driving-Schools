@@ -46,4 +46,5 @@ export type CreateAppointment = {
 export type UpdateAppointment = {
     appointmentId: string;
     schedule: Schedule;
+    date: number
 };

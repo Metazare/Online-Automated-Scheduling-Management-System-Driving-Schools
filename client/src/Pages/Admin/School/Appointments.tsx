@@ -232,7 +232,8 @@ function Appointments() {
                       instructorName={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}
                       instructorID={appointment.instructor.id}
                       courseName={getCourseType(appointment.enrollment)}
-                      schedule={appointment.schedule}
+                      date={appointment.date}
+                      time={`${appointment.enrollment.schedule.from}:00 to ${appointment.enrollment.schedule.to}:00 (${appointment.enrollment.schedule.name})`}
                     />
                 </Grid>
               ))}

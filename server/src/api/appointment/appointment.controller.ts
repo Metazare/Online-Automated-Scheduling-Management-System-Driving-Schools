@@ -92,24 +92,24 @@ export const updateAppointment: RequestHandler = async (req: BodyRequest<UpdateA
     if (!req.user) throw new Unauthorized();
     const user = <SchoolDocument>req.user.document;
 
-    const { appointmentId, schedule } = req.body;
+    const { appointmentId, date } = req.body;
     const checker = new CheckData();
 
     checker.checkType(appointmentId, 'string', 'appointmentId');
-    checker.checkType(schedule, 'object', 'schedule');
+    // checker.checkType(schedule, 'object', 'schedule');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
-    checker.checkType(schedule.name, 'string', 'schedule.name');
-    checker.checkType(schedule.from, 'number', 'schedule.from');
-    checker.checkType(schedule.to, 'number', 'schedule.to');
-    if (checker.size()) throw new UnprocessableEntity(checker.errors);
+    // checker.checkType(schedule.name, 'string', 'schedule.name');
+    // checker.checkType(schedule.from, 'number', 'schedule.from');
+    // checker.checkType(schedule.to, 'number', 'schedule.to');
+    // if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const appointment: AppointmentPopulatedDocument | null = await AppointmentModel.findOneAndUpdate(
         {
             appointmentId,
             school: user._id
         },
-        { $set: { schedule } }
+        { $set: { date } }
     );
     if (!appointment) throw new NotFound('Appointment');
 

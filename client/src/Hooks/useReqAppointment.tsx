@@ -70,7 +70,7 @@ function useReqAppointment(): Data {
               role: 'student'
             }
           ],
-          content: 'New schedule is set ' + ' on ' + moment(data.schedule).format('lll')  + ' at ' + User().name
+          content: 'New schedule is set ' + ' on ' + moment(data.schedule).format('ll')  + ' at ' + User().name
         })
         setOpenSnackBar(openSnackBar => ({
           ...openSnackBar,
@@ -117,13 +117,14 @@ function useReqAppointment(): Data {
 
   const updateAppointment = async (data: UpdateAppointmentData) => {
     setLoading(true);
-    console.log(data);
+    console.log(data.schedule);
     try {
       await axios
       .patch('/appointments', {
         appointmentId: data.appointmentId,
         status: data.status,
-        schedule: data.schedule.getTime()
+        date: data.schedule.getTime(),
+        schedule: new Date(data.schedule)
       })
       .then((response:any)=>{
         console.log(response.data);
