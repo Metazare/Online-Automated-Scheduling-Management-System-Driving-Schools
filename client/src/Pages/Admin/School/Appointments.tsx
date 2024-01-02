@@ -402,6 +402,7 @@ function Appointments() {
                                         <DatePicker
                                             slotProps={{ textField: { fullWidth: true } }}
                                             label="Date"
+                                            minDate={dayjs()}
                                             value={dayjs(form.schedule)}
                                             onChange={handleChangeDateTime}
                                         />
@@ -447,6 +448,7 @@ function Appointments() {
                                       <DatePicker
                                         slotProps={{ textField: { fullWidth: true } }}
                                         label="Date"
+                                        minDate={dayjs()}
                                         value={dayjs(formResched.schedule)}
                                         onChange={handleReschedChangeDateTime}
                                       />

@@ -256,7 +256,7 @@ function School() {
                                           {data?.schedules?.find(schedule => schedule.name === "Morning")?.name || ''} 
                                         </Typography>
                                         <Typography variant="subtitle1" color="initial" sx={{opacity:".6",fontSize:"13px"}}>
-                                          {data?.schedules?.find(schedule => schedule.name === "Morning")?.from || ''}:00 - {data?.schedules?.find(schedule => schedule.name === "Morning")?.to || ''}:00
+                                          {data?.schedules?.find(schedule => schedule.name === "Morning")?.from || '1'}:00 - {data?.schedules?.find(schedule => schedule.name === "Morning")?.to || ''}:00
                                         </Typography>
                                       </Box>
                                       <CheckCircleIcon color='primary' sx={selectedShift === "morning"?{opacity:"1"}:{opacity:"0"}}/>
