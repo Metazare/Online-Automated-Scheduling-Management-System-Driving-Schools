@@ -17,6 +17,8 @@ import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import useReqStudent from '../../../Hooks/useReqStudent';
 import useReqSchool from '../../../Hooks/useReqSchool';
@@ -90,21 +92,10 @@ function Students() {
     const { data: school, loading: schoolLoading, error: errorSchool, getSchool } = useReqSchool();
     const [selectedStudent, setSelectedStudent] = useState<YourStateType<any>>(undefined);
     const [selectedCourse, setSelectedCourse] = useState<YourStateType<any>>(undefined);
+    const [selectedCourseID, setSelectedCourseID] = useState<string>("");
     
     // * Modal Open
     const [open, setOpen] = useState("");
-    // TODO Pagination
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const handleChangePage = (event: unknown, newPage: number) => {
-        setPage(newPage);
-    };
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-    };
-    // TODO End Pagination
-
     const [form, setForm] = useState({
         courseId: "",
         studentId: "",
@@ -112,8 +103,6 @@ function Students() {
         lesson:"",
         feedback:""
     })
-
-    const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
 
     useEffect(() => {
       getStudent({
@@ -130,12 +119,6 @@ function Students() {
       const foundCourse = school.courses.find((course) => course.courseId === courseId);
       return foundCourse?.type;
     }
-
-    // function getLesson(data) {
-    //   const { lessonId } = data;
-    //   const foundCourse = school.courses.find((course) => course.courseId === courseId);
-    //   return foundCourse?.type;
-    // }
 
     async function submit(e: any){
       e.preventDefault();
@@ -163,6 +146,11 @@ function Students() {
       }
       
     };
+    useEffect(()=>{
+      const selectedCourse = selectedStudent?.enrollments.find(course => course.courseId === selectedCourseID);
+      setSelectedCourse(selectedCourse)
+      console.log(selectedCourse)
+    },[selectedCourseID])
 
     function filterStudentsWithAcceptedEnrollment(students) {
       if (!students) {
@@ -208,12 +196,17 @@ function Students() {
                 <TableBody>
                   {filterStudentsWithAcceptedEnrollment(students)?.map((student) => ( 
                     <TableRow  hover role="checkbox" >
-                        <TableCell component="th" scope="row" sx={{display:"flex",alignItems:"center",gap:"10px"}} >
+                        <TableCell >
+                          <Box sx={{display:"flex",alignItems:"center",gap:"15px",height:'100%'}} >
                             <Avatar alt="Remy Sharp" src={student.profile} />
                             <div>
                                 <Typography variant="subtitle1"color="initial" fontWeight={500}>{student.name.first.charAt(0).toUpperCase()  + student.name.first.slice(1)} {student.name.middle.charAt(0).toUpperCase()  + student.name.middle.slice(1)} {student.name.last.charAt(0).toUpperCase()  + student.name.last.slice(1)} </Typography>
                                 <Typography variant="body2" color="initial" sx={{marginTop:"-4px"}}>{moment(student.createdAt).format('LLL')}</Typography>
                             </div>
+                            <IconButton aria-label="" href={`/chat/student/${student.studentId}`}>
+                              <ChatIcon/>
+                            </IconButton>
+                          </Box>
                         </TableCell>
                         <TableCell >
 
@@ -224,7 +217,6 @@ function Students() {
                           </Box>
                           
                         </TableCell>
-                          {/* //TODO START - Shift */}
                         <TableCell >
                           <Box display="flex" flexDirection={"column"} gap={"2em"}>
                             {student.enrollments?.map((enrollment) => ( 
@@ -236,7 +228,7 @@ function Students() {
                             ))}   
                           </Box>
                         </TableCell>
-                        {/* //TODO END - Shift */}
+
                         <TableCell  >
                           <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
                             {student.enrollments?.map((enrollment) => ( 
@@ -246,117 +238,124 @@ function Students() {
                             ))}
                           </Box>
                         </TableCell>
-                        <TableCell >
-                            <IconButton aria-label="" onClick={()=>{setOpen("update");setSelectedStudent(student)}}>
-                                <TaskIcon/>
-                            </IconButton>
+
+                        {/* //TODO Start - Update Progress */}
+                        <TableCell>
+                          <Box display="flex" flexDirection="column" alignItems="center">
+                            {student.enrollments?.map((enrollment) => ( 
+                              <>{enrollment.status === "accepted" && 
+                                <IconButton
+                                  aria-label=""
+                                  onClick={() => {
+                                    setSelectedStudent(student);
+                                    setSelectedCourseID(enrollment.courseId);
+                                    setOpen("update");
+                                  }}
+                                >
+                                  <TaskIcon />
+                                </IconButton>
+                              }</>
+                            ))}
+                          </Box>
                         </TableCell>
+                        {/* //TODO End - Update Progress */}
+
+                        {/* //TODO Start - Create Add schedule */}
                         <TableCell >
-                            <IconButton aria-label="" href={`/chat/student/${student.studentId}`}>
-                              <ChatIcon/>
-                            </IconButton>
+                          <IconButton aria-label="" onClick={()=>{}}>
+                            <EventNoteIcon/>
+                          </IconButton>
                         </TableCell>
+                        {/* //TODO End - Create Add schedule */}
+                        
+                        {/* //TODO Start - Delete */}
+                        <TableCell >
+                          <IconButton aria-label="" onClick={()=>{}}>
+                            <DeleteIcon/>
+                          </IconButton>
+                        </TableCell>
+                        {/* //TODO End - Delete */}
                     </TableRow>
                   ))}
                 </TableBody>
                 </Table>
             </TableContainer>
-            
             <div>
-                <Modal
-                    open={open.length > 0}
-                    onClose={()=>{setOpen("")}}
-                    aria-labelledby="modal-modal-title"
-                    aria-describedby="modal-modal-description"
-                >
-                    <Box sx={style}>
-                        {open === "update"?<>
-                          
-                                <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
-                                    Progress Update
-                                    
-                                </Typography>
-                                <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">
-                                    Select the course and lesson to mark as complete.
-                                </Typography>
-                                <Grid container spacing={2} mt={3}>
-                                    <Grid item  xs={12}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Select Course</InputLabel>
-                                            <Select
-                                              required
-                                              labelId="demo-simple-select-label"
-                                              id="demo-simple-select"
-                                              label="Select Lesson"
-                                              value={form.courseId}
-                                              onChange={(event)=>{ 
-                                                
-                                                const selectedCourseId = event.target.value; // Assuming the value is the courseId
-                                                const selectedCourse = selectedStudent?.enrollments.find(course => course.courseId === selectedCourseId);
-
-                                                setSelectedCourse(selectedCourse);
-                                                setForm({ ...form, courseId: selectedCourseId });
-
-                                                console.log(selectedCourse)
-                                              }}
-                                            >
-                                              {selectedStudent && selectedStudent?.enrollments.map((course) => (
-                                                <MenuItem key={course.courseId} value={course.courseId}>
-                                                  {getCourseType(course)}
-                                                </MenuItem>
-                                              ))}
-
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item  xs={12}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="demo-simple-select-label">Select Lesson</InputLabel>
-                                            <Select
-                                              required
-                                              labelId="demo-simple-select-label"
-                                              id="demo-simple-select"
-                                              label="Select Lesson"
-                                              value={form.lessonId}
-                                              onChange={(event)=>{ setForm({...form, lessonId: event.target.value });}}
-                                            >
-
-                                              {selectedCourse?.progress.map((lesson) => (
-                                                <MenuItem key={lesson.lesson.lessonId} value={lesson.lesson.lessonId}>
-                                                  {lesson.lesson.title}
-                                                </MenuItem>
-                                              ))}
-
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                    <Grid item  xs={12}>
-                                        <TextField
-                                            fullWidth
-                                            required
-                                            id="feedback"
-                                            label="Feedback"
-                                            value={form.feedback}
-                                            onChange={(event)=>{ setForm({...form, feedback: event.target.value });}}
-                                        />
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={1} mt={4}>
-                                    <Grid item sm={4} xs={12}>
-                                        <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
-                                            cancel
-                                        </Button>
-                                    </Grid>
-                                    <Grid item sm={8} xs={12}>
-                                        <Button variant="contained" type='submit' fullWidth color="primary" onClick={(e)=>{setOpen("");submit(e)}} >
-                                            Mark as Complete
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                          
-                        </>:""}
-                    </Box>
-                </Modal>
+              <Modal
+                open={open.length > 0}
+                onClose={()=>{setOpen("")}}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={style}>
+                  {open === "update"?<>
+                    <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">Progress Update</Typography>
+                    <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">Select the course and lesson to mark as complete.</Typography>
+                    <Grid container spacing={2} mt={3}>
+                      <Grid item  xs={12}>
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Select Lesson</InputLabel>
+                            <Select
+                              required
+                              labelId="demo-simple-select-label"
+                              id="demo-simple-select"
+                              label="Select Lesson"
+                              value={form.lessonId}
+                              onChange={(event)=>{ setForm({...form, lessonId: event.target.value });}}
+                            >
+                              {selectedCourse?.progress.map((lesson) => (
+                                lesson.status === "complete"?"": 
+                                  <MenuItem key={lesson.lesson.lessonId} value={lesson.lesson.lessonId}>
+                                    {lesson.lesson.title}
+                                  </MenuItem>
+                              ))}
+                            </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item  xs={12}>
+                          <TextField
+                              fullWidth
+                              required
+                              id="feedback"
+                              label="Feedback"
+                              value={form.feedback}
+                              onChange={(event)=>{ setForm({...form, feedback: event.target.value });}}
+                          />
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1} mt={4}>
+                        <Grid item sm={4} xs={12}>
+                            <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                                cancel
+                            </Button>
+                        </Grid>
+                        <Grid item sm={8} xs={12}>
+                            <Button variant="contained" type='submit' fullWidth color="primary" onClick={(e)=>{setOpen("");submit(e)}} >
+                                Mark as Complete
+                            </Button>
+                        </Grid>
+                    </Grid>
+                    
+                  </>:""}
+                  {open === "drop"?<>
+                    <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">Drop Subject</Typography>
+                    <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">Are you sure you want to drop this student to this?</Typography>
+                    
+                    <Grid container spacing={1} mt={4}>
+                        <Grid item sm={4} xs={12}>
+                            <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                                cancel
+                            </Button>
+                        </Grid>
+                        <Grid item sm={8} xs={12}>
+                            <Button variant="contained" type='submit' fullWidth color="primary" onClick={(e)=>{setOpen("");submit(e)}} >
+                                Mark as Complete
+                            </Button>
+                        </Grid>
+                    </Grid>
+                  </>:""}
+                </Box>
+              </Modal>
             </div>
         </Grid>
     )

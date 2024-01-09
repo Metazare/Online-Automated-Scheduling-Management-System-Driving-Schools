@@ -16,6 +16,7 @@ import useReqAppointment from '../../../Hooks/useReqAppointment';
 import useReqSchool from '../../../Hooks/useReqSchool';
 import { io } from 'socket.io-client';
 import moment from 'moment';
+import SearchInput from '../../../Components/SearchInputAppointments';
 
 import {useAuth} from '../../../Hooks/useAuth';
 import useNotif from '../../../Hooks/useNotif';
@@ -184,8 +185,6 @@ function Appointments() {
 
     }, [selectedDay]);
 
-    const daysOfWeek = ["Sunday ", "Monday ", "Tuesday ", "Wednesday ", "Thursday ", "Friday ", "Saturday "];
-
     function getCourseName(value) {
       const foundCourse = data.courses.find((course) => course.courseId === value );
       return foundCourse?.type;
@@ -209,12 +208,12 @@ function Appointments() {
                     <Typography variant="h6" color="primary" >My Schedules</Typography>
                     <Typography variant="body2" color="initial" >{appointments?.length} Results</Typography>
                 </div>
-                {getUser()==="admin" ?
+                {/* {getUser()==="admin" ?
                   <Button variant="text" color="primary" sx={{background:"white",boxShadow:5}} startIcon={<AddIcon/>} onClick={()=>{setOpen("add")}}>
                       add
                   </Button> : <></>
-                }
-                
+                } */}
+                <SearchInput data={appointments} setFilteredData={setFilteredAppointments} filteredData={filteredAppointments}/>
             </div>
             
             <Grid container spacing={2} mt={1}>
@@ -237,38 +236,6 @@ function Appointments() {
                     />
                 </Grid>
               ))}
-
-              {/* {selectedDay ?
-              <>
-                {filterObjectsByDate(appointments, selectedDay)?.map((appointment) => ( 
-                  <Grid item md={6} xs={12}>
-                      <AppointmentCard 
-                        modalOpen={setOpen}
-                        studentName={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.last}`}
-                        instructorName={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}
-                        instructorID={appointment.instructor.id}
-                        courseName={getCourseType(appointment.enrollment)}
-                        schedule={appointment.schedule}
-                      />
-                  </Grid>
-                ))}
-              </>
-              :
-              <>
-                {appointments?.map((appointment) => ( 
-                  <Grid item md={6} xs={12}>
-                      <AppointmentCard 
-                        modalOpen={setOpen}
-                        studentName={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.last}`}
-                        instructorName={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}
-                        instructorID={appointment.instructor.id}
-                        courseName={getCourseType(appointment.enrollment)}
-                        schedule={appointment.schedule}
-                      />
-                  </Grid>
-                ))}
-              </>
-              } */}
             </Grid>
         </Grid>
         {/* //* Calendar  Container */}
@@ -455,18 +422,6 @@ function Appointments() {
                                   </DemoContainer>
                               </LocalizationProvider>
                             </Grid>
-                            {/* <Grid item xs={12}>
-                                <TextField
-                                    required
-                                    fullWidth
-                                    id="reason"
-                                    label="Reason of Resched"
-                                    value={formResched.reason}
-                                    onChange={(event) => {
-                                        setFormResched({...formResched, reason: event.target.value});
-                                    }}
-                                />
-                            </Grid> */}
                             <Grid item  xs={12} mt={"4"} height={"40px"}>
                                 
                             </Grid>
