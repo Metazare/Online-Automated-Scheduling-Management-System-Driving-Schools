@@ -1,5 +1,5 @@
 import React,{useState, useEffect,useContext} from 'react'
-import {  Grid, Typography, IconButton, TextField } from '@mui/material';
+import {  Grid, Typography, IconButton, TextField,Paper } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -19,7 +19,14 @@ import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import dayjs, { Dayjs } from 'dayjs';
+import useReqAppointment from '../../../Hooks/useReqAppointment';
 
+import useReqInstructor from '../../../Hooks/useReqInstructor';
 import useReqStudent from '../../../Hooks/useReqStudent';
 import useReqSchool from '../../../Hooks/useReqSchool';
 import useReqLesson from '../../../Hooks/useReqLesson';
@@ -93,7 +100,23 @@ function Students() {
     const [selectedStudent, setSelectedStudent] = useState<YourStateType<any>>(undefined);
     const [selectedCourse, setSelectedCourse] = useState<YourStateType<any>>(undefined);
     const [selectedCourseID, setSelectedCourseID] = useState<string>("");
+    const { instructors, loading: instructorLoading, error: instructorError, credentials, getInstructor, createInstructor, updateInstructor} = useReqInstructor();
+    const { appointments, loading: appointmentLoading, error: appointmentError, createAppointment, getAppointments, updateAppointment } = useReqAppointment();
     
+    const handleChangeDateTime = (date: any) => {
+      setFormSchedule({
+        ...formSchedule,
+        schedule: date.toDate(),
+      });
+    };
+    const [formSchedule, setFormSchedule] = useState({
+      enrollmentId:"",
+      instructorId:"",
+      studentId:"",
+      vehicle:"",
+      schedule: new Date()
+    })
+
     // * Modal Open
     const [open, setOpen] = useState("");
     const [form, setForm] = useState({
@@ -103,6 +126,50 @@ function Students() {
         lesson:"",
         feedback:""
     })
+    function findValue(array, key, valueToFind) {
+      for (let i = 0; i < array.length; i++) {
+        const element = array[i];
+        console.log(element)
+        if (element.hasOwnProperty(key) && element[key] === valueToFind) {
+          console.log(element)
+          return element;
+        }
+      }
+      return false;
+    }
+    function getCourseName(value) {
+      const foundCourse = school.courses.find((course) => course.courseId === value );
+      return foundCourse?.type;
+    }
+
+    async function create(e: React.FormEvent<HTMLFormElement>){
+      e.preventDefault();
+      setOpen("")
+      createAppointment({
+        ...formSchedule,
+        studentId: selectedStudent?.studentId,
+      })
+      setFormSchedule({
+        enrollmentId:"",
+        instructorId:"",
+        studentId:"",
+        vehicle:"",
+        schedule: new Date()
+      })
+      getAppointments({
+        appointmentId: null,
+        studentId: null,
+        instructorId: null,
+        status: null,
+      });
+      getAppointments({
+        appointmentId: null,
+        studentId: null,
+        instructorId: null,
+        status: null,
+      });
+    };
+
 
     useEffect(() => {
       getStudent({
@@ -112,6 +179,10 @@ function Students() {
       getSchool({
         schoolId: null
       })
+      getInstructor({
+        instructorId: null,
+        status: "active"
+      });
     }, []);
 
     function getCourseType(data) {
@@ -233,13 +304,11 @@ function Students() {
                           <Box display={"flex"} flexDirection={"column"} alignItems={"center"}>
                             {student.enrollments?.map((enrollment) => ( 
                               <>{enrollment.status === "accepted" && 
-                                <CircularProgressWithLabel defaultValue={0} value={CalculateProgress(enrollment)} />
+                                <CircularProgressWithLabel defaultValue={0} value={!isNaN(CalculateProgress(enrollment))?CalculateProgress(enrollment):0} />
                               }</>
                             ))}
                           </Box>
                         </TableCell>
-
-                        {/* //TODO Start - Update Progress */}
                         <TableCell>
                           <Box display="flex" flexDirection="column" alignItems="center">
                             {student.enrollments?.map((enrollment) => ( 
@@ -258,13 +327,27 @@ function Students() {
                             ))}
                           </Box>
                         </TableCell>
-                        {/* //TODO End - Update Progress */}
 
                         {/* //TODO Start - Create Add schedule */}
                         <TableCell >
-                          <IconButton aria-label="" onClick={()=>{}}>
-                            <EventNoteIcon/>
-                          </IconButton>
+                          <Box display="flex" sx={{flexDirection:"column"}}>
+                            {student.enrollments?.map((enrollment) => ( 
+                              <>{
+                                enrollment.status === "accepted" && 
+                                <IconButton
+                                  aria-label=""
+                                  onClick={() => {
+                                    setSelectedStudent(student);
+                                    setSelectedCourseID(enrollment.courseId);
+                                    setFormSchedule({...formSchedule, enrollmentId: enrollment.enrollmentId });
+                                    setOpen("schedule");
+                                  }}
+                                >
+                                  <EventNoteIcon/>
+                                </IconButton>
+                              }</>
+                            ))}
+                          </Box>
                         </TableCell>
                         {/* //TODO End - Create Add schedule */}
                         
@@ -354,6 +437,87 @@ function Students() {
                         </Grid>
                     </Grid>
                   </>:""}
+                  {open === "schedule"?<>
+                    <form onSubmit={create}>
+                      <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">
+                          Add Schedule
+                      </Typography>
+                      <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2" mb={3}>
+                          Please fill up Schedule form 
+                      </Typography>
+
+                      <Grid container spacing={2}>
+                          {formSchedule.enrollmentId ? 
+                            <Grid item xs={12}>
+                              <Paper variant="elevation" elevation={3} sx={{padding:"1em",background:"#D9D9D9"}}>
+                                <Typography variant="subtitle1" fontWeight={500} color="primary">Availability</Typography>
+                                <Typography variant="body2" color="initial">
+                                  {findValue(selectedStudent?.enrollments, "enrollmentId", formSchedule?.enrollmentId).schedule.name} Shift {" "}
+                                  {findValue(selectedStudent?.enrollments, "enrollmentId", formSchedule?.enrollmentId).schedule.from}:00 to {" "}
+                                  {findValue(selectedStudent?.enrollments, "enrollmentId", formSchedule?.enrollmentId).schedule.to}:00
+                                </Typography>
+                              </Paper>
+                            </Grid>
+                          : ""}
+                          <Grid item xs={12}>
+                              <TextField
+                                  fullWidth
+                                  id="outlined-select-currency"
+                                  select
+                                  label="instructor"
+                                  required
+                                  value={formSchedule.instructorId}
+                                  onChange={(event) => {
+                                      setFormSchedule({...formSchedule, instructorId: event.target.value });
+                                  }}
+                              >
+                                  {instructors?.map((instructor) => ( 
+                                      <MenuItem  value={instructor.instructorId} key={instructor.instructorId}>
+                                          {instructor.name.first} {instructor.name.middle} {instructor.name.last}
+                                      </MenuItem>
+                                  ))}
+                              </TextField>
+                          </Grid>
+                          <Grid item xs={12}>
+                              <TextField
+                                  fullWidth
+                                  label="Vehicle (Optional)"
+                                  value={formSchedule.vehicle}
+                                  onChange={(event) => {
+                                      setFormSchedule({...formSchedule, vehicle: event.target.value });
+                                  }}
+                              />
+                          </Grid>
+                          <Grid item xs={12}>
+                              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                  <DemoContainer components={['DateTimePicker']}>
+                                      <DatePicker
+                                          slotProps={{ textField: { fullWidth: true } }}
+                                          label="Date"
+                                          minDate={dayjs()}
+                                          value={dayjs(formSchedule.schedule)}
+                                          onChange={handleChangeDateTime}
+                                      />
+                                  </DemoContainer>
+                              </LocalizationProvider>
+                          </Grid>
+                          <Grid item  xs={12} mt={"4"} height={"40px"}>
+                              
+                          </Grid>
+
+                          <Grid item sm={4} xs={12}>
+                              <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                                  cancel
+                              </Button>
+                          </Grid>
+                          <Grid item sm={8} xs={12}>
+                              <Button variant="contained" fullWidth color="primary" type="submit">
+                                  Add
+                              </Button>
+                          </Grid>
+                        </Grid>
+                    </form>
+                </>:""}
                 </Box>
               </Modal>
             </div>
