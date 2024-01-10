@@ -27,6 +27,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import useReqAppointment from '../../../Hooks/useReqAppointment';
 import useReqEnroll from '../../../Hooks/useReqEnroll';
 
+import { useAuth } from '../../../Hooks/useAuth';
 import useReqInstructor from '../../../Hooks/useReqInstructor';
 import useReqStudent from '../../../Hooks/useReqStudent';
 import useReqSchool from '../../../Hooks/useReqSchool';
@@ -94,7 +95,7 @@ type YourStateType<T> = T | undefined;
 
 function Students() {
     const{setOpenSnackBar} = useContext(SnackbarContext)
-
+    const {getUser} = useAuth();
     const { updateProgress } = useReqLesson();
     const { students, loading, error, getStudent } = useReqStudent();
     const { data: school, loading: schoolLoading, error: errorSchool, getSchool } = useReqSchool();
@@ -348,27 +349,29 @@ function Students() {
                             ))}
                           </Box>
                         </TableCell>
-                        <TableCell >
-                          <Box display="flex" sx={{flexDirection:"column"}}>
-                            {student.enrollments?.map((enrollment) => ( 
-                              <>{
-                                enrollment.status === "accepted" && 
-                                <IconButton
-                                  aria-label=""
-                                  onClick={() => {
-                                    setSelectedStudent(student);
-                                    setSelectedCourseID(enrollment.courseId);
-                                    setFormSchedule({...formSchedule, enrollmentId: enrollment.enrollmentId });
-                                    setOpen("schedule");
-                                  }}
-                                >
-                                  <EventNoteIcon/>
-                                </IconButton>
-                              }</>
-                            ))}
-                          </Box>
-                        </TableCell>
-                        <TableCell >
+                        {getUser() === "admin"?
+                        <>
+                          <TableCell >
+                            <Box display="flex" sx={{flexDirection:"column"}}>
+                              {student.enrollments?.map((enrollment) => ( 
+                                <>{
+                                  enrollment.status === "accepted" && 
+                                  <IconButton
+                                    aria-label=""
+                                    onClick={() => {
+                                      setSelectedStudent(student);
+                                      setSelectedCourseID(enrollment.courseId);
+                                      setFormSchedule({...formSchedule, enrollmentId: enrollment.enrollmentId });
+                                      setOpen("schedule");
+                                    }}
+                                  >
+                                    <EventNoteIcon/>
+                                  </IconButton>
+                                }</>
+                              ))}
+                            </Box>
+                          </TableCell>
+                          <TableCell >
                           <Box display="flex" sx={{flexDirection:"column"}}>
                             {student.enrollments?.map((enrollment) => ( 
                               <>{
@@ -389,6 +392,8 @@ function Students() {
                             ))}
                           </Box>
                         </TableCell>
+                        </>:""}
+                        
                     </TableRow>
                   ))}
                 </TableBody>
