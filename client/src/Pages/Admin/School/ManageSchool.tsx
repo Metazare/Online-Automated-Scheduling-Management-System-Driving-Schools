@@ -251,11 +251,9 @@ function ManageSchool() {
               <Appointments/>
             :""}
             {value===2?
-              <Courses/>
-            :""}
-            {value===3?
               <Students/>
             :""}
+            
           </>
           }
           
