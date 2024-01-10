@@ -87,6 +87,8 @@ export const createEnrollment: RequestHandler = async (req: BodyRequest<CreateEn
 };
 
 export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<UpdateEnrollmentStatus>, res) => {
+    console.log("Server")
+    console.log(req.body)
     if (!req.user) throw new Unauthorized();
     const user = <SchoolDocument>req.user.document;
 
@@ -100,7 +102,7 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
     const enrollment = await EnrollmentModel.findOne({
         enrollmentId,
         school: user._id,
-        status: status === EnrollmentStatus.FINISHED ? EnrollmentStatus.ACCEPTED : EnrollmentStatus.PENDING
+        // status: status === EnrollmentStatus.FINISHED ? EnrollmentStatus.ACCEPTED : EnrollmentStatus.PENDING
     }).exec();
     if (!enrollment) throw new NotFound('Enrollment');
 

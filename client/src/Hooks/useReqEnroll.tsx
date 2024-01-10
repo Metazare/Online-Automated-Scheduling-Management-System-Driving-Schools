@@ -123,6 +123,7 @@ function useReqEnroll(): Data {
 
   const updateEnrollments = async (data: UpdateEnrollmentData) => {
     setLoading(true);
+    console.log("Ito yung data")
     console.log(data);
     try {
       await axios

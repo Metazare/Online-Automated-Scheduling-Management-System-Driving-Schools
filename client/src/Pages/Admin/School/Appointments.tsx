@@ -217,9 +217,6 @@ function Appointments() {
             </div>
             
             <Grid container spacing={2} mt={1}>
-
-              
-
               {(filteredAppointments ? filteredAppointments : appointments)?.map((appointment) => ( 
                 <Grid item md={6} xs={12}>
                     <AppointmentCard 

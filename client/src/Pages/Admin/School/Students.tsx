@@ -25,6 +25,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs, { Dayjs } from 'dayjs';
 import useReqAppointment from '../../../Hooks/useReqAppointment';
+import useReqEnroll from '../../../Hooks/useReqEnroll';
 
 import useReqInstructor from '../../../Hooks/useReqInstructor';
 import useReqStudent from '../../../Hooks/useReqStudent';
@@ -100,8 +101,9 @@ function Students() {
     const [selectedStudent, setSelectedStudent] = useState<YourStateType<any>>(undefined);
     const [selectedCourse, setSelectedCourse] = useState<YourStateType<any>>(undefined);
     const [selectedCourseID, setSelectedCourseID] = useState<string>("");
-    const { instructors, loading: instructorLoading, error: instructorError, credentials, getInstructor, createInstructor, updateInstructor} = useReqInstructor();
-    const { appointments, loading: appointmentLoading, error: appointmentError, createAppointment, getAppointments, updateAppointment } = useReqAppointment();
+    const { instructors, loading: instructorLoading, error: instructorError, credentials, getInstructor,updateInstructor} = useReqInstructor();
+    const {  loading: appointmentLoading, error: appointmentError, createAppointment, getAppointments } = useReqAppointment();
+    const { data:enrolls, loading:enrollLoading, getEnrollments, updateEnrollments } = useReqEnroll();
     
     const handleChangeDateTime = (date: any) => {
       setFormSchedule({
@@ -125,6 +127,10 @@ function Students() {
         lessonId:"",
         lesson:"",
         feedback:""
+    })
+    const [formDrop,setFormDrop] = useState({
+      enrollmentId:"",
+      reason:""
     })
     function findValue(array, key, valueToFind) {
       for (let i = 0; i < array.length; i++) {
@@ -183,6 +189,12 @@ function Students() {
         instructorId: null,
         status: "active"
       });
+      getEnrollments({
+        enrollmentId: null,
+        courseId: null,
+        status: 'pending',
+        courseType: null,
+      });
     }, []);
 
     function getCourseType(data) {
@@ -191,6 +203,15 @@ function Students() {
       return foundCourse?.type;
     }
 
+    async function dropStudent(e:any) {
+      e.preventDefault();
+      await updateEnrollments({enrollmentId:  formDrop.enrollmentId, status: 'declined', reason: formDrop.reason, studentId: selectedStudent.studentId});
+      getStudent({
+        studentId:null,
+        courseType:null
+      })
+      setOpen("");
+    }
     async function submit(e: any){
       e.preventDefault();
 
@@ -327,8 +348,6 @@ function Students() {
                             ))}
                           </Box>
                         </TableCell>
-
-                        {/* //TODO Start - Create Add schedule */}
                         <TableCell >
                           <Box display="flex" sx={{flexDirection:"column"}}>
                             {student.enrollments?.map((enrollment) => ( 
@@ -349,15 +368,27 @@ function Students() {
                             ))}
                           </Box>
                         </TableCell>
-                        {/* //TODO End - Create Add schedule */}
-                        
-                        {/* //TODO Start - Delete */}
                         <TableCell >
-                          <IconButton aria-label="" onClick={()=>{}}>
-                            <DeleteIcon/>
-                          </IconButton>
+                          <Box display="flex" sx={{flexDirection:"column"}}>
+                            {student.enrollments?.map((enrollment) => ( 
+                              <>{
+                                enrollment.status === "accepted" && 
+                                <IconButton
+                                  aria-label=""
+                                  onClick={() => {
+                                    setSelectedStudent(student);
+                                    setSelectedCourseID(enrollment.courseId);
+                                    setFormDrop({...formDrop, enrollmentId: enrollment.enrollmentId });
+                                    setOpen("drop");
+                                  }}
+                                >
+                                  <DeleteIcon/>
+
+                                </IconButton>
+                              }</>
+                            ))}
+                          </Box>
                         </TableCell>
-                        {/* //TODO End - Delete */}
                     </TableRow>
                   ))}
                 </TableBody>
@@ -421,21 +452,38 @@ function Students() {
                     
                   </>:""}
                   {open === "drop"?<>
-                    <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">Drop Subject</Typography>
-                    <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">Are you sure you want to drop this student to this?</Typography>
-                    
-                    <Grid container spacing={1} mt={4}>
-                        <Grid item sm={4} xs={12}>
-                            <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
-                                cancel
-                            </Button>
-                        </Grid>
-                        <Grid item sm={8} xs={12}>
-                            <Button variant="contained" type='submit' fullWidth color="primary" onClick={(e)=>{setOpen("");submit(e)}} >
-                                Mark as Complete
-                            </Button>
-                        </Grid>
-                    </Grid>
+                    <Typography id="modal-modal-title"  variant="h5" color={"primary"} fontWeight={600} component="h2">Drop Student</Typography>
+                    <Typography id="modal-modal-title"  variant="body2" fontWeight={500} component="h2">Are you sure you want to drop this student to this course?</Typography>
+                    <form onSubmit={dropStudent}>
+                      <Grid container spacing={1} mt={2}>
+                          <Grid item  xs={12}>
+                              <Typography variant="body1" color="initial">Reason</Typography>
+                              <TextField
+                                fullWidth
+                                id="reason"
+                                value={formDrop.reason}
+                                multiline
+                                required
+                                onChange={(e)=>{setFormDrop({...formDrop, reason:e.target.value})}}
+                              />
+                          </Grid>  
+                          <Grid  item  xs={12} mb={3}>
+                            {formDrop.enrollmentId}
+                            <br />
+                            {selectedStudent.studentId}
+                          </Grid>
+                          <Grid item sm={4} xs={12} >
+                              <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
+                                  cancel
+                              </Button>
+                          </Grid>
+                          <Grid item sm={8} xs={12}>
+                              <Button variant="contained" type='submit' fullWidth color="primary">
+                                  Drop
+                              </Button>
+                          </Grid>
+                      </Grid>
+                    </form>
                   </>:""}
                   {open === "schedule"?<>
                     <form onSubmit={create}>
@@ -484,7 +532,7 @@ function Students() {
                                   label="Vehicle (Optional)"
                                   value={formSchedule.vehicle}
                                   onChange={(event) => {
-                                      setFormSchedule({...formSchedule, vehicle: event.target.value });
+                                    setFormSchedule({...formSchedule, vehicle: event.target.value });
                                   }}
                               />
                           </Grid>
