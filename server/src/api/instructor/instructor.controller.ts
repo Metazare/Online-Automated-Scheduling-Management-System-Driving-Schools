@@ -109,3 +109,25 @@ export const updateInstructor: RequestHandler = async (req: BodyRequest<UpdateIn
       res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+
+export const updateInstructorSchedule: RequestHandler = async (req: BodyRequest<{ instructorId: string; schedule: any }>, res) => {
+    try {
+        const { instructorId, schedule } = req.body;
+
+        const updatedInstructor = await InstructorModel.findOneAndUpdate(
+            { instructorId },
+            { $set: { schedule } },
+            { new: true } // Return the updated document
+        ).exec();
+
+        if (!updatedInstructor) {
+            throw new NotFound('Instructor');
+        }
+
+        res.json(updatedInstructor);
+    } catch (error) {
+        console.error('Error updating instructor schedule:', error);
+        // Handle error and send an appropriate response
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};

@@ -38,11 +38,27 @@ const instructorSchema = new Schema(
             required: true
         },
         accreditation: {
-            type: String,
+            type: String
         },
         profile: {
           type: String
         },
+        schedule: {
+            type: {
+                days: {
+                    type: [Number],
+                    required: true
+                },
+                from: {
+                    type: Number,
+                    required: true
+                },
+                to: {
+                    type: Number,
+                    required: true
+                }
+            },
+        }, 
         credentials: {
             type: {
                 email: {

@@ -13,12 +13,18 @@ interface Data {
   editProfile: (data: EditInstructorData) => void;
 }
 
+interface ScheduleInstructor {
+    days: number[],
+    from: number,
+    to: number
+}
 interface CreateInstructorData {
   firstName: string,
   middleName?: string | null,
   lastName: string,
   suffix?: string | null,
   accreditation?: string | null,
+  schedule?: ScheduleInstructor,
   address: string,
   contact: string,
   email: string
@@ -31,6 +37,7 @@ interface EditInstructorData{
   lastName: string,
   suffix?: string | null,
   accreditation?: string | null,
+  schedule?: ScheduleInstructor,
   address: string,
   contact: string,
   email: string,
