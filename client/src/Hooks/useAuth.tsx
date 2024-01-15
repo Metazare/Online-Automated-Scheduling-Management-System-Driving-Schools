@@ -146,7 +146,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     };
 
-
+    const checkEmail = async (email) => {
+      try{
+        await axios
+        .post(`/auth/login`,{
+            "email" : email
+        })
+      } 
+      catch(error) {
+        console.log(error)
+      }
+    };
 
     const isAuth = (id:any) => {
       if (!user) {

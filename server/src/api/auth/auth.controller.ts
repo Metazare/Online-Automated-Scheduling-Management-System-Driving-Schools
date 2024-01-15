@@ -27,6 +27,7 @@ export const register: RequestHandler = async (req: BodyRequest<UserRegister>, r
         InstructorModel.exists({ 'credentials.email': email }).exec(),
         StudentModel.exists({ 'credentials.email': email }).exec()
     ]);
+    
     if (checkDuplicateEmail.find(Boolean)) {
         checker.addError('email', 'Duplicate email');
         throw new UnprocessableEntity(checker.errors);
@@ -76,6 +77,18 @@ export const login: RequestHandler = async (req: BodyRequest<UserLogin>, res) =>
         .cookie('refresh-token', signRefresh(payload), cookieOptions.refresh)
         .json({ ...user.toJSON(), role: payload.role });
 };
+
+export const checkEmail: RequestHandler = async (req, res) => {
+    const { email } = req.body;
+
+    const checkDuplicateEmail = await Promise.all([
+        SchoolModel.exists({ 'credentials.email': email }).exec(),
+        InstructorModel.exists({ 'credentials.email': email }).exec(),
+        StudentModel.exists({ 'credentials.email': email }).exec()
+    ]);
+
+    res.json({ duplicateEmail: checkDuplicateEmail.find(Boolean) });
+}
 
 export const logout: RequestHandler = async (_req, res) =>
     // prettier-ignore
