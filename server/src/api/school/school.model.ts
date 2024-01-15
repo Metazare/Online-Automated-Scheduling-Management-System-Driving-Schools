@@ -35,6 +35,9 @@ const schoolSchema = new Schema(
             type: String,
             minLength: 1
         },
+        payment: {
+            type: String
+        },
         profile: {
             type: String
         },

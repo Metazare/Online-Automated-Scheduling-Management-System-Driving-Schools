@@ -28,6 +28,7 @@ interface EditSchoolData {
   profile: string;
   about: string;
   accreditation?: string | null,
+  payment?: string | null,
   schedules: Schedule[];
 }
 
@@ -74,7 +75,8 @@ function useReqSchool(): Data {
         contact: data.contact,
         email: data.email,
         profile: data.profile,
-        schedules: data.schedules
+        schedules: data.schedules,
+        payment: data.payment
       })
       .then((response:any)=>{
         console.log(response.data)
