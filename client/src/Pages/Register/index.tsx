@@ -82,6 +82,7 @@ function Index() {
   const [passwordSeverity,setPasswordSeverity] = useState(false)
   const [verificationCode, setVerificationCode] = useState('');
   const [otpCode, setOtpCode] = useState('');
+  const [otpExpiration, setOtpExpiration] = useState<Date | null>(null);
 
   const handleChangeVerify = (event) => {
     // Ensure that the entered value contains only numbers
@@ -115,8 +116,26 @@ function Index() {
       const randomIndex = Math.floor(Math.random() * characters.length);
       otp += characters.charAt(randomIndex);
     }
+
+    const expirationTime = new Date();
+    expirationTime.setMinutes(expirationTime.getMinutes() + 10);
+    setOtpExpiration(expirationTime);
   
     return otp;
+  }
+
+  function checkOTPExpiration() {
+    if (otpExpiration && new Date() > otpExpiration) {
+      // OTP has expired, reset OTP and expiration time
+      otp = generateOTP();
+      setOtpCode(otp);
+      // Optionally, you can notify the user that the OTP has expired
+      setOpenSnackBar((openSnackBar) => ({
+        ...openSnackBar,
+        severity: 'warning',
+        note: 'OTP has expired. Please request a new one.',
+      }));
+    }
   }
 
   async function submit(e: React.FormEvent<HTMLFormElement>){
@@ -204,6 +223,16 @@ function Index() {
       setPasswordSeverity(isStrongPassword(form.password))
     }
   },[form.password])
+
+
+  useEffect(() => {
+    // Check OTP expiration every second
+    const intervalId = setInterval(checkOTPExpiration, 1000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, [otpExpiration]);
+
   return (
     <Box sx={styleContainer}>
       <Box sx={{backgroundColor:"#2F2E5A",minHeight:"100%", display:{md:"flex",xs:"none"},alignItems:"end", justifyContent:"start",padding:"4% 5%", position:"relative",overflow:"hidden"}}>
