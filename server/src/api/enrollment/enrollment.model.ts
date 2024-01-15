@@ -20,6 +20,11 @@ const enrollmentSchema = new Schema(
             ref: 'Student',
             required: true
         },
+        instructor: {
+            type: Types.ObjectId,
+            ref: 'Instructor',
+            required: true
+        },
         courseId: {
             type: String,
             required: true
@@ -39,8 +44,7 @@ const enrollmentSchema = new Schema(
                     required: true
                 }
             },
-            required: true
-        },
+        },                                                   
         progress: [
             {
                 lesson: {

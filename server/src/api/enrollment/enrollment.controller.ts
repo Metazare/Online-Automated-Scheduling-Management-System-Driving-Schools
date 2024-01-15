@@ -32,7 +32,7 @@ export const getEnrollments: RequestHandler = async (req: QueryRequest<GetEnroll
     if (role === Role.ADMIN) enrollmentQuery.school = user._id;
 
     let enrollments: EnrollmentPopulatedDocument[] = await EnrollmentModel.find(enrollmentQuery)
-        .populate('school student progress.lesson')
+        .populate('school student instructor progress.lesson')
         .exec();
 
     if (typeof courseType === 'string') {
@@ -92,7 +92,7 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
     if (!req.user) throw new Unauthorized();
     const user = <SchoolDocument>req.user.document;
 
-    const { enrollmentId, status } = req.body;
+    const { enrollmentId, instructorId, status } = req.body;
     const checker = new CheckData();
 
     checker.checkType(enrollmentId, 'string', 'enrollmentId');
@@ -125,6 +125,10 @@ export const updateEnrollmentStatus: RequestHandler = async (req: BodyRequest<Up
     if (status === EnrollmentStatus.ACCEPTED) {
         const lessons: LessonDocument[] = await LessonModel.find({ courseId: enrollment.courseId }).exec();
         enrollment.progress = lessons.map((lesson) => ({ lesson: lesson._id, status: ProgressStatus.INCOMPLETE }));
+    }
+
+    if (instructorId) {
+        enrollment.instructor = instructorId;
     }
 
     enrollment.status = status;

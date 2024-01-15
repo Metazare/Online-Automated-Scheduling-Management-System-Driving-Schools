@@ -3,6 +3,7 @@ import { Document, Types } from 'mongoose';
 import { LessonDocument, ProgressStatus } from '../lesson/lesson.types';
 import { Schedule, SchoolDocument } from '../school/school.types';
 import { Student, StudentDocument } from '../student/student.types';
+import { InstructorDocument } from '../instructor/instructor.types';
 
 export enum EnrollmentStatus {
     PENDING = 'pending',
@@ -30,6 +31,7 @@ export interface Enrollment {
 export interface EnrollmentDocument extends Enrollment, Document {
     school: SchoolDocument['_id'];
     student: StudentDocument['_id'];
+    instructor: InstructorDocument['_id'];
     progress: {
         lesson: LessonDocument['_id'];
         status: ProgressStatus;
@@ -64,6 +66,7 @@ export type CreateEnrollment = {
 
 export type UpdateEnrollmentStatus = {
     enrollmentId: string;
+    instructorId: string;
     status: EnrollmentStatus;
     reason?: string;
 };
