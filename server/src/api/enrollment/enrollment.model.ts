@@ -20,11 +20,6 @@ const enrollmentSchema = new Schema(
             ref: 'Student',
             required: true
         },
-        instructor: {
-            type: Types.ObjectId,
-            ref: 'Instructor',
-            required: true
-        },
         courseId: {
             type: String,
             required: true

@@ -48,6 +48,7 @@ export type CreateInstructor = {
     contact: string;
     profile: string;
     email: string;
+    accreditation: string;
 }
 
 export type GetInstructors = {
@@ -70,4 +71,5 @@ export type UpdateInstructor = {
   contact: string;
   profile: string;
   email: string;
+  accreditation: string;
 }

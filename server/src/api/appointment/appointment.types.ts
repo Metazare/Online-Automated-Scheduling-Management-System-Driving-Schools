@@ -36,11 +36,17 @@ export type GetAppointments = {
     enrollmentId?: string;
 };
 
+export type ScheduleData = {
+    days: string[],
+    from: Date,
+    to: Date
+}
+
 export type CreateAppointment = {
     enrollmentId: string;
     instructorId: string;
     vehicle: string;
-    date: number;
+    schedule: ScheduleData;
 };
 
 export type UpdateAppointment = {

@@ -24,7 +24,6 @@ interface CreateInstructorData {
   lastName: string,
   suffix?: string | null,
   accreditation?: string | null,
-  schedule?: ScheduleInstructor,
   address: string,
   contact: string,
   email: string
@@ -37,7 +36,6 @@ interface EditInstructorData{
   lastName: string,
   suffix?: string | null,
   accreditation?: string | null,
-  schedule?: ScheduleInstructor,
   address: string,
   contact: string,
   email: string,

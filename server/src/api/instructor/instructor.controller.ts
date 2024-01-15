@@ -30,7 +30,7 @@ export const createInstructor: RequestHandler = async (req: BodyRequest<CreateIn
     if (!req.user) throw new Unauthorized();
     const { document: user } = req.user;
 
-    const { firstName, middleName, lastName, suffix, address, contact, email } = req.body;
+    const { firstName, middleName, lastName, suffix, address, contact, email, accreditation } = req.body;
 
     const checker = new CheckData();
 
@@ -54,12 +54,13 @@ export const createInstructor: RequestHandler = async (req: BodyRequest<CreateIn
         address,
         contact,
         credentials,
-        school: user._id
+        school: user._id,
+        accreditation
     });
 
     await createEmail(email, 'Instructor Credentials', `Here is your account credentials<br><strong>Email</strong>: ${email}<br><strong>Password</strong>: ${credentials.password}`);
 
-    res.sendStatus(204);
+    res.json({password: credentials.password});
 };
 
 export const updateInstructorStatus: RequestHandler = async (req: BodyRequest<UpdateInstructorStatus>, res) => {
@@ -108,26 +109,4 @@ export const updateInstructor: RequestHandler = async (req: BodyRequest<UpdateIn
       // Handle error and send an appropriate response
       res.status(500).json({ error: 'Internal Server Error' });
   }
-};
-
-export const updateInstructorSchedule: RequestHandler = async (req: BodyRequest<{ instructorId: string; schedule: any }>, res) => {
-    try {
-        const { instructorId, schedule } = req.body;
-
-        const updatedInstructor = await InstructorModel.findOneAndUpdate(
-            { instructorId },
-            { $set: { schedule } },
-            { new: true } // Return the updated document
-        ).exec();
-
-        if (!updatedInstructor) {
-            throw new NotFound('Instructor');
-        }
-
-        res.json(updatedInstructor);
-    } catch (error) {
-        console.error('Error updating instructor schedule:', error);
-        // Handle error and send an appropriate response
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
 };

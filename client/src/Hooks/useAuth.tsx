@@ -149,7 +149,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const checkEmail = async (email) => {
       try{
         await axios
-        .post(`/auth/login`,{
+        .post(`/auth/checkemail`,{
             "email" : email
         })
       } 

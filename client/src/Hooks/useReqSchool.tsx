@@ -76,7 +76,8 @@ function useReqSchool(): Data {
         email: data.email,
         profile: data.profile,
         schedules: data.schedules,
-        payment: data.payment
+        payment: data.payment,
+        accreditation: data.accreditation
       })
       .then((response:any)=>{
         console.log(response.data)

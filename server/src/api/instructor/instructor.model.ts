@@ -43,22 +43,6 @@ const instructorSchema = new Schema(
         profile: {
           type: String
         },
-        schedule: {
-            type: {
-                days: {
-                    type: [Number],
-                    required: true
-                },
-                from: {
-                    type: Number,
-                    required: true
-                },
-                to: {
-                    type: Number,
-                    required: true
-                }
-            },
-        }, 
         credentials: {
             type: {
                 email: {

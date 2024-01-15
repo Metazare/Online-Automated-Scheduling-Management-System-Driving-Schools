@@ -14,6 +14,12 @@ interface Data {
   updateAppointment: (data: UpdateAppointmentData) => void
 }
 
+interface Schedule {
+    days: string[],
+    from: Date,
+    to: Date
+}
+
 interface CreateAppointmentData {
   enrollmentId: string;
   instructorId: string;
@@ -53,7 +59,7 @@ function useReqAppointment(): Data {
         enrollmentId: data.enrollmentId,
         instructorId: data.instructorId,
         vehicle: data.vehicle,
-        date: data.schedule.getTime()
+        schedule: data.schedule
       })
       .then((response:any)=>{
         console.log(response.data);
@@ -124,7 +130,7 @@ function useReqAppointment(): Data {
         appointmentId: data.appointmentId,
         status: data.status,
         date: data.schedule.getTime(),
-        schedule: new Date(data.schedule)
+        schedule: data.schedule
       })
       .then((response:any)=>{
         console.log(response.data);
