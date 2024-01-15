@@ -18,6 +18,7 @@ interface CreateInstructorData {
   middleName?: string | null,
   lastName: string,
   suffix?: string | null,
+  accreditation?: string | null,
   address: string,
   contact: string,
   email: string
@@ -29,6 +30,7 @@ interface EditInstructorData{
   middleName?: string | null,
   lastName: string,
   suffix?: string | null,
+  accreditation?: string | null,
   address: string,
   contact: string,
   email: string,
@@ -63,6 +65,7 @@ function useReqInstructor(): Data {
         middleName: data.middleName,
         lastName: data.lastName,
         suffix: data.suffix,
+        accreditation: data.accreditation,
         address: data.address,
         contact: data.contact,
         email: data.email
@@ -136,6 +139,7 @@ function useReqInstructor(): Data {
         middleName: data.middleName,
         lastName: data.lastName,
         suffix: data.suffix,
+        accreditation: data.accreditation,
         address: data.address,
         contact: data.contact,
         email: data.email,

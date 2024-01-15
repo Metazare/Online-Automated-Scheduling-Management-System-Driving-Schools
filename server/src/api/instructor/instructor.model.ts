@@ -37,6 +37,9 @@ const instructorSchema = new Schema(
             minLength: 1,
             required: true
         },
+        accreditation: {
+            type: String,
+        },
         profile: {
           type: String
         },
