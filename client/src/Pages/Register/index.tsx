@@ -247,7 +247,7 @@ function Index() {
           {(!role)?
           <>
             <Typography variant="h4" textAlign={"center"} gutterBottom color="primary.main">
-              Select a Role
+              I am a
             </Typography>
             
             <Grid container spacing={2} width={"100%"}  mt={"40px"}>
