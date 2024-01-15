@@ -27,6 +27,7 @@ interface EditSchoolData {
   email: string;
   profile: string;
   about: string;
+  accreditation?: string | null,
   schedules: Schedule[];
 }
 

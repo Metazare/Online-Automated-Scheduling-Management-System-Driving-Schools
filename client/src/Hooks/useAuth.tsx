@@ -33,6 +33,7 @@ interface RegisterData {
     email?: string;
     password?: string;
     role?: string;
+    accreditation?: string,
     schedules?: Schedule[];
   }
 
@@ -91,7 +92,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const register = async (data: RegisterData) => {
-      const { name, first, middle, last, extension, sex, birthday, address, contact, about, email, password, role, schedules } = data;
+      const { name, first, middle, last, extension, sex, birthday, address, contact, about, email, password, role, schedules, accreditation } = data;
 
       try{
           await axios
@@ -109,7 +110,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
               email: email,
               password: password,
               role: role,
-              schedules: schedules
+              schedules: schedules,
+              accreditation: accreditation
           })
           .then((response: any) => {
               console.log(response.data)
@@ -143,6 +145,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         navigate("/");
       }
     };
+
+
 
     const isAuth = (id:any) => {
       if (!user) {

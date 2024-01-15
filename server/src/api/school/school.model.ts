@@ -31,6 +31,10 @@ const schoolSchema = new Schema(
             minLength: 1,
             required: true
         },
+        accreditation: {
+            type: String,
+            minLength: 1
+        },
         profile: {
             type: String
         },
