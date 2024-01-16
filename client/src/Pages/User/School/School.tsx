@@ -25,9 +25,9 @@ import MenuItem from '@mui/material/MenuItem';
 import useReqSchool from '../../../Hooks/useReqSchool';
 import useReqEnroll from '../../../Hooks/useReqEnroll';
 import useReqLesson from '../../../Hooks/useReqLesson';
-
+import useEmail from '../../../Hooks/useEmail';
 import { useParams } from 'react-router-dom';
-
+import { useAuth } from '../../../Hooks/useAuth';
 
 // const socket = io('http://localhost:5000');
 
@@ -37,6 +37,8 @@ function School() {
   const {data, loading, getSchool} = useReqSchool();
   const {data:lessons, loading:lessonLoading, getLessons} = useReqLesson();
   const {data: enrolls, loading: enrollLoading, error: enrollError, getEnrollments, enroll} = useReqEnroll();
+  const {sendEmailPayment} = useEmail();
+  const {user} = useAuth()
   const {id} = useParams();
   {/* //Todo Start of new Design state */}
   const [selectedShift,setSelectedShift] = useState("morning")
@@ -95,14 +97,6 @@ function School() {
 
     async function submit(e: any) {
       e.preventDefault();
-      // if ((appendSelectedDays(form).length === 0) || !form.startTime || !form.endTime) {
-      //   setOpenSnackBar(openSnackBar => ({
-      //     ...openSnackBar,
-      //     severity:'warning',
-      //     note:"Please select at least one day",
-      //   })); 
-      //   return;
-      // }
       enroll({
         courseId: form.course,
         schoolId: id || "undefined",
@@ -116,13 +110,14 @@ function School() {
           note:enrollError,
         })); 
         console.log(enrollError)
+      }else{
+        sendEmailPayment({
+          email: user.email,
+          content: `<h1>Payment Instruction:</h1> <br> ${data.payment}`
+        });
       }
-
       console.log(enrolls)
-
     }
-    
-
     if (loading && enrollLoading) {
         return <p>Loading...</p>
     }
@@ -216,8 +211,7 @@ function School() {
                                         required
                                         value={form.course}
                                         onChange={(event) => {
-                                            setForm({...form, course: event.target.value });
-                                            
+                                          setForm({...form, course: event.target.value });
                                         }}
                                     >
                                       {data?.courses && (

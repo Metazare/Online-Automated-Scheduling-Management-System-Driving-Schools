@@ -224,7 +224,7 @@ function Appointments() {
 
     return <>
       <Box display="flex" sx={{overflowX:'scroll',flexDirection:{md:"row",xs:"column"}}}>
-        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"250px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Sun</Typography>
@@ -235,7 +235,7 @@ function Appointments() {
             ))}
           </Box>
         </Box>
-        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"250px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Mon</Typography>
@@ -246,7 +246,7 @@ function Appointments() {
             ))}
           </Box>
         </Box>
-        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"250px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Tue</Typography>
@@ -257,7 +257,7 @@ function Appointments() {
             ))}
           </Box>
         </Box>
-        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"250px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Wed</Typography>
@@ -268,7 +268,7 @@ function Appointments() {
             ))}
           </Box>
         </Box>
-        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"250px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Thu</Typography>
@@ -279,7 +279,7 @@ function Appointments() {
             ))}
           </Box>
         </Box>
-        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"250px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Fri</Typography>
@@ -290,7 +290,7 @@ function Appointments() {
             ))}
           </Box>
         </Box>
-        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"250px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Sat</Typography>
@@ -302,76 +302,6 @@ function Appointments() {
           </Box>
         </Box>
       </Box>
-      {/* <Grid container spacing={1} sx={{marginTop:"10px"}}>
-        <Grid item md={1} xs={12}>
-          
-        </Grid>
-        <Grid item md={2} xs={12}>
-          <Box sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
-            background: '#D6D6D6',
-          }}}>
-            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Tue</Typography>
-            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
-              {appointments?.map((appointment) => (
-                appointment.schedule.days.includes("tuesday")? 
-                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
-              ))}
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item md={2} xs={12}>
-          <Box sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
-            background: '#D6D6D6',
-          }}}>
-            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Wed</Typography>
-            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
-              {appointments?.map((appointment) => (
-                appointment.schedule.days.includes("wednesday")? 
-                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
-              ))}
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item md={2} xs={12}>
-        <Box sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
-            background: '#D6D6D6',
-          }}}>
-            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Thu</Typography>
-            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
-              {appointments?.map((appointment) => (
-                appointment.schedule.days.includes("thursday")? 
-                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
-              ))}
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item md={2} xs={12}>
-          <Box sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
-            background: '#D6D6D6',
-          }}}>
-            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Fri</Typography>
-            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
-              {appointments?.map((appointment) => (
-                appointment.schedule.days.includes("friday")? 
-                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
-              ))}
-            </Box>
-          </Box>
-        </Grid>
-        <Grid item md={2} xs={12}>
-          <Box sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
-            background: '#D6D6D6',
-          }}}>
-            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Sat</Typography>
-            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
-              {appointments?.map((appointment) => (
-                appointment.schedule.days.includes("saturday")? 
-                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
-              ))}
-            </Box>
-          </Box>
-        </Grid>
-      </Grid> */}
     </>
 }
 

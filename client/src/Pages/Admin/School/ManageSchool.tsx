@@ -30,17 +30,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import dayjs from 'dayjs';
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  bgcolor: 'background.paper',
-  borderRadius:'8px',
-  boxShadow: 24,
-  p: 4,
-};
+
 function ManageSchool() {
   const [open, setOpen] = useState("");
   // * Menu 
@@ -79,7 +69,8 @@ function ManageSchool() {
       name: "Afternoon",
       from: 0,
       to: 0
-    }]
+    }],
+    payment:'',
   })
 
   useEffect(() => {
@@ -108,7 +99,8 @@ function ManageSchool() {
         contact: data.contact || "",
         profile: data.profile || "",
         accreditation: data.accreditation || "",
-        schedules: data.schedules || [{name: "Morning", from: 0, to: 0}, {name: "Afternoon", from: 0, to: 0}]
+        schedules: data.schedules || [{name: "Morning", from: 0, to: 0}, {name: "Afternoon", from: 0, to: 0}],
+        payment: data.payment || ""
       });
     }
   }, [data]);
@@ -277,7 +269,19 @@ function ManageSchool() {
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
       >
-          <Box sx={style}>
+          <Box sx={{
+            position: 'absolute' as 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 600,
+            bgcolor: 'background.paper',
+            borderRadius:'8px',
+            boxShadow: 24,
+            p: 4,
+            maxHeight:"80vh",
+            overflowY:"scroll"
+          }}>
               {/* Enrollment Request  */}
               {(open === "infoUpdate")?<>
                   <form onSubmit={updateProfile}>
@@ -314,6 +318,16 @@ function ManageSchool() {
                           fullWidth
                           defaultValue={data?.accreditation}
                           onChange={(e)=>{setForm({...form, accreditation: e.target.value})}}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          multiline
+                          id="payment"
+                          label="Payment"
+                          fullWidth
+                          defaultValue={data?.payment}
+                          onChange={(e)=>{setForm({...form, payment: e.target.value})}}
                         />
                       </Grid>
                       <Grid item xs={12}>

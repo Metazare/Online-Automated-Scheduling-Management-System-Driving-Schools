@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom';
 import { useAuth } from './useAuth';
 import useNotif from './useNotif';
 import { SnackbarContext } from '../Context/SnackbarContext';
+
 interface Data {
   data: any;
   loading: boolean;
@@ -45,7 +46,6 @@ function useReqEnroll(): Data {
   const [error, setError] = useState<Error | null>(null);
   const {User} = useAuth();
   const {sendNotification} = useNotif();
-
   const enroll = async (data:CreateEnrollmentData) => {
     console.log(data)
     setLoading(true);
@@ -63,6 +63,7 @@ function useReqEnroll(): Data {
             severity:'success',
             note:"Enrollment Request Sent, Wait For School To Approve",
           })); 
+          
           sendNotification({
             sender: User().studentId,
             targets: [

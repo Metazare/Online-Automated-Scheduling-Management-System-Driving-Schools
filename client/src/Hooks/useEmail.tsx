@@ -5,6 +5,7 @@ import { SnackbarContext } from '../Context/SnackbarContext';
 interface Data {
   sendEmail: (data: SendEmailData ) => void;
   sendEmailInstructor : (data: SendEmailData ) => void;
+  sendEmailPayment: (data: SendEmailData ) => void;
 }
 
 
@@ -67,9 +68,33 @@ function useEmail(): Data {
       }));
     }
   }
-
+  const sendEmailPayment = async (data: SendEmailData) => {
+    try {
+      await axios
+      .post('/email', {
+        to: data.email,
+        subject: "Payment Instruction",
+        content: data.content
+      })
+      .then((response:any)=>{
+        console.log(response.data);
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'info',
+          note:"Payment Instruction Sent",
+        }));
+      });
+    } catch (error: any) {
+      console.log(error);
+      setOpenSnackBar(openSnackBar => ({
+        ...openSnackBar,
+        severity:'error',
+        note:"Encountered some error in sending email",
+      }));
+    }
+  }
   return { 
-    sendEmail,sendEmailInstructor
+    sendEmail,sendEmailInstructor,sendEmailPayment
   };
 }
 
