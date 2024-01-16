@@ -223,7 +223,6 @@ function Appointments() {
     }
 
     return <>
-
       <Box display="flex" >
         <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
@@ -374,7 +373,6 @@ function Appointments() {
         </Grid>
       </Grid> */}
     </>
-    
 }
 
 export default Appointments;

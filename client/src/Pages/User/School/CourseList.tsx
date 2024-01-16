@@ -16,9 +16,9 @@ import useReqEnroll from '../../../Hooks/useReqEnroll';
 import useReqAppointment from '../../../Hooks/useReqAppointment';
 import dayjs, { Dayjs } from 'dayjs';
 import AppointmentCard from '../../../Components/AppointmentCard';
-
+import EventNoteIcon from '@mui/icons-material/EventNote';
 import { Link } from 'react-router-dom';
-
+import ScheduleCard from '../../../Components/ScheduleCard';
 
 function CourseList() {
 
@@ -30,6 +30,46 @@ function CourseList() {
   const [selectedDay, setSelectedDay] = useState<Dayjs | null>()
   const [filteredAppointments, setFilteredAppointments] = useState<any>([]);
 
+  const [openSchedule,setOpenSchedule] = useState(false);
+  const [sundayAppointments,setsundayAppointments] = useState<any>([])
+  const [mondayAppointments,setMondayAppointments] = useState<any>([])
+  const [tuesdayAppointments,settuesdayAppointments] = useState<any>([])
+  const [wednesdayAppointments,setwednesdayAppointments] = useState<any>([])
+  const [thursdayAppointments,setthursdayAppointments] = useState<any>([])
+  const [fridayAppointments,setfridayAppointments] = useState<any>([])
+  const [saturdayAppointments,setSaturdayAppointments] = useState<any>([])
+
+  const checkerDay = (day: string) => {
+    if (appointments !== null) {
+      const filteredAppointmentsArray = appointments
+        .filter((appointment) => appointment.schedule.days.includes(day))
+        .sort((a, b) => {
+          // Convert schedule.from strings to Date objects for comparison
+          const dateA = new Date(a.schedule.from);
+          const dateB = new Date(b.schedule.from);
+  
+          // Sort in descending order (recent first)
+          return  dateA.getTime() - dateB.getTime();
+        });
+      return filteredAppointmentsArray;
+    }
+    return [];
+  };
+  useEffect(()=>{
+    if(appointments !== null || appointments !== undefined){
+      setsundayAppointments(checkerDay("sunday"))
+      setMondayAppointments(checkerDay("monday"))
+      settuesdayAppointments(checkerDay("tuesday"))
+      setwednesdayAppointments(checkerDay("wednesday"))
+      setthursdayAppointments(checkerDay("thursday"))
+      setfridayAppointments(checkerDay("friday"))
+      setSaturdayAppointments(checkerDay("saturday"))
+    }
+  },[appointments])
+  function getCourseName(value) {
+    const foundCourse = data.courses.find((course) => course.courseId === value );
+    return foundCourse?.type;
+  }
   useEffect(()=>{
     getSchool({
       schoolId: id
@@ -111,126 +151,163 @@ function CourseList() {
     return (completionCount / lessonCount) * 100;
   }
 
-  const [open, setOpen] = useState("");
-  
-    return <>
-        <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em"}}>
-            <Container maxWidth="lg">
-                <div style={{padding:"3.8rem 0",}}>
-                    {/* <a href="/" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
-                        <ArrowBackIcon/>
-                        <Typography variant="subtitle1" color="initial"> Go Back</Typography>
-                    </a> */}
-                    <Box
+  return <>
+    <div style={{ background: '#DEDEDE',width:"100vw",margin:'auto',padding:"1em"}}>
+        <Container maxWidth="lg">
+            <div style={{padding:"3.8rem 0",}}>
+                {/* <a href="/" style={{display:"flex", gap:"5px",alignItems:"center", marginBottom:"30px"}}>  
+                    <ArrowBackIcon/>
+                    <Typography variant="subtitle1" color="initial"> Go Back</Typography>
+                </a> */}
+                <Box
+                    sx={{
+                    display: 'flex',
+                    gap:"25px",
+                    alignItems:"center"
+                    }}
+                >
+                    <Avatar
+                    alt={data?.name}
+                    src={data?.profile}
+                    sx={{ width: 80, height: 80 }}
+                    />
+                    <div style={{flexGrow:"1"}}>
+                      <Typography variant="h4" fontWeight={500} color="initial">{data?.name}</Typography>
+                      <Box
                         sx={{
                         display: 'flex',
-                        gap:"25px",
-                        alignItems:"center"
+                        gap:"10px"
                         }}
-                    >
-                        <Avatar
-                        alt={data?.name}
-                        src={data?.profile}
-                        sx={{ width: 80, height: 80 }}
-                        />
-                        <div style={{flexGrow:"1"}}>
-                          <Typography variant="h4" fontWeight={500} color="initial">{data?.name}</Typography>
-                          <Box
-                            sx={{
+                      >
+                        <Box
+                          sx={{
                             display: 'flex',
-                            gap:"10px"
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                display: 'flex',
-                                gap:"5px"
-                              }}
-                            >
-                              <CallIcon/> 
-                              <Typography variant="body1" fontWeight={500}>{data?.contact}</Typography>
-                            </Box>
-                            <Box
-                              sx={{
-                              display: 'flex',
-                              gap:"5px"
-                              }}
-                            >
-                              <EmailIcon/> 
-                              <Typography variant="body1" fontWeight={500}>{data?.email}</Typography>
-                            </Box>
-                          </Box>
-                        </div>
-                        <IconButton aria-label="" href={`/chat/admin/${data?.schoolId}`} size='large'>
-                          <ChatIcon/>
-                        </IconButton>
-                    </Box>
-                </div>
-                
-            </Container>
+                            gap:"5px"
+                          }}
+                        >
+                          <CallIcon/> 
+                          <Typography variant="body1" fontWeight={500}>{data?.contact}</Typography>
+                        </Box>
+                        <Box
+                          sx={{
+                          display: 'flex',
+                          gap:"5px"
+                          }}
+                        >
+                          <EmailIcon/> 
+                          <Typography variant="body1" fontWeight={500}>{data?.email}</Typography>
+                        </Box>
+                      </Box>
+                    </div>
+                    <IconButton aria-label="" href={`/chat/admin/${data?.schoolId}`} size='large'>
+                      <ChatIcon/>
+                    </IconButton>
+                    <IconButton aria-label="" onClick={()=>{setOpenSchedule(!openSchedule)}} size='large'>
+                      <EventNoteIcon color={openSchedule?"primary":"inherit"}/>
+                    </IconButton>
+                </Box>
+            </div>
             
-        </div>
-        <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
-          {/* {enrolls && getCourses(enrolls)?.map((course:any)=>(
-            <CourseAccordion variant='use' title={course.type} courseId={course.courseId}/>
-          ))} */}
-
-          <Grid container spacing={2}>
-            <Grid item md={8} xs={12}>
-              <Box display="flex" flexDirection={"column"} gap={"10px"}>
-                {data && enrolls && populateObject2(data.courses, getCourses(enrolls))?.map((course:any)=>(
-                  <CourseAccordion variant='use' title={course.type} courseId={course.courseId} progress={CalculateProgress(course?.progress)}/>
-                ))}
-              </Box>
-            </Grid>
-
-
-            <Grid item md={4} xs={12} sx={{display:"flex",flexDirection:"column",gap:"15px"}}>
-              <Paper variant="elevation" elevation={3}>
-                {/* <TESTCalendar appointments={appointments}/> */}
-
-                {appointments && 
-                  <TESTCalendar
-                    appointments={appointments}
-                    setSelectedDay={setSelectedDay}
-                    selectedDay={selectedDay}
-                  />
-                }
-              </Paper>
-              <Box display="flex" flexDirection={"column"} gap={"20px"} mt={"20px"}>
-
-                {/* Insert Appointment here */}
-
-                {/* {appointments?.map((appointment)=>(
-                  <AppointmentCard 
-                    modalOpen={setOpen}
-                    studentName={""}
-                    instructorName={appointment.instructor.name.first + " " + appointment.instructor.name.last}
-                    instructorID={appointment.instructor.instructorId}
-                    courseName={getCourseType(appointment.enrollment, appointment.school)}
-                    schedule={appointment.schedule}
-                  />
-                ))} */}
-
-              {(filteredAppointments ? filteredAppointments : appointments)?.map((appointment) => ( 
-                <AppointmentCard 
-                  modalOpen={setOpen}
-                  studentName={""}
-                  instructorName={appointment.instructor.name.first + " " + appointment.instructor.name.last}
-                  instructorID={appointment.instructor.instructorId}
-                  courseName={getCourseType(appointment.enrollment, appointment.school)}
-                  date={appointment.date}
-                  time={`${appointment.enrollment.schedule.from}:00 to ${appointment.enrollment.schedule.to}:00 (${appointment.enrollment.schedule.name})`}
-                />
+        </Container>  
+    </div>
+    {!openSchedule && 
+      <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Box display="flex" flexDirection={"column"} gap={"10px"}>
+              {data && enrolls && populateObject2(data.courses, getCourses(enrolls))?.map((course:any)=>(
+                <CourseAccordion variant='use' title={course.type} courseId={course.courseId} progress={CalculateProgress(course?.progress)}/>
               ))}
-
-              </Box>
-            </Grid>
+            </Box>
           </Grid>
-
-        </Container>
-        {/* {console.log(populateObject2(data?.courses, getCourses(enrolls)))} */}
-    </>
+        </Grid>
+      </Container>
+    }
+    {openSchedule && 
+      <Container maxWidth="lg" sx={{padding: "2em 1em "}}>
+        <Box display="flex" width={"100%"} sx={{overflowX:'scroll' }}>
+          <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+            background: '#D6D6D6',
+          }}}>
+            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Sun</Typography>
+            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+              {sundayAppointments !== null && sundayAppointments?.map((appointment) => (
+                appointment.schedule.days.includes("sunday")? 
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))}
+            </Box>
+          </Box>
+          <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+            background: '#D6D6D6',
+          }}}>
+            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Mon</Typography>
+            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+              {mondayAppointments !== null && mondayAppointments?.map((appointment) => (
+                appointment.schedule.days.includes("monday")? 
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))}
+            </Box>
+          </Box>
+          <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+            background: '#D6D6D6',
+          }}}>
+            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Tue</Typography>
+            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+              {tuesdayAppointments !== null && tuesdayAppointments?.map((appointment) => (
+                appointment.schedule.days.includes("monday")? 
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))}
+            </Box>
+          </Box>
+          <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+            background: '#D6D6D6',
+          }}}>
+            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Wed</Typography>
+            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+              {wednesdayAppointments !== null && wednesdayAppointments?.map((appointment) => (
+                appointment.schedule.days.includes("monday")? 
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))}
+            </Box>
+          </Box>
+          <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+            background: '#D6D6D6',
+          }}}>
+            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Thu</Typography>
+            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+              {thursdayAppointments !== null && thursdayAppointments?.map((appointment) => (
+                appointment.schedule.days.includes("monday")? 
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))}
+            </Box>
+          </Box>
+          <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+            background: '#D6D6D6',
+          }}}>
+            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Fri</Typography>
+            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+              {fridayAppointments !== null && fridayAppointments?.map((appointment) => (
+                appointment.schedule.days.includes("monday")? 
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))}
+            </Box>
+          </Box>
+          <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+            background: '#D6D6D6',
+          }}}>
+            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Sat</Typography>
+            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+              {saturdayAppointments !== null && saturdayAppointments?.map((appointment) => (
+                appointment.schedule.days.includes("monday")? 
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))}
+            </Box>
+          </Box>
+        </Box>
+      </Container>
+    }
+    {/* {console.log(populateObject2(data?.courses, getCourses(enrolls)))} */}
+  </>
 }
 
 export default CourseList
