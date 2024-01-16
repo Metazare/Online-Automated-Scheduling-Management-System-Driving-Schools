@@ -26,7 +26,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs, { Dayjs } from 'dayjs';
 import useReqAppointment from '../../../Hooks/useReqAppointment';
 import useReqEnroll from '../../../Hooks/useReqEnroll';
-
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { useAuth } from '../../../Hooks/useAuth';
 import useReqInstructor from '../../../Hooks/useReqInstructor';
 import useReqStudent from '../../../Hooks/useReqStudent';
@@ -35,6 +35,8 @@ import useReqLesson from '../../../Hooks/useReqLesson';
 import moment from 'moment';
 import ChatIcon from '@mui/icons-material/Chat';
 import { SnackbarContext } from '../../../Context/SnackbarContext';
+import SelectDayWeek from '../../../Components/SelectDayWeek';
+
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -103,22 +105,25 @@ function Students() {
     const [selectedCourse, setSelectedCourse] = useState<YourStateType<any>>(undefined);
     const [selectedCourseID, setSelectedCourseID] = useState<string>("");
     const { instructors, loading: instructorLoading, error: instructorError, credentials, getInstructor,updateInstructor} = useReqInstructor();
+    
     const {  loading: appointmentLoading, error: appointmentError, createAppointment, getAppointments } = useReqAppointment();
     const { data:enrolls, loading:enrollLoading, getEnrollments, updateEnrollments } = useReqEnroll();
     
-    const handleChangeDateTime = (date: any) => {
-      setFormSchedule({
-        ...formSchedule,
-        schedule: date.toDate(),
-      });
-    };
+
+    
+
     const [formSchedule, setFormSchedule] = useState({
       enrollmentId:"",
       instructorId:"",
       studentId:"",
       vehicle:"",
-      schedule: new Date()
+
     })
+    
+    const [selectedDay,setSelectedDay] = useState([])
+
+
+
 
     // * Modal Open
     const [open, setOpen] = useState("");
@@ -144,25 +149,22 @@ function Students() {
       }
       return false;
     }
-    function getCourseName(value) {
-      const foundCourse = school.courses.find((course) => course.courseId === value );
-      return foundCourse?.type;
-    }
-
     async function create(e: React.FormEvent<HTMLFormElement>){
       e.preventDefault();
       setOpen("")
-      createAppointment({
-        ...formSchedule,
-        studentId: selectedStudent?.studentId,
-      })
-      setFormSchedule({
-        enrollmentId:"",
-        instructorId:"",
-        studentId:"",
-        vehicle:"",
-        schedule: new Date()
-      })
+      // createAppointment({
+      //   ...formSchedule,
+      //   studentId: selectedStudent?.studentId,
+      // })
+      // setFormSchedule({
+      //   enrollmentId:"",
+      //   instructorId:"",
+      //   studentId:"",
+      //   vehicle:"",
+      //   schedule: new Date()
+      // })
+
+
       getAppointments({
         appointmentId: null,
         studentId: null,
@@ -394,7 +396,7 @@ function Students() {
                         </TableCell>
                         </>:""}
                         
-                    </TableRow>
+                        </TableRow>
                   ))}
                 </TableBody>
                 </Table>
@@ -542,22 +544,26 @@ function Students() {
                               />
                           </Grid>
                           <Grid item xs={12}>
-                              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                  <DemoContainer components={['DateTimePicker']}>
-                                      <DatePicker
-                                          slotProps={{ textField: { fullWidth: true } }}
-                                          label="Date"
-                                          minDate={dayjs()}
-                                          value={dayjs(formSchedule.schedule)}
-                                          onChange={handleChangeDateTime}
-                                      />
-                                  </DemoContainer>
-                              </LocalizationProvider>
+                            <Typography variant="subtitle2" color="initial" marginBottom={"25px"}>Date & Time</Typography>
+                            <SelectDayWeek setSelectedDay={setSelectedDay} selectedDay={selectedDay}/>
                           </Grid>
-                          <Grid item  xs={12} mt={"4"} height={"40px"}>
+                          <Grid item xs={6}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}> 
+                              <DemoContainer components={['TimePicker']} >
+                                <TimePicker label="From"/>
+                              </DemoContainer>
+                            </LocalizationProvider>
+                          </Grid>
+                          <Grid item  xs={6} height={"40px"}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}> 
+                              <DemoContainer components={['TimePicker']} >
+                                <TimePicker label="To"/>
+                              </DemoContainer>
+                            </LocalizationProvider>
+                          </Grid>
+                          <Grid item  xs={12} height={"40px"}>
                               
-                          </Grid>
-
+                            </Grid>
                           <Grid item sm={4} xs={12}>
                               <Button variant="text" fullWidth color='secondary' onClick={()=>{setOpen("")}}>
                                   cancel

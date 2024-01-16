@@ -32,7 +32,7 @@ function LandingPage() {
     }
 
     return <>
-        <div style={{ background: '#DEDEDE',width:"100%",margin:'auto',padding:"1em 1em 0"}}>
+        <div style={{ background: '#DEDEDE',width:"100%",margin:'auto',padding:"5em 1em 0"}}>
             <Container maxWidth="lg" sx={{minHeight:"500px",display:"flex",justifyContent:"center",alignItems:"center"}}>
                 <Grid container spacing={0}>
                     <Grid item md={6} sm={12} sx={{display:"flex",flexDirection:"column", justifyContent:"center"}}>
