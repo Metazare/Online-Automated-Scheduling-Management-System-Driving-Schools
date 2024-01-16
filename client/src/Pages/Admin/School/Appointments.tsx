@@ -139,6 +139,8 @@ function Appointments() {
         setthursdayAppointments(checkerDay("thursday"))
         setfridayAppointments(checkerDay("friday"))
         setSaturdayAppointments(checkerDay("saturday"))
+        console.log("sundayAppointments")
+        console.log(appointments)
       }
     },[appointments])
 
@@ -155,17 +157,17 @@ function Appointments() {
         const filteredAppointmentsArray = appointments
           .filter((appointment) => appointment.schedule.days.includes(day))
           .sort((a, b) => {
-            // Convert schedule.from strings to Date objects for comparison
             const dateA = new Date(a.schedule.from);
             const dateB = new Date(b.schedule.from);
     
-            // Sort in descending order (recent first)
-            return  dateA.getTime() - dateB.getTime();
+            // Sort in ascending order (soonest first)
+            return dateA.getTime() - dateB.getTime();
           });
         return filteredAppointmentsArray;
       }
       return [];
     };
+    
 
 
 
