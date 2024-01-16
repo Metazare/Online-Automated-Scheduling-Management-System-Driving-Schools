@@ -11,6 +11,7 @@ interface AuthContextState {
     isAuth: (id: any) => boolean;
     getUser: () => any;
     User: () => any,
+    checkEmail: (email: string) => any
 }
 
 interface Schedule {
@@ -50,6 +51,7 @@ export const AuthContext = createContext<AuthContextState>({
     isAuth: () => false,
     getUser: () => {},
     User: () => {},
+    checkEmail: () => {}
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -148,14 +150,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     };
 
     const checkEmail = async (email) => {
-      try{
-        await axios
-        .post(`/auth/checkemail`,{
-            "email" : email
-        })
-      } 
-      catch(error) {
-        console.log(error)
+      try {
+          const response = await axios.post(`/auth/checkemail`, {
+              "email": email
+          });
+
+          // Check if the response contains a value (e.g., email exists)
+          return response.data.duplicateEmail ? true : false;
+      } catch (error) {
+          // Handle errors, e.g., log them or return false
+          console.error(error);
+          return false;
       }
     };
 
@@ -194,7 +199,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, register, isAuth, getUser, User }}>
+        <AuthContext.Provider value={{ user, login, logout, register, isAuth, getUser, User, checkEmail }}>
             {children}
         </AuthContext.Provider>
     );

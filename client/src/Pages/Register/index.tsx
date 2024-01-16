@@ -21,6 +21,7 @@ import schoolImg from '../../Images/Resources/school.png';
 import { useAuth } from '../../Hooks/useAuth';
 import { SnackbarContext } from '../../Context/SnackbarContext';
 import useEmail from '../../Hooks/useEmail';
+import useCounter from '../../Hooks/useCounter';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -35,6 +36,7 @@ const style = {
 };
 
 
+
 function Index() {
   // * Modal Open
   const [open, setOpen] = useState("");
@@ -43,7 +45,7 @@ function Index() {
 
   const { register, checkEmail } = useAuth();
   const { sendEmail } = useEmail();
-
+  const {timer,setTimer} = useCounter();
   const styleContainer = {
     minHeight:"100vh",
     display:"grid",
@@ -53,6 +55,7 @@ function Index() {
   let otp = '';
 
   const [role, setRole] = useState('')
+  
   const [confirmPassword, setConfirmPassword] = useState('');
   const [form, setForm] = useState({
     name: '',
@@ -119,7 +122,7 @@ function Index() {
     }
 
     const expirationTime = new Date();
-    expirationTime.setMinutes(expirationTime.getMinutes() + 10);
+    expirationTime.setMinutes(expirationTime.getMinutes() + 1);
     setOtpExpiration(expirationTime);
   
     return otp;
@@ -138,9 +141,10 @@ function Index() {
       }));
     }
   }
-
+ 
   async function submit(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault();
+
     if (form.password === confirmPassword) {
       register(form);
     } 
@@ -153,31 +157,43 @@ function Index() {
     }
   };
 
-  const verifyEmail = () => {
-    let otp = generateOTP();
+  async function resendOTP() {
+    otp = generateOTP();
+    setOtpCode(otp);
     sendEmail({
       email: form.email,
       content: `Your One Time Password is: ${otp}`
-    })
+    });
+    setOpen("verify");
+    setTimer({minutes:1,seconds:0})
   }
-
   async function submitRegister(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault();
-    if (form.password === confirmPassword) {
-      otp = generateOTP();
-      setOtpCode(otp);
-      sendEmail({
-        email: form.email,
-        content: `Your One Time Password is: ${otp}`
-      });
-      setOpen("verify");
-    } 
-    else {
+
+    if(await checkEmail(form.email)){
       setOpenSnackBar(openSnackBar => ({
         ...openSnackBar,
         severity:'error',
-        note:"Passwords do not match",
+        note:"Email is used already, Try other email!",
       })); 
+    }else{
+      if (form.password === confirmPassword) {
+        otp = generateOTP();
+        setOtpCode(otp);
+        sendEmail({
+          email: form.email,
+          content: `Your One Time Password is: ${otp}`
+        });
+        setOpen("verify");
+        setTimer({minutes:1,seconds:0})
+      } 
+      else {
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'error',
+          note:"Passwords do not match",
+        })); 
+      }
     }
   };
 
@@ -218,7 +234,11 @@ function Index() {
   
     return isStrong;
   }
+  const [timerComplete, setTimerComplete] = useState(false);
 
+  const handleTimerComplete = () => {
+    setTimerComplete(true);
+  };
   useEffect(()=>{
     if(form.password){
       setPasswordSeverity(isStrongPassword(form.password))
@@ -308,9 +328,7 @@ function Index() {
               REGISTER
             </Typography>
           }
-          
           {/* School Register Form */}
-          
           {(role === "school")? 
             <form onSubmit={submitRegister}>
               <Grid container spacing={2} width={"100%"} mt="20px" mb={"20px"}>
@@ -604,6 +622,17 @@ function Index() {
                             maxLength: 6 // Allow only numbers
                           }}
                         />
+                        <Box display="flex"  gap={"4px"} alignItems={"center"} mt={1} >
+                          <Typography variant="body2" color="initial" sx={{opacity:".6"}}>Cant received the OTP?</Typography> 
+                          <Button
+                            variant="text"
+                            color="primary"
+                            onClick={resendOTP}
+                            disabled={timer.minutes !== 0 || timer.seconds !== 0}
+                          >
+                            Resend {timer.minutes !== 0 || timer.seconds !== 0?<>({timer.minutes} : {timer.seconds})</>:""} 
+                          </Button>
+                        </Box>
                       </Grid>
                       <Grid item xs={12} mt={1} mb={1}>
                       </Grid>
