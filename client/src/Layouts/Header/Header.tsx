@@ -29,6 +29,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
+import { useLocation } from 'react-router-dom';
 
 type Props = {}
 
@@ -41,7 +42,7 @@ export default function Header({socket}) {
   const {logout, getUser, User} = useAuth();
   const user = localStorage.getItem('user')
   
-
+  const location = useLocation();
   // Check who is login (Student, Admin, Instructor)
   // if student, show the notification for student
   // const fetchStudentNotif = () => {
@@ -145,9 +146,11 @@ export default function Header({socket}) {
       </List>
     </Box>
   );
-
-  return (
-    <AppBar position="static" color='secondary'>
+  return <>
+    <Box sx={location.pathname === '/login' || location.pathname === '/register'?{display:"none"}:{display:"block",height:"64px", width:"100%"}}>
+      
+    </Box>
+    <AppBar position="static" color='secondary' sx={{position:"fixed",top:"0",zIndex:"50000"}}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{ flexGrow: 1, display: {  md: 'flex' } }}>
@@ -268,5 +271,8 @@ export default function Header({socket}) {
         </Toolbar>
       </Container>
     </AppBar>
-  )
+  </>
+    
+    
+  
 }
