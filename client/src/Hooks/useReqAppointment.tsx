@@ -24,8 +24,10 @@ interface CreateAppointmentData {
   enrollmentId: string;
   instructorId: string;
   vehicle: string;
-  schedule: Date;
   studentId: string;
+  days: string[],
+  from: Date,
+  to: Date
 }
 
 interface GetAppointmentData {
@@ -59,7 +61,11 @@ function useReqAppointment(): Data {
         enrollmentId: data.enrollmentId,
         instructorId: data.instructorId,
         vehicle: data.vehicle,
-        schedule: data.schedule
+        schedule: {
+            days: data.days,
+            from: data.from,
+            to: data.to
+        }
       })
       .then((response:any)=>{
         console.log(response.data);
