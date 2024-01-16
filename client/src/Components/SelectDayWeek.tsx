@@ -22,7 +22,6 @@ function SelectDayWeek({selectedDay,setSelectedDay}:Props) {
   };
   return <>
     <Box>
-      {selectedDay}
       <Box display="flex"  gap={"5px"}>
         <Box flexGrow={1} display={"flex"} justifyContent={"center"}>
           <IconButton aria-label="" onClick={()=>{

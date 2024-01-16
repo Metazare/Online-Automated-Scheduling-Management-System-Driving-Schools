@@ -117,7 +117,8 @@ function Students() {
       instructorId:"",
       studentId:"",
       vehicle:"",
-
+      from: new Date(),
+      to: new Date()      
     })
     
     const [selectedDay,setSelectedDay] = useState([])
@@ -141,9 +142,9 @@ function Students() {
     function findValue(array, key, valueToFind) {
       for (let i = 0; i < array.length; i++) {
         const element = array[i];
-        console.log(element)
+        // console.log(element)
         if (element.hasOwnProperty(key) && element[key] === valueToFind) {
-          console.log(element)
+          // console.log(element)
           return element;
         }
       }
@@ -152,10 +153,13 @@ function Students() {
     async function create(e: React.FormEvent<HTMLFormElement>){
       e.preventDefault();
       setOpen("")
-      // createAppointment({
-      //   ...formSchedule,
-      //   studentId: selectedStudent?.studentId,
-      // })
+
+      createAppointment({
+        ...formSchedule,
+        studentId: selectedStudent?.studentId,
+        days: selectedDay,
+      })
+      
       // setFormSchedule({
       //   enrollmentId:"",
       //   instructorId:"",
@@ -163,7 +167,6 @@ function Students() {
       //   vehicle:"",
       //   schedule: new Date()
       // })
-
 
       getAppointments({
         appointmentId: null,
@@ -178,7 +181,6 @@ function Students() {
         status: null,
       });
     };
-
 
     useEffect(() => {
       getStudent({
@@ -550,14 +552,22 @@ function Students() {
                           <Grid item xs={6}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}> 
                               <DemoContainer components={['TimePicker']} >
-                                <TimePicker label="From"/>
+                                <TimePicker label="From"
+                                  // value={formSchedule.from}
+                                  onChange={(newValue: any) => {
+                                    setFormSchedule({...formSchedule, from: new Date(newValue)})
+                                  }}
+                                />
                               </DemoContainer>
                             </LocalizationProvider>
                           </Grid>
                           <Grid item  xs={6} height={"40px"}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}> 
                               <DemoContainer components={['TimePicker']} >
-                                <TimePicker label="To"/>
+                                <TimePicker label="To"
+                                  // value={formSchedule.to}
+                                  onChange={(newValue: any) => setFormSchedule({...formSchedule, to: new Date(newValue)})}
+                                />
                               </DemoContainer>
                             </LocalizationProvider>
                           </Grid>

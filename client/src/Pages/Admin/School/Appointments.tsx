@@ -86,10 +86,10 @@ function Appointments() {
     async function create(e: React.FormEvent<HTMLFormElement>){
       e.preventDefault();
       setOpen("")
-      createAppointment({
-        ...form,
-        studentId: selectedStudent?.studentId,
-      })
+      // createAppointment({
+      //   ...form,
+      //   studentId: selectedStudent?.studentId,
+      // })
       setForm({
         enrollmentId:"",
         instructorId:"",
@@ -126,6 +126,48 @@ function Appointments() {
         status: null,
       });
     }
+    useEffect(()=>{
+      console.log("Dito")
+      console.log(appointments)
+    },[])
+    useEffect(()=>{
+      if(appointments !== null || appointments !== undefined){
+        setsundayAppointments(checkerDay("sunday"))
+        setMondayAppointments(checkerDay("monday"))
+        settuesdayAppointments(checkerDay("tuesday"))
+        setwednesdayAppointments(checkerDay("wednesday"))
+        setthursdayAppointments(checkerDay("thursday"))
+        setfridayAppointments(checkerDay("friday"))
+        setSaturdayAppointments(checkerDay("saturday"))
+      }
+    },[appointments])
+
+    const [sundayAppointments,setsundayAppointments] = useState<any>([])
+    const [mondayAppointments,setMondayAppointments] = useState<any>([])
+    const [tuesdayAppointments,settuesdayAppointments] = useState<any>([])
+    const [wednesdayAppointments,setwednesdayAppointments] = useState<any>([])
+    const [thursdayAppointments,setthursdayAppointments] = useState<any>([])
+    const [fridayAppointments,setfridayAppointments] = useState<any>([])
+    const [saturdayAppointments,setSaturdayAppointments] = useState<any>([])
+
+    const checkerDay = (day: string) => {
+      if (appointments !== null) {
+        const filteredAppointmentsArray = appointments
+          .filter((appointment) => appointment.schedule.days.includes(day))
+          .sort((a, b) => {
+            // Convert schedule.from strings to Date objects for comparison
+            const dateA = new Date(a.schedule.from);
+            const dateB = new Date(b.schedule.from);
+    
+            // Sort in descending order (recent first)
+            return  dateA.getTime() - dateB.getTime();
+          });
+        return filteredAppointmentsArray;
+      }
+      return [];
+    };
+
+
 
     useEffect(() => {
       getStudent({
@@ -181,16 +223,89 @@ function Appointments() {
     }
 
     return <>
-      <Grid container spacing={1} sx={{marginTop:"10px"}}>
-        <Grid item md={2} xs={12}>
-          <Box sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
-            background: '#D6D6D6',
-          }}}>
-            <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Mon</Typography>
-            <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
-              <ScheduleCard course={"PDC Automatic Motorcycle"} time='8:00 am - 10:00 am' vehicle='Mirage' student='Dianne Chrystalin Castillo' instructor='Harold James H. Castillo'/>
-            </Box>
+
+      <Box display="flex" >
+        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+          background: '#D6D6D6',
+        }}}>
+          <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Sun</Typography>
+          <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+            {sundayAppointments !== null && sundayAppointments?.map((appointment) => (
+              appointment.schedule.days.includes("sunday")? 
+                <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+            ))}
           </Box>
+        </Box>
+        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+          background: '#D6D6D6',
+        }}}>
+          <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Mon</Typography>
+          <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+            {mondayAppointments !== null && mondayAppointments?.map((appointment) => (
+              appointment.schedule.days.includes("monday")? 
+                <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+            ))}
+          </Box>
+        </Box>
+        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+          background: '#D6D6D6',
+        }}}>
+          <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Tue</Typography>
+          <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+            {tuesdayAppointments !== null && tuesdayAppointments?.map((appointment) => (
+              appointment.schedule.days.includes("monday")? 
+                <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+            ))}
+          </Box>
+        </Box>
+        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+          background: '#D6D6D6',
+        }}}>
+          <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Wed</Typography>
+          <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+            {wednesdayAppointments !== null && wednesdayAppointments?.map((appointment) => (
+              appointment.schedule.days.includes("monday")? 
+                <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+            ))}
+          </Box>
+        </Box>
+        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+          background: '#D6D6D6',
+        }}}>
+          <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Thu</Typography>
+          <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+            {thursdayAppointments !== null && thursdayAppointments?.map((appointment) => (
+              appointment.schedule.days.includes("monday")? 
+                <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+            ))}
+          </Box>
+        </Box>
+        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+          background: '#D6D6D6',
+        }}}>
+          <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Fri</Typography>
+          <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+            {fridayAppointments !== null && fridayAppointments?.map((appointment) => (
+              appointment.schedule.days.includes("monday")? 
+                <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+            ))}
+          </Box>
+        </Box>
+        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+          background: '#D6D6D6',
+        }}}>
+          <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Sat</Typography>
+          <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
+            {saturdayAppointments !== null && saturdayAppointments?.map((appointment) => (
+              appointment.schedule.days.includes("monday")? 
+                <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+            ))}
+          </Box>
+        </Box>
+      </Box>
+      {/* <Grid container spacing={1} sx={{marginTop:"10px"}}>
+        <Grid item md={1} xs={12}>
+          
         </Grid>
         <Grid item md={2} xs={12}>
           <Box sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
@@ -198,7 +313,10 @@ function Appointments() {
           }}}>
             <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Tue</Typography>
             <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
-              <ScheduleCard course={"PDC Automatic Motorcycle"} time='8:00 am - 10:00 am' vehicle='Mirage' student='Dianne Chrystalin Castillo' instructor='Harold James H. Castillo'/>
+              {appointments?.map((appointment) => (
+                appointment.schedule.days.includes("tuesday")? 
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))}
             </Box>
           </Box>
         </Grid>
@@ -208,7 +326,10 @@ function Appointments() {
           }}}>
             <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Wed</Typography>
             <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
-              <ScheduleCard course={"PDC Automatic Motorcycle"} time='8:00 am - 10:00 am' vehicle='Mirage' student='Dianne Chrystalin Castillo' instructor='Harold James H. Castillo'/>
+              {appointments?.map((appointment) => (
+                appointment.schedule.days.includes("wednesday")? 
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))}
             </Box>
           </Box>
         </Grid>
@@ -218,7 +339,10 @@ function Appointments() {
           }}}>
             <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Thu</Typography>
             <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
-              <ScheduleCard course={"PDC Automatic Motorcycle"} time='8:00 am - 10:00 am' vehicle='Mirage' student='Dianne Chrystalin Castillo' instructor='Harold James H. Castillo'/>
+              {appointments?.map((appointment) => (
+                appointment.schedule.days.includes("thursday")? 
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))}
             </Box>
           </Box>
         </Grid>
@@ -228,7 +352,10 @@ function Appointments() {
           }}}>
             <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Fri</Typography>
             <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
-              <ScheduleCard course={"PDC Automatic Motorcycle"} time='8:00 am - 10:00 am' vehicle='Mirage' student='Dianne Chrystalin Castillo' instructor='Harold James H. Castillo'/>
+              {appointments?.map((appointment) => (
+                appointment.schedule.days.includes("friday")? 
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))}
             </Box>
           </Box>
         </Grid>
@@ -238,11 +365,14 @@ function Appointments() {
           }}}>
             <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Sat</Typography>
             <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
-              <ScheduleCard course={"PDC Automatic Motorcycle"} time='8:00 am - 10:00 am' vehicle='Mirage' student='Dianne Chrystalin Castillo' instructor='Harold James H. Castillo'/>
+              {appointments?.map((appointment) => (
+                appointment.schedule.days.includes("saturday")? 
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))}
             </Box>
           </Box>
         </Grid>
-      </Grid>
+      </Grid> */}
     </>
     
 }

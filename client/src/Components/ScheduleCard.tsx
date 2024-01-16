@@ -37,7 +37,7 @@ function ScheduleCard({course,time,student,instructor,vehicle}:Props) {
         >
           <Chip variant="outlined" icon={<AccessTimeFilledIcon/>} label={time}/>
           {
-            vehicle !== null || vehicle !==""?<Chip variant="outlined" icon={<DirectionsCarIcon/>} label="AUZI" />:""
+            vehicle !== null || vehicle !==""?<Chip variant="outlined" icon={<DirectionsCarIcon/>} label={vehicle} />:""
           }
         </Box>        
       </Box>
