@@ -82,7 +82,7 @@ function useReqAppointment(): Data {
               role: 'student'
             }
           ],
-          content: 'New schedule is set ' + ' on ' + moment(data.schedule).format('ll')  + ' at ' + User().name
+          content: 'New schedule is set ' + ' by ' + User().name
         })
         setOpenSnackBar(openSnackBar => ({
           ...openSnackBar,
