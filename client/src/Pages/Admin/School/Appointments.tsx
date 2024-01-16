@@ -223,8 +223,8 @@ function Appointments() {
     }
 
     return <>
-      <Box display="flex" >
-        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+      <Box display="flex" sx={{overflowX:'scroll',flexDirection:{md:"row",xs:"column"}}}>
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Sun</Typography>
@@ -235,7 +235,7 @@ function Appointments() {
             ))}
           </Box>
         </Box>
-        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Mon</Typography>
@@ -246,7 +246,7 @@ function Appointments() {
             ))}
           </Box>
         </Box>
-        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Tue</Typography>
@@ -257,7 +257,7 @@ function Appointments() {
             ))}
           </Box>
         </Box>
-        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Wed</Typography>
@@ -268,7 +268,7 @@ function Appointments() {
             ))}
           </Box>
         </Box>
-        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Thu</Typography>
@@ -279,7 +279,7 @@ function Appointments() {
             ))}
           </Box>
         </Box>
-        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Fri</Typography>
@@ -290,7 +290,7 @@ function Appointments() {
             ))}
           </Box>
         </Box>
-        <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
+        <Box flexGrow={1}  sx={{background:"white",width:{md:"190px",xs:"100%"},padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
           background: '#D6D6D6',
         }}}>
           <Typography variant="h6" color="initial" sx={{opacity:".5"}} textAlign={"center"}>Sat</Typography>

@@ -233,8 +233,8 @@ function CourseList() {
             <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
               {sundayAppointments !== null && sundayAppointments?.map((appointment) => (
                 appointment.schedule.days.includes("sunday")? 
-                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
-              ))}
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+              ))} 
             </Box>
           </Box>
           <Box flexGrow={1} maxWidth={"190px"} sx={{background:"white",padding:"1em .1em 1em",transition:"all ease .3s",borderRadius:"4px",':hover': {
@@ -244,7 +244,7 @@ function CourseList() {
             <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
               {mondayAppointments !== null && mondayAppointments?.map((appointment) => (
                 appointment.schedule.days.includes("monday")? 
-                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
               ))}
             </Box>
           </Box>
@@ -255,7 +255,7 @@ function CourseList() {
             <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
               {tuesdayAppointments !== null && tuesdayAppointments?.map((appointment) => (
                 appointment.schedule.days.includes("monday")? 
-                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle}  instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
               ))}
             </Box>
           </Box>
@@ -266,7 +266,7 @@ function CourseList() {
             <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
               {wednesdayAppointments !== null && wednesdayAppointments?.map((appointment) => (
                 appointment.schedule.days.includes("monday")? 
-                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
               ))}
             </Box>
           </Box>
@@ -277,7 +277,7 @@ function CourseList() {
             <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
               {thursdayAppointments !== null && thursdayAppointments?.map((appointment) => (
                 appointment.schedule.days.includes("monday")? 
-                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
               ))}
             </Box>
           </Box>
@@ -288,7 +288,7 @@ function CourseList() {
             <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
               {fridayAppointments !== null && fridayAppointments?.map((appointment) => (
                 appointment.schedule.days.includes("monday")? 
-                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
               ))}
             </Box>
           </Box>
@@ -299,7 +299,7 @@ function CourseList() {
             <Box display="flex" flexDirection={"column"} gap={1} mt={3}>
               {saturdayAppointments !== null && saturdayAppointments?.map((appointment) => (
                 appointment.schedule.days.includes("monday")? 
-                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} student={`${appointment.enrollment.student.name.first} ${appointment.enrollment.student.name.middle} ${appointment.enrollment.student.name.last}`} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
+                  <ScheduleCard course={getCourseName(appointment.enrollment.courseId)} time={`${dayjs(appointment.schedule.from).format("h:mm A")} - ${dayjs(appointment.schedule.to).format("h:mm A")}`} vehicle={appointment.vehicle} instructor={`${appointment.instructor.name.first} ${appointment.instructor.name.middle} ${appointment.instructor.name.last}`}/>:""
               ))}
             </Box>
           </Box>
