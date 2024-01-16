@@ -22,6 +22,7 @@ import useReqStudent from '../../Hooks/useReqStudent';
 import useReqInstructor from '../../Hooks/useReqInstructor';
 import useFirebase from '../../Hooks/useFirebase';
 import {useAuth} from '../../Hooks/useAuth';
+import { Verified } from '@mui/icons-material';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -62,6 +63,7 @@ function Profile() {
     birthday: "",
     profile: "",
     password: "",
+    accreditation:""
   })
 
   useEffect(() => {
@@ -111,6 +113,7 @@ function Profile() {
         address: instructor.address || "",
         profile: instructor.profile || "",
         password: instructor.password || "",
+        accreditation: instructor.accreditation||""
       });
     }
   }, [students, instructors]);
@@ -228,6 +231,19 @@ function Profile() {
                           {getUser() === "student" ? <>{students?.email}</> : <>{instructor?.email}</>}
                           </Typography>
                       </Box>
+                      {getUser() !== "student"?
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            alignItems:"center",
+                            gap:"5px"
+                          }}
+                        >
+                          <Verified/> 
+                          <Typography variant="body1" fontWeight={500}>{instructor?.accreditation}</Typography>
+                        </Box>
+                      :""}
+                      
 
                       {getUser() === "student" ?
                       <>
@@ -334,6 +350,18 @@ function Profile() {
                           onChange={(e)=>{setForm({...form, contact: e.target.value})}}
                         />
                       </Grid>
+                      {getUser() !== "student" && 
+                      <Grid item xs={12}>
+                        <TextField
+                          id="accreditation"
+                          label="Accreditation"
+                          fullWidth
+                          type='text'
+                          value={form?.accreditation}
+                          onChange={(e)=>{setForm({...form, accreditation: e.target.value})}}
+                        />
+                      </Grid>
+                      }
                       {getUser() === "student" ? <>
                         <Grid item xs={6} >
                           <TextField

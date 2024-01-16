@@ -28,6 +28,7 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import VerifiedIcon from '@mui/icons-material/Verified';
 import dayjs from 'dayjs';
 const style = {
   position: 'absolute' as 'absolute',
@@ -69,6 +70,7 @@ function ManageSchool() {
     address: '',
     contact: '',
     profile: '',
+    accreditation:'',
     schedules: [{
       name: "Morning",
       from: 0,
@@ -105,6 +107,7 @@ function ManageSchool() {
         address: data.address || "",
         contact: data.contact || "",
         profile: data.profile || "",
+        accreditation: data.accreditation || "",
         schedules: data.schedules || [{name: "Morning", from: 0, to: 0}, {name: "Afternoon", from: 0, to: 0}]
       });
     }
@@ -158,7 +161,7 @@ function ManageSchool() {
                         gap:"10px"
                         }}
                     >
-                        <Box
+                      <Box
                         sx={{
                         display: 'flex',
                         gap:"5px"
@@ -167,7 +170,7 @@ function ManageSchool() {
                         <CallIcon/> 
                         <Typography variant="body1" fontWeight={500}>{data?.contact}</Typography>
                         </Box>
-                        <Box
+                      <Box
                         sx={{
                         display: 'flex',
                         gap:"5px"
@@ -175,7 +178,16 @@ function ManageSchool() {
                         >
                         <EmailIcon/> 
                         <Typography variant="body1" fontWeight={500}>{data?.email}</Typography>
-                        </Box>
+                      </Box>
+                      <Box
+                        sx={{
+                        display: 'flex',
+                        gap:"5px"
+                        }}
+                        >
+                        <VerifiedIcon/> 
+                        <Typography variant="body1" fontWeight={500}>{data?.accreditation}</Typography>
+                      </Box>
                     </Box>
                     </div>
                     {getUser()==="admin"?
@@ -293,6 +305,15 @@ function ManageSchool() {
                           fullWidth
                           defaultValue={data?.email}
                           onChange={(e)=>{setForm({...form, email: e.target.value})}}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          id="accreditation"
+                          label="Accreditation"
+                          fullWidth
+                          defaultValue={data?.accreditation}
+                          onChange={(e)=>{setForm({...form, accreditation: e.target.value})}}
                         />
                       </Grid>
                       <Grid item xs={12}>

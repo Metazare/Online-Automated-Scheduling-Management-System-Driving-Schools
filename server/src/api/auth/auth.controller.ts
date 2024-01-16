@@ -16,6 +16,8 @@ export const register: RequestHandler = async (req: BodyRequest<UserRegister>, r
     const { role, ...body } = req.body;
     const { email } = body;
 
+    console.log(req.body)
+
     const checker: CheckData = new CheckData();
 
     checker.checkType(role, 'string', 'role');

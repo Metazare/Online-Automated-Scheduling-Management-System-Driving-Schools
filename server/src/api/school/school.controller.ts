@@ -24,7 +24,7 @@ export const getSchools: RequestHandler = async (req: QueryRequest<GetSchools>, 
 };
 
 export const createSchool = async (body: CreateSchool): Promise<Payload> => {
-    const { name, about, address, contact, email, password, schedules } = body;
+    const { name, about, address, contact, email, password, schedules, accreditation } = body;
     const checker = new CheckData();
 
     checker.checkType(name, 'string', 'name');
@@ -50,7 +50,8 @@ export const createSchool = async (body: CreateSchool): Promise<Payload> => {
         address,
         contact,
         schedules,
-        credentials: { email, password }
+        credentials: { email, password },
+        accreditation
     });
 
     return { userId: schoolId, role: Role.ADMIN };

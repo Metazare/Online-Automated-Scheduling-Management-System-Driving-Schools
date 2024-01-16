@@ -56,8 +56,10 @@ function Instructors() {
         address: "",
         contact: "",
         email: "",
+        accreditation:""
       });
       setOpen("");
+      getInstructor(instructorinstructors);
     }
     useEffect(()=>{
       if(credentials){
@@ -88,6 +90,7 @@ function Instructors() {
         address:"",
         contact:"",
         email:"",
+        accreditation:""
     })
 
     const{setOpenSnackBar} = useContext(SnackbarContext)
@@ -248,6 +251,16 @@ function Instructors() {
                                             label="Email"
                                             value={form.email}
                                             onChange={(event)=>{ setForm({...form, email: event.target.value });}}
+                                        />
+                                    </Grid>
+                                    <Grid item  xs={12}>
+                                        <TextField
+                                            fullWidth
+                                            required
+                                            id="accreditation"
+                                            label="Accreditation"
+                                            value={form.accreditation}
+                                            onChange={(event)=>{ setForm({...form, accreditation: event.target.value });}}
                                         />
                                     </Grid>
                                 </Grid>

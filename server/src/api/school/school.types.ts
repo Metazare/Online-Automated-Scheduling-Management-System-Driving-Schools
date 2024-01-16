@@ -22,6 +22,7 @@ export interface School {
         email: string;
         password: string;
     };
+    accreditation: string;
 }
 
 export interface SchoolDocument extends School, Document {
@@ -44,4 +45,5 @@ export type CreateSchool = {
     password: string;
     profile: string;
     schedules: Schedule[];
+    accreditation: string;
 };

@@ -93,7 +93,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const register = async (data: RegisterData) => {
       const { name, first, middle, last, extension, sex, birthday, address, contact, about, email, password, role, schedules, accreditation } = data;
-
+      console.log(data)
+      console.log(accreditation)
       try{
           await axios
           .post(`/auth/register`,{
