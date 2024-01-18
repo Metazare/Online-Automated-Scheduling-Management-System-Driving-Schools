@@ -123,7 +123,7 @@ function Index() {
     }
 
     const expirationTime = new Date();
-    expirationTime.setMinutes(expirationTime.getMinutes() + 1);
+    expirationTime.setMinutes(expirationTime.getMinutes() + 5);
     setOtpExpiration(expirationTime);
   
     return otp;
@@ -166,7 +166,7 @@ function Index() {
       content: `Your One Time Password is: ${otp}`
     });
     setOpen("verify");
-    setTimer({minutes:1,seconds:0})
+    setTimer({minutes:5,seconds:0})
   }
   async function submitRegister(e: React.FormEvent<HTMLFormElement>){
     e.preventDefault();
@@ -186,7 +186,7 @@ function Index() {
           content: `Your One Time Password is: ${otp}`
         });
         setOpen("verify");
-        setTimer({minutes:1,seconds:0})
+        setTimer({minutes:5,seconds:0})
       } 
       else {
         setOpenSnackBar(openSnackBar => ({
