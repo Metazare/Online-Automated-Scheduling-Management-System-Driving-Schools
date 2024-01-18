@@ -51,11 +51,11 @@ export const register: RequestHandler = async (req: BodyRequest<UserRegister>, r
 };
 
 export const login: RequestHandler = async (req: BodyRequest<UserLogin>, res) => {
-    const { email, password } = req.body;
+    const { email, password, oauth } = req.body;
     const checker = new CheckData();
 
     checker.checkType(email, 'string', 'email');
-    checker.checkType(password, 'string', 'password');
+    // checker.checkType(password, 'string', 'password');
     if (checker.size()) throw new UnprocessableEntity(checker.errors);
 
     const findUser = await Promise.all([
@@ -65,7 +65,12 @@ export const login: RequestHandler = async (req: BodyRequest<UserLogin>, res) =>
     ]);
 
     const user = findUser.find(Boolean);
-    if (!user || !compareSync(password, user.credentials.password)) throw new Unauthorized();
+    if (!oauth) {
+        if (!user || !compareSync(password, user.credentials.password)) throw new Unauthorized();
+    }
+    else{
+        if (!user) throw new Unauthorized();
+    }
 
     let payload: Payload;
 

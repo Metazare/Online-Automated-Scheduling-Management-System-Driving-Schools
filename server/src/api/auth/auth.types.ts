@@ -29,6 +29,7 @@ export interface SocketUser {
 export type UserLogin = {
     email: string;
     password: string;
+    oauth?: boolean;
 };
 
 export type UserRegister = (CreateSchool | CreateStudent) & { role: Role };
