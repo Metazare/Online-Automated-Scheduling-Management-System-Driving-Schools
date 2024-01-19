@@ -15,7 +15,7 @@ import Profile from './Pages/Profile/Profile'
 import ManageSchool from './Pages/Admin/School/ManageSchool';
 import Error from './Pages/Error';
 import Chat from './Pages/User/Chat';
-
+import LoginTest from './Test/LoginTest';
 import TestSchool from './Test/TestSchool';
 
 // Hooks
@@ -45,6 +45,7 @@ function App() {
           <Route path="/login" element={<Login/>} />
           <Route path="/register" element={<Register />} />
           <Route path="/" element={<LandingPage/>} />
+          
             
           {/* admin */}
           <Route element={<ProtectedRoute allowedRoles={["admin", "instructor"]}/>}>
@@ -71,6 +72,7 @@ function App() {
           </Route>
 
           <Route path="/test" element={<TestSchool/>} />
+          <Route path="/testLogin" element={<LoginTest/>} />
         </Route>
 
       </Routes>

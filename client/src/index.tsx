@@ -6,9 +6,10 @@ import reportWebVitals from './reportWebVitals';
 import { AuthProvider } from './Hooks/useAuth';
 import MuiAlert, { AlertProps, AlertColor } from '@mui/material/Alert';
 
+import { GoogleOAuthProvider } from '@react-oauth/google';
 import './Styles/main.scss';
 import SnackbarComponent from './Components/SnackbarComponent';
-import {SnackbarContext} from './Context/SnackbarContext'
+import {SnackbarContext} from './Context/SnackbarContext';
 const Root = () => {
   const [openSnackBar, setOpenSnackBar] = useState<{
     severity: AlertColor;
@@ -20,16 +21,18 @@ const Root = () => {
   
   return (
     <React.StrictMode>
-      <BrowserRouter>
-        <SnackbarContext.Provider value={{openSnackBar,setOpenSnackBar}}>
-          <AuthProvider>
-            <Routes>
-              <Route path="/*" element={<App/>} />
-            </Routes>
-          </AuthProvider>
-          <SnackbarComponent openSnackbar={openSnackBar} setOpenSnackbar={setOpenSnackBar} />
-        </SnackbarContext.Provider>
-      </BrowserRouter>
+      <GoogleOAuthProvider clientId="147520673349-1gqn038bt4m2ibfv6rvkha4ujqg82o1g.apps.googleusercontent.com">
+        <BrowserRouter>
+          <SnackbarContext.Provider value={{openSnackBar,setOpenSnackBar}}>
+            <AuthProvider>
+              <Routes>
+                <Route path="/*" element={<App/>} />
+              </Routes>
+            </AuthProvider>
+            <SnackbarComponent openSnackbar={openSnackBar} setOpenSnackbar={setOpenSnackBar} />
+          </SnackbarContext.Provider>
+        </BrowserRouter>
+      </GoogleOAuthProvider>;
     </React.StrictMode>
   );
 };
