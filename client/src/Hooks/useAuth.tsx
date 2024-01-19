@@ -12,6 +12,7 @@ interface AuthContextState {
     getUser: () => any;
     User: () => any,
     checkEmail: (email: string) => any
+    googleLogin:(data: LoginDataGoogle) => void;
 }
 
 interface Schedule {
@@ -42,6 +43,11 @@ interface LoginData {
   email: string;
   password: string;
 }
+interface LoginDataGoogle {
+  email: string;
+  password: string;
+  oauth: boolean;
+}
 
 export const AuthContext = createContext<AuthContextState>({
     user: null,
@@ -51,37 +57,74 @@ export const AuthContext = createContext<AuthContextState>({
     isAuth: () => false,
     getUser: () => {},
     User: () => {},
-    checkEmail: () => {}
+    checkEmail: () => {},
+    googleLogin: ()=>{}
 });
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const navigate = useNavigate()
     const [user, setUser] = useState<any>(null);
     const{setOpenSnackBar} = useContext(SnackbarContext)
+
+    const googleLogin = async(data:LoginDataGoogle)=>{
+      const { email, password,oauth} = data;
+      try{
+        await axios
+        .post(`/auth/login`,{
+            "email" : email,
+            "password" : password,
+            "oauth": oauth
+        })
+        .then((response: any) => {
+            console.log(response.data)
+            setUser(response.data);
+
+            if (response.data.schoolId) {
+              navigate("/dashboard")  
+            }
+            else if (response.data.studentId) {
+              navigate("/home")  
+            }
+            else if (response.data.instructorId) {
+              navigate("/dashboard")  
+            }
+
+            localStorage.setItem('user', JSON.stringify(response.data))
+        });
+      }
+      catch (error: any){
+        console.log(error);
+        setOpenSnackBar(openSnackBar => ({
+          ...openSnackBar,
+          severity:'error',
+          note:error.response.data.message,
+        })); 
+      }
+    }
     const login = async (data: LoginData) => {
-        const { email, password} = data;
-        try{
-          await axios
-          .post(`/auth/login`,{
-              "email" : email,
-              "password" : password
-          })
-          .then((response: any) => {
-              console.log(response.data)
-              setUser(response.data);
+      const { email, password} = data;
+      try{
+        await axios
+        .post(`/auth/login`,{
+            "email" : email,
+            "password" : password
+        })
+        .then((response: any) => {
+            console.log(response.data)
+            setUser(response.data);
 
-              if (response.data.schoolId) {
-                navigate("/dashboard")  
-              }
-              else if (response.data.studentId) {
-                navigate("/home")  
-              }
-              else if (response.data.instructorId) {
-                navigate("/dashboard")  
-              }
+            if (response.data.schoolId) {
+              navigate("/dashboard")  
+            }
+            else if (response.data.studentId) {
+              navigate("/home")  
+            }
+            else if (response.data.instructorId) {
+              navigate("/dashboard")  
+            }
 
-              localStorage.setItem('user', JSON.stringify(response.data))
-          });
+            localStorage.setItem('user', JSON.stringify(response.data))
+        });
       }
       catch (error: any){
         console.log(error);
@@ -199,7 +242,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, register, isAuth, getUser, User, checkEmail }}>
+        <AuthContext.Provider value={{ user, login, logout, register, isAuth, getUser, User, checkEmail,googleLogin}}>
             {children}
         </AuthContext.Provider>
     );

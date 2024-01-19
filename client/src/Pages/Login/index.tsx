@@ -20,7 +20,7 @@ import CourseCard from '../../Components/CourseCard';
 
 
 function Index() {
-  const { login } = useAuth();
+  const { login,googleLogin } = useAuth();
   const [slider,setSlider] = useState(1);
   const{setOpenSnackBar} = useContext(SnackbarContext)
   const styleContainer = {
@@ -117,8 +117,11 @@ function Index() {
                     const decoded: { email?:string} = await jwtDecode(token);
 
                     if (decoded.email) {
-                      console.log(decoded.email);
-                      const email = decoded.email;
+                      googleLogin({
+                        email:decoded.email,
+                        password:"",
+                        oauth:true
+                      })
                       
                     } else {
                       console.error('Email not found in JWT payload');
