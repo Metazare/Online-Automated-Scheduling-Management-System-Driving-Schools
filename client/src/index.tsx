@@ -32,7 +32,7 @@ const Root = () => {
             <SnackbarComponent openSnackbar={openSnackBar} setOpenSnackbar={setOpenSnackBar} />
           </SnackbarContext.Provider>
         </BrowserRouter>
-      </GoogleOAuthProvider>;
+      </GoogleOAuthProvider>
     </React.StrictMode>
   );
 };
